@@ -33,3 +33,9 @@ jobs:
 
       - name: Pytest
         run: uv run pytest
+
+      - name: Eval gate (reference agent)
+        run: >
+          uv run python -m spine.eval gate
+          --suite spine.reference_agent:build_reference_suite
+          --baseline baselines/reference_agent.json

@@ -19,6 +19,11 @@ Phase 5 surface: a shared retrieval layer (``spine.rag``) — ingest/query with
 namespacing and citation plumbing compatible with ``CitationGuard`` — plus a
 memory abstraction (``spine.memory``) for per-session state and long-term,
 cross-session agent memory.
+
+Phase 6 surface: an observability sink + metric emitters (``spine.obs``) with a
+local and lazy-GCP BigQuery implementation and a metrics-report summary, plus a
+reference agent (``spine.reference_agent``) that composes every component end to
+end behind one ``run`` entry point (the local "Definition of done" proof).
 """
 
 from spine import eval
@@ -69,6 +74,17 @@ from spine.models import (
     ModelResponse,
     WrappedModelClient,
 )
+from spine.obs import (
+    BigQueryMetricsSink,
+    InMemoryMetricsSink,
+    JsonlMetricsSink,
+    MetricRecord,
+    MetricsReport,
+    MetricsSink,
+    metrics_report,
+    percentile,
+    record_to_row,
+)
 from spine.rag import (
     Document,
     InMemoryRetriever,
@@ -77,6 +93,13 @@ from spine.rag import (
     VertexSearchRetriever,
     passages_to_citations,
     resolve_citations,
+)
+from spine.reference_agent import (
+    ReferenceAgent,
+    ReferenceRequest,
+    ReferenceResult,
+    build_reference_suite,
+    demo,
 )
 from spine.tracing import (
     StepType,
@@ -148,4 +171,20 @@ __all__ = [
     "MemoryStore",
     "SessionState",
     "SessionStore",
+    # obs
+    "BigQueryMetricsSink",
+    "InMemoryMetricsSink",
+    "JsonlMetricsSink",
+    "MetricRecord",
+    "MetricsReport",
+    "MetricsSink",
+    "metrics_report",
+    "percentile",
+    "record_to_row",
+    # reference agent
+    "ReferenceAgent",
+    "ReferenceRequest",
+    "ReferenceResult",
+    "build_reference_suite",
+    "demo",
 ]

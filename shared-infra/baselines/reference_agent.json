@@ -1,0 +1,8 @@
+{
+  "dataset_name": "reference_agent",
+  "dataset_version": "1",
+  "mean_scores": {
+    "schema_pass_rate": 1.0,
+    "field_accuracy": 1.0
+  }
+}
