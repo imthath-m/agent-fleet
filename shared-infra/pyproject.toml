@@ -23,6 +23,9 @@ tracing-gcp = [
 logging-gcp = [
     "google-cloud-logging>=3.0",
 ]
+bigquery = [
+    "google-cloud-bigquery>=3.0",
+]
 
 [build-system]
 requires = ["hatchling"]
