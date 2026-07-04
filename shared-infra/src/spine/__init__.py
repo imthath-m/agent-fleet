@@ -5,8 +5,13 @@ runnable with an in-memory fake model, and a local tool backend.
 
 Phase 2 surface: OpenTelemetry tracing setup + span helpers and a structured
 JSON logger correlated to traces by ``trace_id``.
+
+Phase 3 surface: an offline evaluation harness (``spine.eval``) with versioned
+golden datasets, deterministic + LLM-judge metrics, a runner, a CI regression
+gate, and result sinks.
 """
 
+from spine import eval
 from spine.agent import Agent, Tool
 from spine.logging import (
     SpineJsonFormatter,
@@ -32,6 +37,7 @@ from spine.tracing import (
 )
 
 __all__ = [
+    "eval",
     "Agent",
     "Tool",
     "ModelClient",
