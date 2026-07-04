@@ -14,6 +14,11 @@ Phase 4 surface: input/output guardrails (``spine.guardrails``) — PII,
 prompt-injection, and topic checks on input; schema, citation, and confidence
 checks on output — plus a human-in-the-loop escalation queue (``spine.hitl``)
 that low-confidence or high-risk cases route to.
+
+Phase 5 surface: a shared retrieval layer (``spine.rag``) — ingest/query with
+namespacing and citation plumbing compatible with ``CitationGuard`` — plus a
+memory abstraction (``spine.memory``) for per-session state and long-term,
+cross-session agent memory.
 """
 
 from spine import eval
@@ -47,12 +52,31 @@ from spine.logging import (
     get_logger,
     log_event,
 )
+from spine.memory import (
+    FirestoreSessionStore,
+    InMemoryMemoryStore,
+    InMemorySessionStore,
+    MemoryBankStore,
+    MemoryEntry,
+    MemoryStore,
+    SessionState,
+    SessionStore,
+)
 from spine.models import (
     FakeModelClient,
     ModelClient,
     ModelConfig,
     ModelResponse,
     WrappedModelClient,
+)
+from spine.rag import (
+    Document,
+    InMemoryRetriever,
+    Passage,
+    Retriever,
+    VertexSearchRetriever,
+    passages_to_citations,
+    resolve_citations,
 )
 from spine.tracing import (
     StepType,
@@ -107,4 +131,21 @@ __all__ = [
     "current_trace_id",
     "get_logger",
     "log_event",
+    # rag
+    "Document",
+    "InMemoryRetriever",
+    "Passage",
+    "Retriever",
+    "VertexSearchRetriever",
+    "passages_to_citations",
+    "resolve_citations",
+    # memory
+    "FirestoreSessionStore",
+    "InMemoryMemoryStore",
+    "InMemorySessionStore",
+    "MemoryBankStore",
+    "MemoryEntry",
+    "MemoryStore",
+    "SessionState",
+    "SessionStore",
 ]
