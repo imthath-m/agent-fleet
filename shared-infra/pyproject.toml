@@ -26,6 +26,9 @@ logging-gcp = [
 bigquery = [
     "google-cloud-bigquery>=3.0",
 ]
+firestore = [
+    "google-cloud-firestore>=2.0",
+]
 
 [build-system]
 requires = ["hatchling"]
