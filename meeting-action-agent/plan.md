@@ -1,7 +1,7 @@
-# Project Four — Meeting → Action Agent
+# Meeting → Action Agent
 
-Fourth product. Chosen to stress the two spine capabilities the earlier projects
-touch only lightly: **async orchestration** (a multi-stage pipeline driven off a
+One of Fleet's agents. It leans hardest on two platform capabilities:
+**async orchestration** (a multi-stage pipeline driven off a
 queue instead of one synchronous call) and **cross-session memory** (`spine.memory.MemoryStore`
 carrying prior commitments and unresolved actions forward across meetings). A
 meeting ends, a transcript arrives, and the agent turns it into a summary plus

@@ -1,11 +1,11 @@
-# Project Three — Lead Research & Outreach Agent
+# Lead Research & Outreach Agent
 
-Third product. Chosen because it turns the spine's grounding + guardrail stack
+One of Fleet's agents. It turns the platform's grounding + guardrail stack
 toward an outbound use case: take a raw lead, **research it on the open web**,
 **score it against the customer's ICP**, and **draft cited, personalized
-outreach** a human approves before anything is sent. It is the first vertical
-where the primary input (fetched web pages) is **untrusted**, so prompt-injection
-defense and citation validity are load-bearing, not nice-to-have.
+outreach** a human approves before anything is sent. Its primary input (fetched
+web pages) is **untrusted**, so prompt-injection defense and citation validity
+are load-bearing, not nice-to-have.
 
 > This project builds **on top of `shared-infra/`**. It does not re-implement
 > runtime, eval, tracing, logging, observability, guardrails, memory, RAG, or

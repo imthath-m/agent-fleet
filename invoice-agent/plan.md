@@ -1,11 +1,10 @@
-# Project Two — AP / Invoice-Processing Agent
+# AP / Invoice-Processing Agent
 
-Second product. Chosen to **prove the spine is reusable**: it should reach a
-working, traced, evaluated local build by importing `spine/` and writing only
-domain logic — extraction, deterministic validation, and agentic exception
-handling. Document AI does the reading; plain Python does the checking; the LLM
-is used **only** for the ambiguous exceptions. High willingness to pay because
-AP is a headcount line item.
+One of Fleet's agents. It reaches a working, traced, evaluated local build by
+importing `spine/` and writing only domain logic — extraction, deterministic
+validation, and agentic exception handling. Document AI does the reading; plain
+Python does the checking; the LLM is used **only** for the ambiguous exceptions.
+High willingness to pay because AP is a headcount line item.
 
 > This project builds **on top of `shared-infra/`**. It does not re-implement
 > runtime, eval, tracing, logging, observability, guardrails, memory, HITL, or

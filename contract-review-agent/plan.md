@@ -1,10 +1,10 @@
-# Project Five — Contract / Compliance Review Agent
+# Contract / Compliance Review Agent
 
-Fifth product. The **high-stakes** vertical: it uploads a contract, checks each
+The **high-stakes** agent in Fleet's lineup: it uploads a contract, checks each
 clause against a customer **playbook**, flags risks, and drafts redlines — but
 **every finding must cite the exact source clause and the playbook rule it
 violates**, and **every report is reviewed by a human before use**. It uniquely
-stresses two spine components harder than any other product: **citation
+stresses two platform components harder than any other agent: **citation
 grounding** (`spine.rag.resolve_citations` + `CitationGuard`, zero tolerance for
 fabricated citations) and **high-stakes evaluation** (the most rigorous eval
 gate of the five, with absolute floors, not just regression checks). Framing is

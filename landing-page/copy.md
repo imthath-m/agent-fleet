@@ -1,188 +1,193 @@
 # Copy — Final, Paste-Ready
 
 All copy for the page. Rules: no invented users, numbers, or testimonials;
-"target" not "guaranteed"; products are always "in development." The intern
-pastes this verbatim; anything variable is in `{braces}`.
+automation rates are stated as the agent's target/typical capability, not a
+guarantee; the agents are available products an SMB can adopt. The intern pastes
+this verbatim; anything variable is in `{braces}`.
 
-Brand: **Fivefold** (single-source constant — see plan.md §1).
+Brand: **Fleet** (single-source constant — see plan.md §1). Never lock the brand
+to "five" — Fleet scales past five agents as we ship them.
 
 ---
 
 ## 1. Hero
 
-**Eyebrow badge:** `Pre-launch — you decide the roadmap`
+**Eyebrow badge:** `A fleet of AI agents for your back office`
 
 **H1 (use option A; B and C are approved alternates if the owner prefers):**
-- **A:** Five AI agents for the work no one at your company wants. You pick which one we build first.
-- B: Your next hire is an agent. Vote on which one.
-- C: The busywork queue is long. So is ours — help us sort it.
+- **A:** A fleet of AI agents that run your back office. Add the ones you need.
+- B: The work no one at your company wants — handled by agents you can trust.
+- C: Five AI agents for SMB operations. Opt into one, or all of them.
 
 **Subhead:**
-Support tickets, invoices, lead research, meeting follow-ups, contract
-review — five agents, one production-grade platform, built for small teams.
-None of them are live yet. That's the point: vote for the one you need, and
-the winner gets built first — with voters on board from day one.
+Support tickets, invoices, lead research, meeting follow-ups, contract review —
+five AI agents on one production-grade platform, built for small teams. Adopt the
+ones that match the work you have, add more as we ship them. Each runs like real
+software: evaluated, fully audited, and always under your control.
 
-**Buttons:** `See the five agents ↓` (primary) · `How the vote works` (secondary)
+**Buttons:** `See the five agents ↓` (primary) · `See pricing` (secondary)
 
-**Microcopy:** No spam. No credit card. Just a say in what gets built.
+**Microcopy:** Per-agent pricing. Take one, or all five for a bundle discount.
 
 ## 2. Problem strip
 
-**Section heading (visually hidden, for a11y):** Why this exists
+**Section heading (visually hidden, for a11y):** Why Fleet exists
 
 1. **You are the support team.** And the AP clerk, and the SDR. Every hour on
    busywork is an hour off the product.
-2. **AI tools overpromise.** Chat wrappers demo well and then quietly make
-   things up. Nobody audits them, so nobody trusts them.
-3. **You can't buy what doesn't exist — yet.** So instead of a fake "book a
-   demo" button, we're letting you set the build order.
+2. **AI tools overpromise.** Chat wrappers demo well and then quietly make things
+   up. Nobody audits them, so nobody trusts them.
+3. **You need operators, not another chatbot.** Fleet's agents each own one job
+   end-to-end, with a full audit trail and a human on the high-stakes calls.
 
-## 3. Product cards (Section 4)
+## 3. Agent cards (Section 4)
 
-Status pill on every card: `In development · vote to prioritize`
+Status pill on every card: `Available · onboarding now`
 
 ### Card 1 — Triage (Support ticket triage & resolution)
 
 - **Badge:** Triage · Support
-- **One-liner (h3):** Answers routine support tickets with cited answers from
-  your own help docs — and hands the hard ones to you.
+- **One-liner (h3):** Answers routine support tickets with cited answers from your
+  own help docs — and hands the hard ones to you.
 - **Pipeline chips:** `classify` → `answer + cite` → `safe actions` → `escalate to you`
 - **Pain bullets:**
-  - **First-response time is embarrassing.** Triage drafts a grounded answer
-    the moment a ticket lands — from email, chat, or webform.
-  - **Same five questions, forever.** Routine tickets get resolved
-    automatically, with citations to your help center, not hallucinations.
-  - **Scared of AI going rogue?** Refunds and account changes always wait for
-    a human unless you say otherwise. Every step is logged and auditable.
-- **CTA:** `Vote for Triage` · **Sample link:** `See a sample run →`
+  - **First-response time is embarrassing.** Triage drafts a grounded answer the
+    moment a ticket lands — from email, chat, or webform.
+  - **Same five questions, forever.** Routine tickets get resolved automatically,
+    with citations to your help center, not hallucinations.
+  - **Scared of AI going rogue?** Refunds and account changes always wait for a
+    human unless you say otherwise. Every step is logged and auditable.
+- **CTA:** `Get Triage` · **Sample link:** `See a sample run →`
 
 ### Card 2 — Payable (AP / invoice processing)
 
 - **Badge:** Payable · Finance
-- **One-liner:** Reads every invoice, checks the math, catches duplicates —
-  and only bothers a human with the genuine exceptions.
+- **One-liner:** Reads every invoice, checks the math, catches duplicates — and
+  only bothers a human with the genuine exceptions.
 - **Pipeline chips:** `extract` → `validate math + PO` → `catch duplicates` → `approve or escalate`
 - **Pain bullets:**
   - **Invoice pile, no AP clerk.** Clean invoices go straight through to your
     books; you approve only the flagged ones.
-  - **Double payments happen.** Duplicate detection fingerprints every
-    invoice, so paying the same bill twice stops being a risk.
-  - **Auditors ask "why was this paid?"** Every invoice keeps a full audit
-    trail: what was extracted, what was checked, who approved it.
-- **CTA:** `Vote for Payable` · **Sample link:** `See a sample run →`
+  - **Double payments happen.** Duplicate detection fingerprints every invoice, so
+    paying the same bill twice stops being a risk.
+  - **Auditors ask "why was this paid?"** Every invoice keeps a full audit trail:
+    what was extracted, what was checked, who approved it.
+- **CTA:** `Get Payable` · **Sample link:** `See a sample run →`
 
 ### Card 3 — Prospect (Lead research & outreach)
 
 - **Badge:** Prospect · Sales
-- **One-liner:** Researches every lead on the open web, scores it against
-  your ideal customer, and drafts outreach you approve before anything sends.
+- **One-liner:** Researches every lead on the open web, scores it against your
+  ideal customer, and drafts outreach you approve before anything sends.
 - **Pipeline chips:** `research` → `score vs your ICP` → `draft w/ evidence` → `you approve`
 - **Pain bullets:**
   - **An hour of googling per lead.** Prospect builds the dossier in minutes —
     industry, size, tech, buying signals — every fact cited to its source.
-  - **Templates that scream template.** Drafts are personalized from real
-    evidence about the company, not `{first_name}` tricks.
-  - **Nothing sends without you.** Every single draft waits for your
-    approval. Your reputation stays yours.
-- **CTA:** `Vote for Prospect` · **Sample link:** `See a sample run →`
+  - **Templates that scream template.** Drafts are personalized from real evidence
+    about the company, not `{first_name}` tricks.
+  - **Nothing sends without you.** Every single draft waits for your approval. Your
+    reputation stays yours.
+- **CTA:** `Get Prospect` · **Sample link:** `See a sample run →`
 
 ### Card 4 — Follow-Through (Meeting → action)
 
 - **Badge:** Follow-Through · Ops
-- **One-liner:** Turns every meeting into owned, dated action items — and
-  remembers what was promised last week.
+- **One-liner:** Turns every meeting into owned, dated action items — and remembers
+  what was promised last week.
 - **Pipeline chips:** `transcript in` → `extract actions` → `check past promises` → `route + digest`
 - **Pain bullets:**
-  - **Decisions evaporate by Friday.** Every action item gets an owner, a due
-    date, and a ticket in your tracker — automatically.
-  - **"Didn't you say you'd ship that?"** Cross-meeting memory resurfaces
-    last week's unresolved commitments so nothing silently dies.
-  - **No ops person to chase people.** A digest goes to participants after
-    every meeting; external emails always get a human OK first.
-- **CTA:** `Vote for Follow-Through` · **Sample link:** `See a sample run →`
+  - **Decisions evaporate by Friday.** Every action item gets an owner, a due date,
+    and a ticket in your tracker — automatically.
+  - **"Didn't you say you'd ship that?"** Cross-meeting memory resurfaces last
+    week's unresolved commitments so nothing silently dies.
+  - **No ops person to chase people.** A digest goes to participants after every
+    meeting; external emails always get a human OK first.
+- **CTA:** `Get Follow-Through` · **Sample link:** `See a sample run →`
 
 ### Card 5 — Redline (Contract / compliance review)
 
 - **Badge:** Redline · Legal
-- **One-liner:** First-pass contract review against your own playbook — every
-  flag cites the exact clause and the rule it breaks.
+- **One-liner:** First-pass contract review against your own playbook — every flag
+  cites the exact clause and the rule it breaks.
 - **Pipeline chips:** `segment clauses` → `match your playbook` → `flag risks + cite` → `human review`
 - **Pain bullets:**
-  - **Every NDA is a bottleneck.** Redline does the first pass in minutes and
-    ranks findings by severity, so counsel time goes where it matters.
-  - **AI that cites, or it doesn't count.** A finding without a verifiable
-    citation to the clause and your rule is dropped — zero tolerance.
-  - **Assist, not a lawyer.** A qualified human reviews every report before
-    it's used. Nothing is sent or signed by the agent.
-- **Card footnote (small, muted):** Redline is a review-assist tool, not
-  legal advice.
-- **CTA:** `Vote for Redline` · **Sample link:** `See a sample run →`
+  - **Every NDA is a bottleneck.** Redline does the first pass in minutes and ranks
+    findings by severity, so counsel time goes where it matters.
+  - **AI that cites, or it doesn't count.** A finding without a verifiable citation
+    to the clause and your rule is dropped — zero tolerance.
+  - **Assist, not a lawyer.** A qualified human reviews every report before it's
+    used. Nothing is sent or signed by the agent.
+- **Card footnote (small, muted):** Redline is a review-assist tool, not legal
+  advice.
+- **CTA:** `Get Redline` · **Sample link:** `See a sample run →`
 
 ### Shared card form copy
 - Email placeholder: `you@company.com`
 - Company-size select label: `Company size (optional)` — options:
   `Just me · 2–10 · 11–50 · 51–200 · 200+`
-- Submit: `Cast my vote`
-- Success: `Counted. You're on the {Name} founding list — updates every week.`
+- Submit: `Get started`
+- Success: `Got it. We'll reach out to onboard {Name} onto your stack — usually
+  within a day.`
 - Error: `That didn't go through — mind trying again?`
 
-## 4. How the vote works (Section 5)
+## 4. How Fleet works (Section 5)
 
-**H2:** One vote, three consequences
+**H2:** Adopt an agent in three steps
 
-1. **You vote.** Pick the agent (or agents) you'd actually use. Takes an
-   email and ten seconds.
-2. **We build the winner — in public.** The leaderboard updates weekly.
-   Voters get the build log: what shipped, what the evals say, what's next.
-3. **Voters go first.** When your agent goes live, you're in the first
-   onboarding group, at founding-user pricing.
+1. **Pick your agents.** Start with the one job that hurts most — or take the whole
+   fleet. Per-agent pricing, bundle discount for all five.
+2. **We wire it into your stack.** Your helpdesk, ledger, CRM, tracker, or contract
+   folder — connected and configured with you.
+3. **It runs, you stay in control.** The agent handles the routine work; anything
+   high-stakes waits for your approval, and every step is logged.
 
-## 5. Founding partner section (Section 6)
+## 5. Pricing / build your fleet (Section 6)
 
-**H2:** Ten founding slots per agent. That's not marketing — it's capacity.
+**H2:** Per-agent pricing. Take one, or the whole fleet.
 
-**Intro:** We onboard founding partners personally, so each agent takes
-exactly ten. In exchange for shaping the product, you get:
+**Intro:** Every agent is priced on its own, so you only pay for the work you
+actually hand off. Run all five and the **bundle discount** kicks in.
 
-- **50% off for your first year** — locked at launch.
-- **Direct roadmap input** — your workflow becomes the golden test set the
-  agent must pass before every release.
-- **White-glove onboarding** — we wire it into your stack with you.
-- **Your integrations built first** — your helpdesk, ledger, CRM, or tracker
-  goes to the front of the queue.
+- **Any one agent** — adopt a single agent and onboard it onto your stack.
+- **Any combination** — mix and match; add more agents as your operations grow.
+- **All five (bundle)** — the full back office, at a bundle discount.
 
-**Form heading:** Apply for a founding slot
-**Textarea label:** What's the most painful part of this job today?
-**Submit:** `Apply for a founding slot`
-**Success:** `Application in. A human (the founder) replies within a day.`
-**Slot counter (mono, keep truthful):**
-`Slots open — Triage 10/10 · Payable 10/10 · Prospect 10/10 · Follow-Through 10/10 · Redline 10/10`
+**Launch offer (optional, keep truthful):** Early customers who onboard during
+launch get a founding discount locked for their first year, and their integrations
+built first. This is a launch offer, not a limited-seat gimmick — if it's on the
+page, it's real.
+
+**Selector label:** Build your fleet — pick the agents you want:
+`☐ Triage  ☐ Payable  ☐ Prospect  ☐ Follow-Through  ☐ Redline`
+
+**Form heading:** Get started
+**Textarea label:** What's the most painful part of this job today? (optional)
+**Submit:** `Get started`
+**Success:** `Got it. A human replies within a day to set up the agents you
+picked.`
 
 ## 6. Credibility section (Section 8)
 
 **H2:** Built like production software, not a chat wrapper
 
-**Intro line:** The platform under all five agents already exists. Here's
-what it enforces:
+**Intro line:** The platform under all five agents is real, and here's what it
+enforces:
 
-1. **`eval-gated`** — Every agent ships with a versioned test suite of real
-   cases. A release that scores worse than the last one is blocked from
-   deploying. Automatically.
-2. **`audit-trail`** — Every step — every retrieval, decision, and action —
-   is traced and logged. When you ask "why did it do that?", there's an
-   actual answer.
-3. **`human-in-the-loop`** — Refunds, outbound email, contract findings:
-   anything high-stakes waits for a person. Confidence thresholds are
-   enforced in code, not vibes.
-4. **`google-cloud`** — Runs on Google Cloud's AI stack (Gemini on Vertex
-   AI), with per-customer data isolation from day one.
+1. **`eval-gated`** — Every agent ships with a versioned test suite of real cases.
+   A release that scores worse than the last one is blocked from deploying.
+   Automatically.
+2. **`audit-trail`** — Every step — every retrieval, decision, and action — is
+   traced and logged. When you ask "why did it do that?", there's an actual answer.
+3. **`human-in-the-loop`** — Refunds, outbound email, contract findings: anything
+   high-stakes waits for a person. Confidence thresholds are enforced in code, not
+   vibes.
+4. **`google-cloud`** — Runs on Google Cloud's AI stack (Gemini on Vertex AI), with
+   per-customer data isolation.
 
-## 7. Sample-run modal contents (Hook 4)
+## 7. Sample-run modal contents (Mechanic 4)
 
-Caption on every modal: *Illustrative sample — this is what {Name} will
-produce.* Render in the dark panel style (design.md §Section 4b). Content
-below is literal panel text.
+Caption on every modal: *Sample output — this is what {Name} produces.* Render in
+the dark panel style (design.md §Section 4b). Content below is literal panel text.
 
 ### Triage sample
 ```
@@ -245,53 +250,49 @@ CONTRACT  vendor-msa_draft3.docx — 41 clauses vs your playbook
    every finding cites the exact clause and the rule it breaks
 ```
 
-**Modal footer CTA (all five):** `Want this for your {tickets|invoices|leads|meetings|contracts}? Vote for {Name}.` + email field, button `Vote for {Name}`.
+**Modal footer CTA (all five):** `Want this for your {tickets|invoices|leads|meetings|contracts}? Get {Name}.` + email field, button `Get {Name}`.
 
 ## 8. FAQ (Section 9)
 
-1. **Is any of this live today?**
-   No — and that's the point of this page. The platform underneath (testing,
-   tracing, guardrails, deployment) is built; the five agents are designed
-   and specced. We're building them in demand order instead of guessing.
-   Your vote sets that order.
-2. **What am I committing to by voting?**
-   Nothing. A vote is an email address and product interest. You'll get a
-   short weekly build update; unsubscribe is one click. No card, no charge,
-   no obligation — ever, unless you later choose to become a customer.
-3. **When will the winning agent be usable?**
-   Target: first founding users onboarded within about 8–10 weeks of an
-   agent winning the vote. Founding partners see working versions much
-   earlier and shape them.
+1. **Can I adopt just one agent?**
+   Yes. Pricing is per agent — start with the one job that hurts most. Take any
+   combination, or all five for a bundle discount. Add more as your operations
+   grow.
+2. **What am I committing to by getting started?**
+   A conversation. You give us your email and which agent(s) you want; we reach out
+   to scope wiring it into your stack. No card is charged from this page.
+3. **How does onboarding work?**
+   We connect the agent to the systems it needs — your helpdesk, ledger, CRM,
+   tracker, or contract folder — configure it to your policies, and go live on the
+   agents you chose. Onboarding is per agent.
 4. **What happens to my email and answers?**
-   They're stored in our form provider, used only for build updates and
-   founding-partner contact, never sold or shared. Reply "remove" to any
-   email and we delete you.
-5. **What about my company's data once agents are live?**
-   Per-customer isolation from day one, on Google Cloud. High-stakes actions
-   (refunds, outbound email, contract findings) always require your
-   approval. Full audit logs are a feature, not an add-on.
+   They're stored in our form provider, used only to contact you about onboarding,
+   never sold or shared. Reply "remove" to any email and we delete you.
+5. **What about my company's data once an agent is running?**
+   Per-customer isolation, on Google Cloud. High-stakes actions (refunds, outbound
+   email, contract findings) always require your approval. Full audit logs are a
+   feature, not an add-on.
 6. **Is Redline giving legal advice?**
-   No. Redline is a paralegal-style assist: it does a cited first pass
-   against your own playbook, and a qualified human reviews every report.
-   It is not a lawyer and not legal advice.
+   No. Redline is a paralegal-style assist: it does a cited first pass against your
+   own playbook, and a qualified human reviews every report. It is not a lawyer and
+   not legal advice.
 
 ## 9. Final banner + footer
 
-**Banner H2:** Still reading? That's a vote for *something*.
-**Banner sub:** Tell us which one — or grab updates on all five and decide
-later.
-**Banner buttons/form:** `Back to the five agents` (primary, scrolls up) ·
-inline email + `Get updates on all five`
-**Global form success:** `Done — you'll get the weekly build log for all five.`
+**Banner H2:** Ready to hand off the busywork?
+**Banner sub:** Pick the agents you need — or talk to us and we'll help you choose.
+**Banner buttons/form:** `Back to the five agents` (primary, scrolls up) · inline
+email + `Talk to us`
+**Global form success:** `Done — we'll be in touch about getting you set up.`
 
 **Footer:**
-- Line 1: **Fivefold** — five AI agents for SMB busywork, built in public on
-  one production-grade platform.
+- Line 1: **Fleet** — a fleet of AI agents that run your back office, built on one
+  production-grade platform. More agents coming.
 - Contact: `hello@{domain}` (mailto; owner substitutes real address)
 - Links: `FAQ` · `Privacy` (anchor to the privacy paragraph) · `Redline
   disclaimer` (anchor to FAQ #6)
-- Privacy paragraph (anchor target): We store what you submit on this page —
-  email, product interest, and optional answers — with our form provider,
-  solely to send build updates and contact founding applicants. No resale,
-  no ad targeting. Reply "remove" to any email to be deleted.
-- `© 2026 Fivefold. All five agents are pre-launch and in development.`
+- Privacy paragraph (anchor target): We store what you submit on this page — email,
+  which agents you want, and optional answers — with our form provider, solely to
+  contact you about onboarding. No resale, no ad targeting. Reply "remove" to any
+  email to be deleted.
+- `© 2026 Fleet. A fleet of AI agents for SMB operations.`

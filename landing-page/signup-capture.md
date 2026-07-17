@@ -1,9 +1,9 @@
 # Intent Capture — Backend Recommendation, Fields, Attribution, Analytics
 
 Answers the owner's question directly: **no, you do not need a backend.**
-A static site + a form service captures everything this validation needs.
-Below: the comparison, the one recommendation, the exact field spec, and the
-analytics plan.
+A static site + a form service captures every onboarding request this page
+needs. Below: the comparison, the one recommendation, the exact field spec, and
+the analytics plan.
 
 ---
 
@@ -27,9 +27,9 @@ export), and setup effort.
 
 **Primary: Formspree, one form endpoint for the entire site.**
 
-- All 8 capture points (5 card vote forms, founding form, calculator form,
+- All 8 capture points (5 card adopt forms, pricing form, calculator form,
   global banner form, plus modal footer forms reusing the card pipe) POST to
-  the **same endpoint**; hidden fields distinguish product and hook. One
+  the **same endpoint**; hidden fields distinguish agent and surface. One
   endpoint keeps the free plan's form-count limits irrelevant and puts every
   signup in one export.
 - Submit via `fetch()` (AJAX) so the visitor never leaves the page; Formspree
@@ -57,14 +57,14 @@ GA4 events key off them.
 | Field | Type | Required | Values / notes |
 | --- | --- | --- | --- |
 | `email` | visible input, `type=email` | yes | native validation + `required` |
-| `product` | hidden | yes | `triage \| payable \| prospect \| followthrough \| redline \| all` |
-| `source_cta` | hidden | yes | `vote \| founding \| calculator \| sample_modal \| global` |
+| `product` | hidden | yes | `triage \| payable \| prospect \| followthrough \| redline \| all`; the pricing form carries the selected combination (comma-separated agent ids, or `all` when every agent is checked) |
+| `source_cta` | hidden | yes | `adopt \| pricing \| calculator \| sample_modal \| global` |
 | `company_size` | visible select | no | `solo \| 2-10 \| 11-50 \| 51-200 \| 200+` |
-| `pain` | visible textarea | no (founding form only) | max 280 chars |
+| `pain` | visible textarea | no (pricing form only) | max 280 chars |
 | `calc_a`, `calc_b`, `calc_hours` | hidden | calculator form only | raw slider values + computed hours/mo |
 | `utm_source`, `utm_campaign` | hidden | auto | JS copies them from the page URL query string on load into every form — attributes signups to the traffic post/channel |
 | `_gotcha` | hidden text input (honeypot) | — | Formspree drops submissions where it's filled; also enable reCAPTCHA in Formspree settings |
-| `_subject` | hidden | — | set per-form, e.g. `Vote: payable (calculator)` so the owner's inbox is scannable |
+| `_subject` | hidden | — | set per-form, e.g. `Get started: payable (calculator)` so the owner's inbox is scannable |
 
 **Attribution encoding decision:** hidden fields on distinct forms — NOT
 query params, NOT separate endpoints. Each of the 8 forms is its own `<form>`
@@ -88,11 +88,10 @@ A Google Sheet with two tabs, built once from the first CSV export:
 
 - **Raw**: paste the Formspree CSV export weekly (columns = §3 fields +
   timestamp).
-- **Standings**: per product — votes (`source_cta=vote` + `sample_modal`),
-  calculator signups, founding applications, **intent points**
-  (`votes×1 + calc×2 + founding×3`, per plan.md §5), deduped by
-  email-within-product. These numbers feed the weekly `VOTE_DATA` update on
-  the page and the build decision.
+- **Requests**: per agent — adopt signups (`source_cta=adopt` + `sample_modal`),
+  calculator signups, pricing/get-started requests, and total unique requests,
+  deduped by email-within-agent. This tells the owner which agents to onboard
+  and where interest is concentrated.
 
 ## 6. Analytics (measure intent even without a submit)
 
@@ -104,7 +103,7 @@ Single `gtag.js` snippet in `<head>`. Events (name → params):
 
 | Event | Fired when | Params |
 | --- | --- | --- |
-| `cta_click` | any vote/founding/calculator/global button clicked | `product`, `source_cta` |
+| `cta_click` | any adopt/pricing/calculator/global button clicked | `product`, `source_cta` |
 | `form_submit_ok` | Formspree AJAX success | `product`, `source_cta` |
 | `sample_open` | sample-run modal opened | `product` |
 | `calc_used` | first slider interaction per product per session | `product` |
