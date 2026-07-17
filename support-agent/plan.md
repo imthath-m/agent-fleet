@@ -1,7 +1,7 @@
-# Project One — Support Ticket Triage & Resolution Agent
+# Support Ticket Triage & Resolution Agent
 
-First product. Chosen because it has the broadest SMB market, is the easiest to
-demo, and exercises **every** component of the shared spine.
+One of Fleet's agents. It has the broadest SMB market and exercises **every**
+component of the shared platform.
 
 > This project builds **on top of `shared-infra/`**. It does not re-implement
 > runtime, eval, tracing, logging, observability, guardrails, memory, or CI/CD —

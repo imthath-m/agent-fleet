@@ -1,177 +1,174 @@
-# Landing Page — Master Plan (Demand Validation)
+# Landing Page — Master Plan (Company Site)
 
-**Goal:** validate demand for five pre-launch AI agent products with one page.
-Every visitor action must produce an attributable signal: *email + which product
-+ (optionally) company size / pain*. Whichever product wins gets built first.
+**Goal:** sell and onboard Fleet's five AI agents with one page. A visitor should
+understand what Fleet is, see the five agents, and either adopt the ones they need
+or request onboarding. Every capture is attributable: *email + which agent(s) +
+(optionally) company size / pain*, so the owner knows what each new customer wants.
 
 **This folder is the complete spec.** A frontend intern should be able to build
 the entire page from these four documents without asking questions.
 
 | Doc | Contents |
 | --- | --- |
-| `plan.md` (this file) | Positioning, conversion hooks, end-to-end flow, success criteria, build checklist |
+| `plan.md` (this file) | Positioning, page mechanics, end-to-end flow, success criteria, build checklist |
 | `design.md` | Design system, section-by-section page spec, responsive/a11y/animation, tech stack + hosting |
-| `copy.md` | All final copy: headlines, product cards, FAQ, buttons — paste-ready |
+| `copy.md` | All final copy: headlines, product cards, pricing, FAQ, buttons — paste-ready |
 | `signup-capture.md` | Form-backend comparison + recommendation, exact fields, attribution encoding, analytics |
 
 ---
 
 ## 1. Positioning & narrative
 
-### Site concept: ONE umbrella brand, ONE page, five product cards
+### Site concept: ONE company brand, ONE page, five agent cards
 
-**Decision: a single-page umbrella site with five product cards, each with its
-own CTA.** Not five mini-pages, not five separate sites.
+**Decision: a single-page site for Fleet with five agent cards, each with its own
+adopt CTA, plus a pricing/opt-in section.** Not five mini-pages, not five separate
+sites.
 
 Why:
-- Demand validation needs **comparative signal** — five products on one page
-  lets a visitor self-select, which is exactly the data we want. Separate pages
-  fragment traffic and make comparison impossible.
+- Fleet's whole pitch is **a fleet you assemble** — five agents on one page lets a
+  visitor self-select the combination they need, which is exactly the buying
+  decision. Separate pages fragment the story and hide the bundle.
 - One page = one build, one deploy, one analytics setup. Intern-sized.
-- SEO/ads aren't the channel yet (traffic will be founder-driven: communities,
-  LinkedIn, direct outreach), so per-product landing pages buy nothing.
-- The five products share a real story ("one production-grade platform, five
-  agents"), which makes the umbrella brand credible rather than scattered.
+- The five agents share a real story ("one production-grade platform, five
+  agents") that makes the company credible rather than scattered.
 
-**Umbrella working brand: "Fivefold"** — tagline *"Five AI agents. Built like
-production software. You pick what ships first."*
-- The name is a placeholder decision so the intern isn't blocked. Put it in ONE
-  place (a `<span class="brand">` + a JS/config constant) so it can be swapped
-  in minutes if the owner picks another name or the domain is taken.
-- Product working names (short, evocative, honest — used on cards):
+**Brand: "Fleet"** — tagline concept: *a fleet of AI agents that run your back
+office; add the ones you need, add more as we ship them.*
+- The name lives in ONE place (a `<span class="brand">` + a JS/config constant) so
+  it can be swapped in minutes if the domain requires it.
+- Never lock the brand to "five" — Fleet scales past five agents as we ship them.
+- Agent names (short, evocative, honest — used on cards):
   1. **Triage** — support ticket triage & resolution agent
   2. **Payable** — AP / invoice-processing agent
   3. **Prospect** — lead research & outreach agent
   4. **Follow-Through** — meeting → action agent
   5. **Redline** — contract / compliance review agent
 
-### Honest pre-launch framing
+### Honest framing (a real company, no vaporware)
 
-**Decision: frame the page as a public build-queue vote + founding-user
-program.** Exact framing rules:
+**Decision: frame the page as a real company you can adopt agents from.** Exact
+framing rules:
 
-- The page says plainly, above the fold and in the FAQ: **"These agents are in
-  development. We build the one you vote for first."** No fake "trusted by"
-  logos, no invented testimonials, no fabricated user counts.
-- Signup = "Vote + join the founding list for that agent." What they get:
-  build-progress updates, first access, founding-user pricing.
-- Credibility comes from **how it's engineered**, not fake social proof: a
-  section on the production platform (eval gates, full tracing/audit trail,
+- The page presents the five agents as **available products** an SMB can opt into
+  and onboard — not a roadmap to vote on. No fake "trusted by" logos, no invented
+  testimonials, no fabricated user/customer counts.
+- Signup = "get started / request onboarding for the agent(s) you want." What they
+  get: a real conversation about wiring the agent into their stack.
+- Credibility comes from **how it's engineered**, not fake social proof: a section
+  on the production platform (eval gates, full tracing/audit trail,
   human-in-the-loop, Google Cloud). This is true today — the spine exists.
-- The contract agent always carries the **"assist, not legal advice"**
-  disclaimer (see copy.md), even pre-launch.
-- Never use the word "customers." Use "founding users" / "design partners."
+- The contract agent always carries the **"assist, not legal advice"** disclaimer
+  (see copy.md), everywhere it appears.
+- Don't overclaim specific existing customers. Position as a real, buyable company
+  without inventing who already bought.
 
-This framing turns pre-launch from a weakness into the hook: visitors get
-agency ("you decide what exists"), which no shipped product can offer.
+### Opt-in / bundle model
+
+- **Per-agent pricing.** A visitor can adopt one agent, or any subset.
+- **Bundle discount** when they take all five.
+- The page includes a **"build your fleet" selector / pricing section** so the
+  visitor assembles the combination they want, and the capture carries which
+  agents they selected.
+- An honest **early-customer / design-partner** launch discount MAY be offered —
+  but framed as a launch offer, never tied to voting or fabricated scarcity.
 
 ---
 
-## 2. Conversion hooks (the mechanics, exactly)
+## 2. Page mechanics (the conversion pieces, exactly)
 
-Four mechanics, layered. Every one ends in the same capture pipe
-(`signup-capture.md`) with a distinct `source_cta` value, so we know not just
-*which product* but *which hook* converted.
+Four pieces, layered. Every capture ends in the same pipe (`signup-capture.md`)
+with a distinct `source_cta` value, so the owner knows not just *which agent* but
+*which surface* converted.
 
-### Hook 1 — The Build-Queue Vote (primary; structures the whole page)
+### Mechanic 1 — Adopt-an-agent CTAs (primary; structures the whole page)
 
-**What it is:** "We're building five agents. Vote for the one you need — the
-winner gets built first, and voters get it first."
-
-**How it works on the page:**
-- Each product card's primary CTA is **"Vote for {Name}"**. Clicking opens an
-  inline email form on the card (no redirect, no modal): email + optional
-  company-size select + submit. Hidden fields: `product`, `source_cta=vote`.
-- A **leaderboard strip** near the hero shows the five products as horizontal
-  bars in their accent colors. Until total votes ≥ 25, bars show no numbers —
-  label reads *"Early voting open — standings published weekly."* After 25,
-  the owner updates a small JSON constant in the page weekly with real counts
-  (static site: no live tally, and that's fine — weekly cadence creates a
-  reason to revisit). **Never display invented numbers.**
-- Voting for more than one product is allowed (each is a separate submission —
-  more signal, and multi-votes reveal bundle demand).
-
-**Why it converts:** signup stops being "give us your email for vague updates"
-and becomes **agency** — the visitor's action visibly changes what gets built.
-Voting is also a lighter psychological ask than "join a waitlist" while
-producing the identical data (email + product). It's the honest version of a
-fake-door test: the door is real, it just opens later.
-
-### Hook 2 — Founding Partner slots (scarcity + depth of signal)
-
-**What it is:** "The first 10 companies per agent become design partners:
-50% off for the first year, direct roadmap input, white-glove onboarding, and
-we build your integrations first."
+**What it is:** each agent is a product you can adopt. The card's primary CTA is
+**"Get {Name}"** (or "Add to your plan" / "Start with {Name}").
 
 **How it works on the page:**
-- A dedicated section after the product grid (see design.md §Section 6) with
-  the perk list and a per-product slot counter ("10 of 10 slots open" —
-  manually updated, must always reflect reality; it starts full and that's
-  honest).
-- CTA **"Apply for a founding slot"** opens a slightly longer inline form:
-  email, product select, company size, and one free-text field — *"What's the
-  most painful part of this job today?"* Hidden `source_cta=founding`.
-- Founding applications are the **high-intent tier**: a founding application
-  counts 3x a vote in the build decision (see §5).
+- Clicking opens an inline form on the card (no redirect, no modal): email +
+  optional company-size select + submit. Hidden fields: `product`,
+  `source_cta=adopt`.
+- The visitor can adopt more than one agent (each is a separate submission — this
+  is exactly the bundle signal), or use the pricing selector to pick a combination
+  in one go.
 
-**Why it converts:** scarcity ("10 per product") is credible at this scale and
-true — a solo builder genuinely can't onboard more. The longer form filters
-for seriousness and harvests the pain-point language we'll reuse as copy.
+**Why it works:** the ask is concrete — "start with the agent that matches the
+work you have" — and the per-agent attribution tells the owner precisely what to
+onboard for each new customer.
 
-### Hook 3 — Time-Saved Calculator (engagement → gated capture)
+### Mechanic 2 — Pricing / build-your-fleet selector (the opt-in model, made visible)
 
-**What it is:** a small interactive calculator: pick a product, drag 2 sliders,
-see hours and dollars reclaimed per month.
+**What it is:** "Per-agent pricing. Take one, or take all five for a bundle
+discount." A selector where the visitor checks the agents they want and sees the
+combination.
 
 **How it works on the page:**
-- One shared component with a product tab-switcher; per-product inputs and
-  math are specified in design.md §Section 7 (e.g. Triage: tickets/week ×
-  minutes/ticket; Payable: invoices/month × minutes/invoice; assumptions
-  stated under the result — deflection/automation rates are labeled
-  "target," not claimed fact).
-- The **result shows instantly and ungated** (gating the number itself feels
-  cheap and kills trust). Below the result: *"Get this estimate emailed to you
-  + first access when {Name} launches"* → email field. Hidden fields carry
-  `product`, `source_cta=calculator`, **and the slider values** — so every
-  calculator signup tells us the visitor's actual volume (tickets/week,
-  invoices/month…). That's qualification data no waitlist form gets.
+- A dedicated pricing section after the agent grid (see design.md §Section 6):
+  per-agent price, the all-five bundle discount, and a checkbox selector so the
+  visitor assembles a fleet.
+- CTA **"Get started"** opens a short form: email, the selected agents (carried as
+  `product`), company size, and one optional free-text field — *"What's the most
+  painful part of this job today?"* Hidden `source_cta=pricing`.
+- An honest launch/design-partner discount may live here, framed as a real
+  launch offer — never as fabricated seat scarcity. Keep any number truthful and
+  static-site simple.
 
-**Why it converts:** the calculator does work *for* the visitor before asking
-for anything (reciprocity), personalizes the value prop with their own
-numbers, and converts at the exact moment the pain is quantified in dollars.
+**Why it works:** it makes the opt-in/bundle model legible and lets high-intent
+visitors self-assemble exactly what they'll buy — the richest signal on the page.
 
-### Hook 4 — "Peek at a sample run" (fake-door depth probe, zero backend)
+### Mechanic 3 — Time-Saved Calculator (engagement → capture)
 
-**What it is:** each product card has a secondary text link — *"See a sample
-run →"* — opening a modal with a **static, styled mock artifact** of the
-agent's real output, drawn from each plan.md: a triaged ticket with a cited
-answer and an escalation decision (Triage), an invoice audit trail with a
-caught duplicate (Payable), a scored lead dossier with citations (Prospect),
-a meeting digest with a carried-over action item (Follow-Through), a findings
-table with severities and a suggested redline (Redline). Content is in
-copy.md §7; rendered as styled HTML "terminal/report" panels, not images.
+**What it is:** a small interactive calculator: pick an agent, drag 2 sliders, see
+hours and dollars reclaimed per month.
 
-**How it works:** the modal footer repeats the vote CTA: *"Want this for your
-{tickets/invoices/leads}? Vote for {Name}."* Every modal open fires an
-analytics event `sample_open{product}` — so even non-submitting visitors
-leave a per-product interest trace.
+**How it works on the page:**
+- One shared component with an agent tab-switcher; per-agent inputs and math are
+  in design.md §Section 7 (e.g. Triage: tickets/week × minutes/ticket; Payable:
+  invoices/month × minutes/invoice). Automation/deflection rates are stated as the
+  agent's target/typical capability, labeled as such — product capability, not a
+  guarantee.
+- The **result shows instantly and ungated** (gating the number itself kills
+  trust). Below the result: *"Get this estimate emailed to you + get started with
+  {Name}"* → email field. Hidden fields carry `product`, `source_cta=calculator`,
+  **and the slider values** — so every calculator signup tells the owner the
+  visitor's actual volume (tickets/week, invoices/month…). That's qualification
+  data no plain form gets.
 
-**Why it converts:** pre-launch pages fail when the product feels abstract.
-A concrete artifact ("this is literally what lands in your inbox") makes the
-promise tangible and honest — it's clearly labeled *"Illustrative sample —
-this is what {Name} will produce."* It also measures depth of interest per
-product independent of email submission.
+**Why it works:** the calculator does work *for* the visitor before asking for
+anything (reciprocity), personalizes the value prop with their own numbers, and
+captures at the moment the pain is quantified in dollars.
 
-### CTA structure decision: per-product micro-CTAs, one global fallback
+### Mechanic 4 — "See a sample run" (make the product concrete, zero backend)
 
-- **Every primary CTA is per-product** (vote / founding / calculator all carry
-  a product). This maximizes attribution — the entire point of the page.
-- **One global fallback CTA** exists in the final banner + footer: *"Not sure
-  which? Get the build updates for all five."* → `product=all`,
-  `source_cta=global`. It catches generally-interested visitors without
-  polluting per-product signal.
-- Explicitly rejected: a single global "join waitlist" as primary (destroys
-  attribution), and payment/preorder CTAs (goal is intent, not revenue).
+**What it is:** each agent card has a secondary text link — *"See a sample run →"*
+— opening a modal with a **static, styled artifact** of that agent's output, drawn
+from each plan.md: a triaged ticket with a cited answer and an escalation (Triage),
+an invoice audit trail with a caught duplicate (Payable), a scored lead dossier
+with citations (Prospect), a meeting digest with a carried-over action item
+(Follow-Through), a findings table with severities and a suggested redline
+(Redline). Content is in copy.md §7; rendered as styled HTML "terminal/report"
+panels, not images.
+
+**How it works:** the modal footer repeats the adopt CTA: *"Want this for your
+{tickets/invoices/leads}? Get {Name}."* Every modal open fires an analytics event
+`sample_open{product}` — so even non-submitting visitors leave a per-agent interest
+trace.
+
+**Why it works:** the sample shows exactly what the agent produces — concrete and
+honest, clearly labeled *"Sample output — this is what {Name} produces."* It also
+measures depth of interest per agent independent of email submission.
+
+### CTA structure decision: per-agent micro-CTAs, one global fallback
+
+- **Every primary CTA carries an agent** (adopt / pricing / calculator). This
+  maximizes attribution — the owner learns what each customer wants.
+- **One global fallback CTA** in the final banner + footer: *"Not sure which? Talk
+  to us / get the overview."* → `product=all`, `source_cta=global`. It catches
+  generally-interested visitors without polluting per-agent signal.
+- Explicitly rejected: a single global "contact us" as the only primary (destroys
+  attribution).
 
 ---
 
@@ -180,15 +177,15 @@ product independent of email submission.
 Full comparison and spec in `signup-capture.md`. The decision:
 
 - **No custom backend.** Static site + **Formspree** (one form endpoint, free
-  tier): native HTML forms styled to match the design, product attribution via
+  tier): native HTML forms styled to match the design, per-agent attribution via
   hidden fields, email notification to the owner per signup, CSV export.
 - **Fallback: Tally.so** (free unlimited responses + Google Sheets sync) if
-  Formspree's free 50 submissions/month is exceeded and the owner won't pay
-  $10/mo — being over 50/month is itself a validation success.
-- The GCP Firestore/Cloud Function option is deliberately deferred: it's the
-  *post-validation* upgrade, not worth build time before signal exists.
-- **Analytics: Google Analytics 4** (free) with 6 custom events + scroll
-  depth, so intent is measurable even without a submit.
+  Formspree's free 50 submissions/month is exceeded — being over 50/month means
+  the page is working.
+- The GCP Firestore/Cloud Function option is deliberately deferred: same HTML
+  forms, new `action` URL when there's reason to own the endpoint.
+- **Analytics: Google Analytics 4** (free) with custom events + scroll depth, so
+  intent is measurable even without a submit.
 
 ## 4. Design & build — summary of recommendation
 
@@ -198,10 +195,10 @@ Full spec in `design.md`. The decisions:
   framework, no build step beyond the Tailwind CLI. Hosted on **GitHub Pages**
   (repo already lives on GitHub; free; custom domain when ready).
 - Style: clean light "credible SaaS" base, ink-on-warm-white, indigo primary
-  accent, **five per-product accent hues** used consistently across cards,
-  vote bars, and calculator tabs (color = attribution made visible).
-- Imagery: **no stock AI art, no fake screenshots.** Diagram-style pipeline
-  chips on cards + dark terminal/report-styled sample panels, all HTML/CSS.
+  accent, **five per-agent accent hues** used consistently across cards, pricing
+  selector, and calculator tabs (color = attribution made visible).
+- Imagery: **no stock AI art, no fake screenshots.** Diagram-style pipeline chips
+  on cards + dark terminal/report-styled sample panels, all HTML/CSS.
 - Fonts: Space Grotesk (display) + Inter (body) + JetBrains Mono (samples).
 
 ---
@@ -214,60 +211,51 @@ Full spec in `design.md`. The decisions:
 Visitor lands (LinkedIn post / community link / DM, with ?utm_source=…)
    │
    ▼
-Hero: "Five agents. You pick what ships first." → primary CTA scrolls to grid
+Hero: "A fleet of AI agents that run your back office." → primary CTA scrolls to grid
    │
-   ├── Reads product card → clicks "Vote for {Name}"
+   ├── Reads an agent card → clicks "Get {Name}"
    │       → inline form (email [+ company size]) → POST to Formspree
    │
-   ├── Opens "See a sample run" → modal artifact → vote CTA  (event: sample_open)
+   ├── Opens "See a sample run" → modal artifact → adopt CTA  (event: sample_open)
    │
-   ├── Uses calculator → sees $/month → emails estimate     (source: calculator,
-   │                                                          + volume data)
-   ├── Applies for founding slot → longer form               (source: founding,
-   │                                                          + pain text)
-   └── Unsure → final banner "updates on all five"           (product: all)
+   ├── Uses calculator → sees $/month → emails estimate       (source: calculator,
+   │                                                            + volume data)
+   ├── Pricing selector → picks a combination → "Get started"  (source: pricing,
+   │                                                            + agents + pain)
+   └── Unsure → final banner "talk to us / overview"           (product: all)
    │
    ▼
 Formspree: stores submission, EMAILS THE OWNER instantly per signup
    │
    ▼
-Owner: weekly — export Formspree CSV → tally sheet (template in
-signup-capture.md §5) → update the leaderboard JSON on the page → check GA4
-funnel (views → CTA clicks → submits, per product)
+Owner: replies to onboard the requested agent(s); exports CSV weekly for a simple
+tally; checks GA4 funnel (views → CTA clicks → submits, per agent)
 ```
 
 What the owner sees, concretely: **(a)** one email per signup with all fields,
-**(b)** the Formspree dashboard/CSV of all submissions with product + source +
-qualification fields, **(c)** GA4 per-product event counts. No dashboards to
-build.
+**(b)** the Formspree dashboard/CSV of all submissions with agent + source +
+qualification fields, **(c)** GA4 per-agent event counts. No dashboards to build.
 
-### Success criteria (decide the build queue mechanically)
+### Success criteria (a page that sells)
 
-Scoring: **intent points per product = votes×1 + calculator signups×2 +
-founding applications×3** (weight = effort the visitor invested). Global
-(`product=all`) signups count for nobody.
+The page's job is to turn a qualified visitor into an onboarding conversation.
 
-- **Build trigger:** a product is greenlit when it reaches **30 intent points
-  including ≥3 founding applications, within 4 weeks** of the page getting
-  ≥300 unique visitors. If two products qualify, higher points win;
-  tie-break on founding applications.
-- **Weak-signal trigger:** if after 500 visitors overall conversion
-  (any submit / unique visitors) is **< 2%**, the page — not the products —
-  is the problem: revise hooks/copy before concluding anything.
-- **No-signal trigger:** ≥500 visitors, 4 weeks, no product above 10 points →
-  demand evidence is absent; proceed on the learning roadmap (overview.md)
-  and treat the page as a portfolio piece.
-- Deduplicate by email per product when tallying; the same email across
-  different products is legitimate multi-product interest (note it — it's
-  bundle evidence).
+- **Conversion:** track submits / unique visitors per agent. A healthy page
+  converts interested traffic into per-agent adopt/pricing/calculator signups.
+- **Weak-page trigger:** if after ~500 visitors overall conversion (any submit /
+  unique visitors) is **< 2%**, the page — not the agents — is the problem: revise
+  hooks/copy before concluding anything.
+- **Per-agent read:** an agent with high `sample_open` but low submits is
+  interesting but has a weak card offer → adjust that card's copy.
+- Deduplicate by email per agent when tallying; the same email across different
+  agents is legitimate multi-agent (bundle) interest — note it.
 
 ### Owner ops cadence (post-launch, 15 min/week)
 
 1. Export Formspree CSV → paste into the tally sheet.
-2. Update leaderboard values + founding-slot counters in `index.html`.
-3. Post the weekly standings wherever traffic comes from (the update IS the
-   re-engagement content).
-4. Reply personally to every founding application within 24h.
+2. Reply personally to every onboarding request within 24h.
+3. Update any pricing/launch-offer copy in `index.html` if it changes.
+4. Post updates wherever traffic comes from (new agents shipped, etc.).
 
 ---
 
@@ -275,41 +263,38 @@ founding applications×3** (weight = effort the visitor invested). Global
 
 Work top-to-bottom; each step has a verify gate. Total estimate: 3–5 days.
 
-1. **Read all four docs in this folder**, then skim the five product
-   `plan.md`s only if copy context is unclear. → verify: can state each
-   product's one-liner from memory.
-2. **Scaffold**: `landing-page/site/` with `index.html`, `input.css`,
-   Tailwind CLI build (`design.md` §8), `main.js`. → verify: styled hello
-   page builds and opens locally.
+1. **Read all four docs in this folder**, then skim the five agent `plan.md`s only
+   if copy context is unclear. → verify: can state each agent's one-liner from
+   memory.
+2. **Scaffold**: `landing-page/site/` with `index.html`, `input.css`, Tailwind CLI
+   build (`design.md` §8), `main.js`. → verify: styled hello page builds and opens
+   locally.
 3. **Design tokens**: colors, fonts, spacing from `design.md` §2 as Tailwind
    config + CSS variables. → verify: swatch test page matches hex values.
-4. **Static sections in order** — header, hero, problem strip, product grid
-   (cards only, no forms yet), how-it-works, credibility, FAQ, footer — using
-   final copy from `copy.md`. → verify: full page reads end-to-end, no
-   placeholder text ("lorem" grep returns nothing).
-5. **Leaderboard strip** driven by the `VOTE_DATA` JS constant (design.md §4,
-   Section 3). → verify: editing the constant re-renders bars; pre-threshold
-   state shows no numbers.
+4. **Static sections in order** — header, hero, value strip, agent grid (cards
+   only, no forms yet), how-it-works, pricing, credibility, FAQ, footer — using
+   final copy from `copy.md`. → verify: full page reads end-to-end, no placeholder
+   text ("lorem" grep returns nothing).
+5. **Value strip** (design.md §Section 3) renders the "build your fleet" framing.
+   → verify: matches copy.md.
 6. **Formspree setup**: owner creates the account/endpoint (10 min, see
-   signup-capture.md §4); intern wires the vote form on ONE card. → verify: a
-   real test submission arrives in owner's email with correct `product` and
-   `source_cta`.
-7. **Roll forms out** to all five cards + founding section + global banner.
-   → verify: one test submission per form; every one attributes correctly.
-8. **Sample-run modals** (Hook 4) with the five artifacts from copy.md §7.
-   → verify: keyboard-closable, scrollable on mobile, CTA inside works.
-9. **Calculator** (Hook 3) per design.md §Section 7. → verify: math matches
-   the worked examples; hidden fields carry slider values into the
-   submission email.
-10. **GA4**: add the tag + the 6 events from signup-capture.md §6. → verify:
-    events appear in GA4 DebugView for each CTA.
-11. **Responsive + a11y pass** per design.md §6–7. → verify: Lighthouse
-    ≥ 90 accessibility & performance on mobile; page usable at 360px width;
-    keyboard-only run-through completes a vote.
+   signup-capture.md §4); intern wires the adopt form on ONE card. → verify: a real
+   test submission arrives in owner's email with correct `product` and `source_cta`.
+7. **Roll forms out** to all five cards + pricing section + global banner. →
+   verify: one test submission per form; every one attributes correctly.
+8. **Sample-run modals** (Mechanic 4) with the five artifacts from copy.md §7. →
+   verify: keyboard-closable, scrollable on mobile, CTA inside works.
+9. **Calculator** (Mechanic 3) per design.md §Section 7. → verify: math matches the
+   worked examples; hidden fields carry slider values into the submission email.
+10. **GA4**: add the tag + the events from signup-capture.md §6. → verify: events
+    appear in GA4 DebugView for each CTA.
+11. **Responsive + a11y pass** per design.md §6–7. → verify: Lighthouse ≥ 90
+    accessibility & performance on mobile; page usable at 360px width; keyboard-only
+    run-through completes an adopt.
 12. **Spam guard**: honeypot field + Formspree reCAPTCHA setting. → verify:
     honeypot-filled submission is dropped.
-13. **Deploy to GitHub Pages** (design.md §8). → verify: live URL loads, a
-    live-site test submission arrives, GA4 shows the visit.
-14. **Handoff note to owner**: live URL, how to update `VOTE_DATA` + slot
-    counters, where signups land, the weekly cadence (§5). → verify: owner
-    completes one leaderboard update unassisted.
+13. **Deploy to GitHub Pages** (design.md §8). → verify: live URL loads, a live-site
+    test submission arrives, GA4 shows the visit.
+14. **Handoff note to owner**: live URL, where signups land, how to edit pricing/
+    launch-offer copy, the weekly cadence (§5). → verify: owner completes one copy
+    edit unassisted.
