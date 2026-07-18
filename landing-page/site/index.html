@@ -1,0 +1,554 @@
+<!-- Fleet — landing page. Static: index.html + dist/style.css (Tailwind CLI) + main.js -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet — a fleet of AI agents that run your back office.</title>
+<meta name="description" content="Support tickets, invoices, lead research, meeting follow-ups, contract review — five AI agents on one production-grade platform, built for small teams. Adopt the ones that match the work you have, add more as we ship them.">
+<meta name="theme-color" content="#FAFAF7">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fleet — a fleet of AI agents that run your back office.">
+<meta property="og:description" content="Five AI agents for SMB operations on one production-grade platform. Adopt the ones you need, add more as we ship them.">
+<meta property="og:url" content="https://fleet.example.com/">
+<meta property="og:image" content="og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Favicon: "F" ink glyph on accent-soft, inline SVG data URI -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='6'%20fill='%23EEF2FF'/%3E%3Ctext%20x='16'%20y='23'%20font-family='sans-serif'%20font-size='20'%20font-weight='700'%20text-anchor='middle'%20fill='%230F172A'%3EF%3C/text%3E%3C/svg%3E">
+
+<!-- Google Fonts: one link, display=swap, preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="dist/style.css">
+
+<!-- ============================ HEADER (Section 0) ============================ -->
+<header class="sticky top-0 z-40 bg-bg/90 backdrop-blur border-b border-transparent transition-colors" id="site-header">
+  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Primary">
+    <a href="#top" class="brand font-display font-bold text-xl text-ink">Fleet</a>
+    <div class="flex items-center gap-6">
+      <ul class="hidden md:flex items-center gap-6 text-sm font-medium text-body">
+        <li><a href="#agents" class="hover:text-ink">The agents</a></li>
+        <li><a href="#how" class="hover:text-ink">How it works</a></li>
+        <li><a href="#pricing" class="hover:text-ink">Pricing</a></li>
+        <li><a href="#faq" class="hover:text-ink">FAQ</a></li>
+      </ul>
+      <a href="#agents" class="btn btn-primary">Get started</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============================ HERO (Section 1) ============================ -->
+  <section class="scroll-mt-24" aria-labelledby="hero-h1">
+    <div class="max-w-3xl mx-auto px-6 py-24 md:py-24 text-center">
+      <span class="reveal inline-flex items-center rounded-full bg-accent-soft text-accent px-3 py-1 text-sm font-medium">A fleet of AI agents for your back office</span>
+      <h1 id="hero-h1" class="reveal mt-6">A fleet of AI agents that run your back office. Add the ones you need.</h1>
+      <p class="reveal mt-6 text-lg text-body">Support tickets, invoices, lead research, meeting follow-ups, contract review — five AI agents on one production-grade platform, built for small teams. Adopt the ones that match the work you have, add more as we ship them. Each runs like real software: evaluated, fully audited, and always under your control.</p>
+      <div class="reveal mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#agents" class="btn btn-primary w-full sm:w-auto">See the five agents ↓</a>
+        <a href="#pricing" class="btn btn-secondary w-full sm:w-auto">See pricing</a>
+      </div>
+      <p class="reveal mt-5 text-sm text-muted">Per-agent pricing. Take one, or all five for a bundle discount.</p>
+    </div>
+  </section>
+
+  <!-- ==================== VALUE STRIP / BUILD YOUR FLEET (Section 2) ==================== -->
+  <section class="scroll-mt-24" aria-label="Build your fleet">
+    <div class="max-w-3xl mx-auto px-6 pb-8">
+      <div class="card p-3 sm:p-4">
+        <ul class="divide-y divide-border">
+          <li class="reveal"><a href="#card-triage" class="flex items-center gap-3 rounded-xl bg-triage-soft px-4 py-3 my-1 hover:opacity-90"><span class="w-2.5 h-2.5 rounded-full bg-triage shrink-0"></span><span class="font-display font-medium text-ink">Triage</span><span class="text-muted text-sm ml-auto">Support tickets</span></a></li>
+          <li class="reveal"><a href="#card-payable" class="flex items-center gap-3 rounded-xl bg-payable-soft px-4 py-3 my-1 hover:opacity-90"><span class="w-2.5 h-2.5 rounded-full bg-payable shrink-0"></span><span class="font-display font-medium text-ink">Payable</span><span class="text-muted text-sm ml-auto">Invoices</span></a></li>
+          <li class="reveal"><a href="#card-prospect" class="flex items-center gap-3 rounded-xl bg-prospect-soft px-4 py-3 my-1 hover:opacity-90"><span class="w-2.5 h-2.5 rounded-full bg-prospect shrink-0"></span><span class="font-display font-medium text-ink">Prospect</span><span class="text-muted text-sm ml-auto">Lead research</span></a></li>
+          <li class="reveal"><a href="#card-followthrough" class="flex items-center gap-3 rounded-xl bg-followthrough-soft px-4 py-3 my-1 hover:opacity-90"><span class="w-2.5 h-2.5 rounded-full bg-followthrough shrink-0"></span><span class="font-display font-medium text-ink">Follow-Through</span><span class="text-muted text-sm ml-auto">Meeting follow-ups</span></a></li>
+          <li class="reveal"><a href="#card-redline" class="flex items-center gap-3 rounded-xl bg-redline-soft px-4 py-3 my-1 hover:opacity-90"><span class="w-2.5 h-2.5 rounded-full bg-redline shrink-0"></span><span class="font-display font-medium text-ink">Redline</span><span class="text-muted text-sm ml-auto">Contract review</span></a></li>
+        </ul>
+      </div>
+      <p class="mt-3 text-center text-sm text-muted">Add the agents you need — add more as we ship them.</p>
+    </div>
+  </section>
+
+  <!-- ============================ PROBLEM STRIP (Section 3) ============================ -->
+  <section class="scroll-mt-24" aria-labelledby="problem-h2">
+    <div class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+      <h2 id="problem-h2" class="sr-only-label">Why Fleet exists</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="reveal pt-4 border-t-2 border-accent">
+          <p class="font-display font-medium text-ink text-lg">You are the support team.</p>
+          <p class="mt-2 text-muted">And the AP clerk, and the SDR. Every hour on busywork is an hour off the product.</p>
+        </div>
+        <div class="reveal pt-4 border-t-2 border-accent">
+          <p class="font-display font-medium text-ink text-lg">AI tools overpromise.</p>
+          <p class="mt-2 text-muted">Chat wrappers demo well and then quietly make things up. Nobody audits them, so nobody trusts them.</p>
+        </div>
+        <div class="reveal pt-4 border-t-2 border-accent">
+          <p class="font-display font-medium text-ink text-lg">You need operators, not another chatbot.</p>
+          <p class="mt-2 text-muted">Fleet's agents each own one job end-to-end, with a full audit trail and a human on the high-stakes calls.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ THE FIVE AGENTS (Section 4) ============================ -->
+  <section id="agents" class="scroll-mt-24 bg-bg" aria-labelledby="agents-h2">
+    <div class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+      <h2 id="agents-h2" class="text-center">The five agents</h2>
+      <p class="mt-3 text-center text-muted max-w-2xl mx-auto">Each agent owns one job end-to-end. Adopt the ones that match the work you have.</p>
+
+      <div class="mt-12 grid lg:grid-cols-2 gap-6">
+
+        <!-- Card 1 — Triage -->
+        <article id="card-triage" class="card agent-card p-8 flex flex-col reveal hover:border-t-triage" data-product="triage">
+          <div class="flex items-start justify-between gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-triage-soft text-ink px-3 py-1 text-sm font-medium"><span class="w-2.5 h-2.5 rounded-full bg-triage"></span>Triage · Support</span>
+            <span class="text-xs text-muted whitespace-nowrap mt-1">Available · onboarding now</span>
+          </div>
+          <h3 class="mt-4">Answers routine support tickets with cited answers from your own help docs — and hands the hard ones to you.</h3>
+          <div class="mt-4 flex flex-wrap items-center gap-1.5 font-mono text-xs">
+            <span class="rounded-md bg-triage-soft text-triage px-2 py-1">classify</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-triage-soft text-triage px-2 py-1">answer + cite</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-triage-soft text-triage px-2 py-1">safe actions</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-triage-soft text-triage px-2 py-1">escalate to you</span>
+          </div>
+          <ul class="mt-5 space-y-3 text-sm text-body">
+            <li><strong class="text-ink">First-response time is embarrassing.</strong> Triage drafts a grounded answer the moment a ticket lands — from email, chat, or webform.</li>
+            <li><strong class="text-ink">Same five questions, forever.</strong> Routine tickets get resolved automatically, with citations to your help center, not hallucinations.</li>
+            <li><strong class="text-ink">Scared of AI going rogue?</strong> Refunds and account changes always wait for a human unless you say otherwise. Every step is logged and auditable.</li>
+          </ul>
+          <div class="mt-auto pt-6" data-footer>
+            <div class="flex items-center gap-4 flex-wrap" data-cta-row>
+              <button type="button" class="btn text-white bg-triage" data-adopt="triage">Get Triage</button>
+              <button type="button" class="text-sm font-medium text-triage hover:underline underline-offset-2" data-sample="triage">See a sample run →</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 — Payable -->
+        <article id="card-payable" class="card agent-card p-8 flex flex-col reveal hover:border-t-payable" data-product="payable">
+          <div class="flex items-start justify-between gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-payable-soft text-ink px-3 py-1 text-sm font-medium"><span class="w-2.5 h-2.5 rounded-full bg-payable"></span>Payable · Finance</span>
+            <span class="text-xs text-muted whitespace-nowrap mt-1">Available · onboarding now</span>
+          </div>
+          <h3 class="mt-4">Reads every invoice, checks the math, catches duplicates — and only bothers a human with the genuine exceptions.</h3>
+          <div class="mt-4 flex flex-wrap items-center gap-1.5 font-mono text-xs">
+            <span class="rounded-md bg-payable-soft text-payable px-2 py-1">extract</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-payable-soft text-payable px-2 py-1">validate math + PO</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-payable-soft text-payable px-2 py-1">catch duplicates</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-payable-soft text-payable px-2 py-1">approve or escalate</span>
+          </div>
+          <ul class="mt-5 space-y-3 text-sm text-body">
+            <li><strong class="text-ink">Invoice pile, no AP clerk.</strong> Clean invoices go straight through to your books; you approve only the flagged ones.</li>
+            <li><strong class="text-ink">Double payments happen.</strong> Duplicate detection fingerprints every invoice, so paying the same bill twice stops being a risk.</li>
+            <li><strong class="text-ink">Auditors ask "why was this paid?"</strong> Every invoice keeps a full audit trail: what was extracted, what was checked, who approved it.</li>
+          </ul>
+          <div class="mt-auto pt-6" data-footer>
+            <div class="flex items-center gap-4 flex-wrap" data-cta-row>
+              <button type="button" class="btn text-white bg-payable" data-adopt="payable">Get Payable</button>
+              <button type="button" class="text-sm font-medium text-payable hover:underline underline-offset-2" data-sample="payable">See a sample run →</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 — Prospect -->
+        <article id="card-prospect" class="card agent-card p-8 flex flex-col reveal hover:border-t-prospect" data-product="prospect">
+          <div class="flex items-start justify-between gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-prospect-soft text-ink px-3 py-1 text-sm font-medium"><span class="w-2.5 h-2.5 rounded-full bg-prospect"></span>Prospect · Sales</span>
+            <span class="text-xs text-muted whitespace-nowrap mt-1">Available · onboarding now</span>
+          </div>
+          <h3 class="mt-4">Researches every lead on the open web, scores it against your ideal customer, and drafts outreach you approve before anything sends.</h3>
+          <div class="mt-4 flex flex-wrap items-center gap-1.5 font-mono text-xs">
+            <span class="rounded-md bg-prospect-soft text-prospect px-2 py-1">research</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-prospect-soft text-prospect px-2 py-1">score vs your ICP</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-prospect-soft text-prospect px-2 py-1">draft w/ evidence</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-prospect-soft text-prospect px-2 py-1">you approve</span>
+          </div>
+          <ul class="mt-5 space-y-3 text-sm text-body">
+            <li><strong class="text-ink">An hour of googling per lead.</strong> Prospect builds the dossier in minutes — industry, size, tech, buying signals — every fact cited to its source.</li>
+            <li><strong class="text-ink">Templates that scream template.</strong> Drafts are personalized from real evidence about the company, not <code class="font-mono text-xs bg-prospect-soft text-prospect px-1 rounded">{first_name}</code> tricks.</li>
+            <li><strong class="text-ink">Nothing sends without you.</strong> Every single draft waits for your approval. Your reputation stays yours.</li>
+          </ul>
+          <div class="mt-auto pt-6" data-footer>
+            <div class="flex items-center gap-4 flex-wrap" data-cta-row>
+              <button type="button" class="btn text-ink bg-prospect-soft" data-adopt="prospect">Get Prospect</button>
+              <button type="button" class="text-sm font-medium text-prospect hover:underline underline-offset-2" data-sample="prospect">See a sample run →</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 4 — Follow-Through -->
+        <article id="card-followthrough" class="card agent-card p-8 flex flex-col reveal hover:border-t-followthrough" data-product="followthrough">
+          <div class="flex items-start justify-between gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-followthrough-soft text-ink px-3 py-1 text-sm font-medium"><span class="w-2.5 h-2.5 rounded-full bg-followthrough"></span>Follow-Through · Ops</span>
+            <span class="text-xs text-muted whitespace-nowrap mt-1">Available · onboarding now</span>
+          </div>
+          <h3 class="mt-4">Turns every meeting into owned, dated action items — and remembers what was promised last week.</h3>
+          <div class="mt-4 flex flex-wrap items-center gap-1.5 font-mono text-xs">
+            <span class="rounded-md bg-followthrough-soft text-followthrough px-2 py-1">transcript in</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-followthrough-soft text-followthrough px-2 py-1">extract actions</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-followthrough-soft text-followthrough px-2 py-1">check past promises</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-followthrough-soft text-followthrough px-2 py-1">route + digest</span>
+          </div>
+          <ul class="mt-5 space-y-3 text-sm text-body">
+            <li><strong class="text-ink">Decisions evaporate by Friday.</strong> Every action item gets an owner, a due date, and a ticket in your tracker — automatically.</li>
+            <li><strong class="text-ink">"Didn't you say you'd ship that?"</strong> Cross-meeting memory resurfaces last week's unresolved commitments so nothing silently dies.</li>
+            <li><strong class="text-ink">No ops person to chase people.</strong> A digest goes to participants after every meeting; external emails always get a human OK first.</li>
+          </ul>
+          <div class="mt-auto pt-6" data-footer>
+            <div class="flex items-center gap-4 flex-wrap" data-cta-row>
+              <button type="button" class="btn text-white bg-followthrough" data-adopt="followthrough">Get Follow-Through</button>
+              <button type="button" class="text-sm font-medium text-followthrough hover:underline underline-offset-2" data-sample="followthrough">See a sample run →</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 5 — Redline (centered full-row) -->
+        <article id="card-redline" class="card agent-card p-8 flex flex-col reveal hover:border-t-redline lg:col-span-2 lg:max-w-[calc(50%-12px)] lg:mx-auto" data-product="redline">
+          <div class="flex items-start justify-between gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-redline-soft text-ink px-3 py-1 text-sm font-medium"><span class="w-2.5 h-2.5 rounded-full bg-redline"></span>Redline · Legal</span>
+            <span class="text-xs text-muted whitespace-nowrap mt-1">Available · onboarding now</span>
+          </div>
+          <h3 class="mt-4">First-pass contract review against your own playbook — every flag cites the exact clause and the rule it breaks.</h3>
+          <div class="mt-4 flex flex-wrap items-center gap-1.5 font-mono text-xs">
+            <span class="rounded-md bg-redline-soft text-redline px-2 py-1">segment clauses</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-redline-soft text-redline px-2 py-1">match your playbook</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-redline-soft text-redline px-2 py-1">flag risks + cite</span><span class="text-muted">→</span>
+            <span class="rounded-md bg-redline-soft text-redline px-2 py-1">human review</span>
+          </div>
+          <ul class="mt-5 space-y-3 text-sm text-body">
+            <li><strong class="text-ink">Every NDA is a bottleneck.</strong> Redline does the first pass in minutes and ranks findings by severity, so counsel time goes where it matters.</li>
+            <li><strong class="text-ink">AI that cites, or it doesn't count.</strong> A finding without a verifiable citation to the clause and your rule is dropped — zero tolerance.</li>
+            <li><strong class="text-ink">Assist, not a lawyer.</strong> A qualified human reviews every report before it's used. Nothing is sent or signed by the agent.</li>
+          </ul>
+          <p class="mt-4 text-xs text-muted">Redline is a review-assist tool, not legal advice.</p>
+          <div class="mt-auto pt-6" data-footer>
+            <div class="flex items-center gap-4 flex-wrap" data-cta-row>
+              <button type="button" class="btn text-white bg-redline" data-adopt="redline">Get Redline</button>
+              <button type="button" class="text-sm font-medium text-redline hover:underline underline-offset-2" data-sample="redline">See a sample run →</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HOW FLEET WORKS (Section 5) ============================ -->
+  <section id="how" class="scroll-mt-24" aria-labelledby="how-h2">
+    <div class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+      <h2 id="how-h2" class="text-center">Adopt an agent in three steps</h2>
+      <div class="mt-12 grid md:grid-cols-3 gap-8">
+        <div class="reveal">
+          <div class="font-display font-bold text-accent" style="font-size:3rem;line-height:1">1</div>
+          <p class="mt-2 font-display font-medium text-ink text-lg">Pick your agents.</p>
+          <p class="mt-2 text-muted">Start with the one job that hurts most — or take the whole fleet. Per-agent pricing, bundle discount for all five.</p>
+        </div>
+        <div class="reveal">
+          <div class="font-display font-bold text-accent" style="font-size:3rem;line-height:1">2</div>
+          <p class="mt-2 font-display font-medium text-ink text-lg">We wire it into your stack.</p>
+          <p class="mt-2 text-muted">Your helpdesk, ledger, CRM, tracker, or contract folder — connected and configured with you.</p>
+        </div>
+        <div class="reveal">
+          <div class="font-display font-bold text-accent" style="font-size:3rem;line-height:1">3</div>
+          <p class="mt-2 font-display font-medium text-ink text-lg">It runs, you stay in control.</p>
+          <p class="mt-2 text-muted">The agent handles the routine work; anything high-stakes waits for your approval, and every step is logged.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PRICING (Section 6) ============================ -->
+  <section id="pricing" class="scroll-mt-24 bg-ink text-white" aria-labelledby="pricing-h2">
+    <div class="max-w-6xl mx-auto px-6 py-16 md:py-24 grid lg:grid-cols-2 gap-12 items-start">
+      <div class="reveal">
+        <h2 id="pricing-h2" class="text-white">Per-agent pricing. Take one, or the whole fleet.</h2>
+        <p class="mt-4 text-panel-text">Every agent is priced on its own, so you only pay for the work you actually hand off. Run all five and the <strong class="text-white">bundle discount</strong> kicks in.</p>
+        <ul class="mt-8 space-y-4">
+          <li class="border-b border-white/10 pb-4"><span class="font-display font-medium text-white text-lg">Any one agent</span><span class="block text-panel-text mt-1">Adopt a single agent and onboard it onto your stack.</span></li>
+          <li class="border-b border-white/10 pb-4"><span class="font-display font-medium text-white text-lg">Any combination</span><span class="block text-panel-text mt-1">Mix and match; add more agents as your operations grow.</span></li>
+          <li class="pb-4"><span class="font-display font-medium text-white text-lg">All five (bundle)</span><span class="block text-panel-text mt-1">The full back office, at a bundle discount.</span></li>
+        </ul>
+        <p class="mt-6 text-sm text-panel-text flex gap-2"><span class="text-success" aria-hidden="true">✓</span><span>Early customers who onboard during launch get a founding discount locked for their first year, and their integrations built first. This is a launch offer, not a limited-seat gimmick — if it's on the page, it's real.</span></p>
+      </div>
+
+      <div class="reveal card p-6 sm:p-8 text-body">
+        <h3 class="text-ink">Get started</h3>
+        <form class="capture-form mt-6" data-source="pricing" novalidate>
+          <input type="hidden" name="product" value="">
+          <input type="hidden" name="source_cta" value="pricing">
+          <input type="hidden" name="_subject" value="Get started: pricing selector">
+          <input type="hidden" name="utm_source" value="" data-utm="utm_source">
+          <input type="hidden" name="utm_campaign" value="" data-utm="utm_campaign">
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+
+          <fieldset>
+            <legend class="text-sm font-medium text-ink mb-2">Build your fleet — pick the agents you want:</legend>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="flex items-center gap-2 rounded-lg border border-border px-3 py-2 cursor-pointer hover:bg-triage-soft"><input type="checkbox" class="fleet-pick accent-triage" value="triage"><span class="text-sm text-ink">Triage</span></label>
+              <label class="flex items-center gap-2 rounded-lg border border-border px-3 py-2 cursor-pointer hover:bg-payable-soft"><input type="checkbox" class="fleet-pick" value="payable"><span class="text-sm text-ink">Payable</span></label>
+              <label class="flex items-center gap-2 rounded-lg border border-border px-3 py-2 cursor-pointer hover:bg-prospect-soft"><input type="checkbox" class="fleet-pick" value="prospect"><span class="text-sm text-ink">Prospect</span></label>
+              <label class="flex items-center gap-2 rounded-lg border border-border px-3 py-2 cursor-pointer hover:bg-followthrough-soft"><input type="checkbox" class="fleet-pick" value="followthrough"><span class="text-sm text-ink">Follow-Through</span></label>
+              <label class="flex items-center gap-2 rounded-lg border border-border px-3 py-2 cursor-pointer hover:bg-redline-soft col-span-2"><input type="checkbox" class="fleet-pick" value="redline"><span class="text-sm text-ink">Redline</span></label>
+            </div>
+          </fieldset>
+
+          <div class="mt-4 space-y-3">
+            <label class="block"><span class="sr-only-label">Work email</span><input class="input" type="email" name="email" required placeholder="you@company.com"></label>
+            <label class="block"><span class="text-sm font-medium text-ink">Company size (optional)</span>
+              <select class="input mt-1" name="company_size">
+                <option value="">Company size (optional)</option>
+                <option value="solo">Just me</option>
+                <option value="2-10">2–10</option>
+                <option value="11-50">11–50</option>
+                <option value="51-200">51–200</option>
+                <option value="200+">200+</option>
+              </select>
+            </label>
+            <label class="block"><span class="text-sm font-medium text-ink">What's the most painful part of this job today? (optional)</span>
+              <textarea class="input mt-1" name="pain" rows="3" maxlength="280" placeholder="Tell us where it hurts…"></textarea>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary w-full mt-4" data-cta>Get started</button>
+          <p class="capture-error text-sm text-redline mt-3 hidden" role="alert" aria-live="polite">That didn't go through — mind trying again?</p>
+        </form>
+        <p class="capture-success text-success font-medium mt-4 hidden" role="status" aria-live="polite">Got it. A human replies within a day to set up the agents you picked.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CALCULATOR (Section 7) ============================ -->
+  <section id="calculator" class="scroll-mt-24" aria-labelledby="calc-h2">
+    <div class="max-w-3xl mx-auto px-6 py-16 md:py-24">
+      <h2 id="calc-h2" class="text-center">See the hours you'd get back</h2>
+      <p class="mt-3 text-center text-muted">Pick an agent, set your volumes, and see the time and cost reclaimed each month.</p>
+
+      <div class="mt-10 card p-6 sm:p-8">
+        <!-- Tabs -->
+        <div class="flex flex-wrap gap-2" role="tablist" aria-label="Choose an agent">
+          <button role="tab" class="calc-tab rounded-full px-4 py-2 text-sm font-medium" data-tab="triage">Triage</button>
+          <button role="tab" class="calc-tab rounded-full px-4 py-2 text-sm font-medium" data-tab="payable">Payable</button>
+          <button role="tab" class="calc-tab rounded-full px-4 py-2 text-sm font-medium" data-tab="prospect">Prospect</button>
+          <button role="tab" class="calc-tab rounded-full px-4 py-2 text-sm font-medium" data-tab="followthrough">Follow-Through</button>
+          <button role="tab" class="calc-tab rounded-full px-4 py-2 text-sm font-medium" data-tab="redline">Redline</button>
+        </div>
+
+        <div class="mt-8 grid gap-6">
+          <div>
+            <div class="flex items-baseline justify-between">
+              <label for="calc-a" id="calc-a-label" class="text-sm font-medium text-ink">Slider A</label>
+              <span id="calc-a-val" class="font-mono text-ink">0</span>
+            </div>
+            <input type="range" id="calc-a" class="mt-2" aria-labelledby="calc-a-label">
+          </div>
+          <div>
+            <div class="flex items-baseline justify-between">
+              <label for="calc-b" id="calc-b-label" class="text-sm font-medium text-ink">Slider B</label>
+              <span id="calc-b-val" class="font-mono text-ink">0</span>
+            </div>
+            <input type="range" id="calc-b" class="mt-2" aria-labelledby="calc-b-label">
+          </div>
+          <p id="calc-capability" class="text-sm text-muted"></p>
+        </div>
+
+        <div class="mt-8 rounded-2xl bg-bg border border-border p-6 text-center">
+          <div id="calc-hours-out" class="font-mono font-medium text-triage" style="font-size:2.5rem;line-height:1.1">28 hrs/month</div>
+          <div id="calc-dollars-out" class="font-mono text-body mt-1" style="font-size:1.5rem">$1,050/month</div>
+          <p class="mt-2 text-xs text-muted">at a $38/hr loaded ops cost — adjustable soon</p>
+        </div>
+
+        <form class="capture-form mt-6" data-source="calculator" novalidate>
+          <input type="hidden" name="product" value="triage">
+          <input type="hidden" name="source_cta" value="calculator">
+          <input type="hidden" name="_subject" value="Get started: triage (calculator)">
+          <input type="hidden" name="calc_a" value="">
+          <input type="hidden" name="calc_b" value="">
+          <input type="hidden" name="calc_hours" value="">
+          <input type="hidden" name="utm_source" value="" data-utm="utm_source">
+          <input type="hidden" name="utm_campaign" value="" data-utm="utm_campaign">
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <label class="block flex-1"><span class="sr-only-label">Work email</span><input class="input" type="email" name="email" required placeholder="you@company.com"></label>
+            <button type="submit" class="btn btn-primary whitespace-nowrap" data-cta>Email me this estimate + get started</button>
+          </div>
+          <p class="capture-error text-sm text-redline mt-3 hidden" role="alert" aria-live="polite">That didn't go through — mind trying again?</p>
+        </form>
+        <p class="capture-success text-success font-medium mt-4 hidden" role="status" aria-live="polite">Got it. A human will send your estimate and reach out to get you started.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CREDIBILITY (Section 8) ============================ -->
+  <section class="scroll-mt-24 bg-bg" aria-labelledby="cred-h2">
+    <div class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+      <h2 id="cred-h2" class="text-center">Built like production software, not a chat wrapper</h2>
+      <p class="mt-3 text-center text-muted max-w-2xl mx-auto">The platform under all five agents is real, and here's what it enforces:</p>
+      <div class="mt-12 grid sm:grid-cols-2 gap-6">
+        <div class="reveal card p-6">
+          <span class="font-mono text-sm text-accent bg-accent-soft rounded px-2 py-1">eval-gated</span>
+          <p class="mt-3 text-body">Every agent ships with a versioned test suite of real cases. A release that scores worse than the last one is blocked from deploying. Automatically.</p>
+        </div>
+        <div class="reveal card p-6">
+          <span class="font-mono text-sm text-accent bg-accent-soft rounded px-2 py-1">audit-trail</span>
+          <p class="mt-3 text-body">Every step — every retrieval, decision, and action — is traced and logged. When you ask "why did it do that?", there's an actual answer.</p>
+        </div>
+        <div class="reveal card p-6">
+          <span class="font-mono text-sm text-accent bg-accent-soft rounded px-2 py-1">human-in-the-loop</span>
+          <p class="mt-3 text-body">Refunds, outbound email, contract findings: anything high-stakes waits for a person. Confidence thresholds are enforced in code, not vibes.</p>
+        </div>
+        <div class="reveal card p-6">
+          <span class="font-mono text-sm text-accent bg-accent-soft rounded px-2 py-1">google-cloud</span>
+          <p class="mt-3 text-body">Runs on Google Cloud's AI stack (Gemini on Vertex AI), with per-customer data isolation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FAQ (Section 9) ============================ -->
+  <section id="faq" class="scroll-mt-24" aria-labelledby="faq-h2">
+    <div class="max-w-3xl mx-auto px-6 py-16 md:py-24">
+      <h2 id="faq-h2" class="text-center">Questions, answered straight</h2>
+      <div class="mt-10 space-y-3">
+        <details class="faq card p-5"><summary class="flex items-center justify-between gap-3 font-display font-medium text-ink"><span>Can I adopt just one agent?</span><span class="chev text-muted" aria-hidden="true">▾</span></summary><p class="mt-3 text-body">Yes. Pricing is per agent — start with the one job that hurts most. Take any combination, or all five for a bundle discount. Add more as your operations grow.</p></details>
+        <details class="faq card p-5"><summary class="flex items-center justify-between gap-3 font-display font-medium text-ink"><span>What am I committing to by getting started?</span><span class="chev text-muted" aria-hidden="true">▾</span></summary><p class="mt-3 text-body">A conversation. You give us your email and which agent(s) you want; we reach out to scope wiring it into your stack. No card is charged from this page.</p></details>
+        <details class="faq card p-5"><summary class="flex items-center justify-between gap-3 font-display font-medium text-ink"><span>How does onboarding work?</span><span class="chev text-muted" aria-hidden="true">▾</span></summary><p class="mt-3 text-body">We connect the agent to the systems it needs — your helpdesk, ledger, CRM, tracker, or contract folder — configure it to your policies, and go live on the agents you chose. Onboarding is per agent.</p></details>
+        <details class="faq card p-5"><summary class="flex items-center justify-between gap-3 font-display font-medium text-ink"><span>What happens to my email and answers?</span><span class="chev text-muted" aria-hidden="true">▾</span></summary><p class="mt-3 text-body">They're stored in our form provider, used only to contact you about onboarding, never sold or shared. Reply "remove" to any email and we delete you.</p></details>
+        <details class="faq card p-5"><summary class="flex items-center justify-between gap-3 font-display font-medium text-ink"><span>What about my company's data once an agent is running?</span><span class="chev text-muted" aria-hidden="true">▾</span></summary><p class="mt-3 text-body">Per-customer isolation, on Google Cloud. High-stakes actions (refunds, outbound email, contract findings) always require your approval. Full audit logs are a feature, not an add-on.</p></details>
+        <details id="redline-disclaimer" class="faq card p-5"><summary class="flex items-center justify-between gap-3 font-display font-medium text-ink"><span>Is Redline giving legal advice?</span><span class="chev text-muted" aria-hidden="true">▾</span></summary><p class="mt-3 text-body">No. Redline is a paralegal-style assist: it does a cited first pass against your own playbook, and a qualified human reviews every report. It is not a lawyer and not legal advice.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FINAL CTA BANNER (Section 10) ============================ -->
+  <section class="scroll-mt-24 bg-accent-soft" aria-labelledby="final-h2">
+    <div class="max-w-3xl mx-auto px-6 py-16 md:py-24 text-center">
+      <h2 id="final-h2">Ready to hand off the busywork?</h2>
+      <p class="mt-3 text-body">Pick the agents you need — or talk to us and we'll help you choose.</p>
+      <div class="mt-8 flex flex-col items-center gap-6">
+        <a href="#agents" class="btn btn-primary">Back to the five agents</a>
+        <form class="capture-form w-full max-w-md" data-source="global" novalidate>
+          <input type="hidden" name="product" value="all">
+          <input type="hidden" name="source_cta" value="global">
+          <input type="hidden" name="_subject" value="Get started: talk to us (global)">
+          <input type="hidden" name="utm_source" value="" data-utm="utm_source">
+          <input type="hidden" name="utm_campaign" value="" data-utm="utm_campaign">
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <label class="block flex-1"><span class="sr-only-label">Work email</span><input class="input" type="email" name="email" required placeholder="you@company.com"></label>
+            <button type="submit" class="btn btn-primary whitespace-nowrap" data-cta>Talk to us</button>
+          </div>
+          <p class="capture-error text-sm text-redline mt-3 hidden" role="alert" aria-live="polite">That didn't go through — mind trying again?</p>
+        </form>
+        <p class="capture-success text-success font-medium hidden" role="status" aria-live="polite">Done — we'll be in touch about getting you set up.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================ FOOTER (Section 11) ============================ -->
+<footer class="bg-ink text-panel-text">
+  <div class="max-w-6xl mx-auto px-6 py-16">
+    <p class="font-display font-bold text-white text-lg">Fleet</p>
+    <p class="mt-2 max-w-2xl">A fleet of AI agents that run your back office, built on one production-grade platform. More agents coming.</p>
+    <p class="mt-4"><a class="underline hover:text-white" href="mailto:hello@fleet.example.com">hello@fleet.example.com</a></p>
+    <nav class="mt-4 flex flex-wrap gap-4 text-sm" aria-label="Footer">
+      <a class="hover:text-white" href="#faq">FAQ</a>
+      <a class="hover:text-white" href="#privacy">Privacy</a>
+      <a class="hover:text-white" href="#redline-disclaimer">Redline disclaimer</a>
+    </nav>
+    <p id="privacy" class="scroll-mt-24 mt-6 max-w-2xl text-sm text-panel-text/80">We store what you submit on this page — email, which agents you want, and optional answers — with our form provider, solely to contact you about onboarding. No resale, no ad targeting. Reply "remove" to any email to be deleted.</p>
+    <p class="mt-6 text-sm text-panel-text/70">© 2026 Fleet. A fleet of AI agents for SMB operations.</p>
+  </div>
+</footer>
+
+<!-- ==================== HIDDEN: sample-run payloads (Section 4b, copy.md §7) ==================== -->
+<div id="samples" hidden>
+  <pre data-sample="triage" data-name="Triage" data-noun="tickets"><span class="text-triage">TICKET #4821</span>  "I was charged twice this month??"
+<span class="text-triage">─ classify</span>   intent=billing/duplicate-charge  priority=high  sentiment=upset
+<span class="text-triage">─ retrieve</span>   kb: "Duplicate charges &amp; refunds" (§2) — cited
+<span class="text-triage">─ draft</span>      "Hi Maya — you're right, order #7731 was charged twice on
+             Jul 3. I've flagged the duplicate for refund (3–5 business
+             days). Here's how to check status: …"  [cites KB §2]
+<span class="text-triage">─ action</span>     issue_refund($49) → <span class="text-amber-400">HIGH-RISK</span> → held for human approval
+<span class="text-triage">─ status</span>     <span class="text-rose-400">ESCALATED</span> → your queue (reason: refund over auto-approve limit)
+   response drafted in 41s · every step above is logged</pre>
+
+  <pre data-sample="payable" data-name="Payable" data-noun="invoices"><span class="text-payable">INVOICE</span>  acme-supplies_0117.pdf
+<span class="text-payable">─ extract</span>    vendor=Acme Supplies  no=INV-0117  total=$2,340.00  conf=0.98
+<span class="text-payable">─ validate</span>   line items sum ✓ · PO-88231 match ✓ · vendor on file ✓
+<span class="text-payable">─ duplicate</span>  <span class="text-amber-400">⚠</span> fingerprint matches INV-0117 posted Jun 14 ($2,340.00)
+<span class="text-payable">─ status</span>     <span class="text-rose-400">DUPLICATE — HELD.</span>  Nothing posted to your ledger.
+<span class="text-payable">─ audit</span>      full trail saved: extraction, checks, decision, reviewer
+   clean invoices post straight through — only exceptions reach you</pre>
+
+  <pre data-sample="prospect" data-name="Prospect" data-noun="leads"><span class="text-prospect">LEAD</span>  Dana Reyes — Head of Ops, Brightpath Logistics (brightpath.com)
+<span class="text-prospect">─ research</span>   industry=3PL logistics [1] · headcount≈120 [2] ·
+             signal: hiring 3 dispatchers [2] · stack: legacy TMS [3]
+<span class="text-prospect">─ score</span>      ICP fit 82/100 → Tier A  (rules, not model vibes)
+<span class="text-prospect">─ draft</span>      "Dana — saw Brightpath is adding dispatch headcount [2].
+             Teams on legacy TMS usually feel routing pain first…"
+<span class="text-prospect">─ status</span>     <span class="text-amber-400">DRAFT PENDING YOUR APPROVAL</span> — nothing has been sent
+   [1][2][3] = live citations to the pages the facts came from</pre>
+
+  <pre data-sample="followthrough" data-name="Follow-Through" data-noun="meetings"><span class="text-followthrough">MEETING</span>  "Weekly product sync" — 34 min, 5 participants
+<span class="text-followthrough">─ actions</span>    ① Sam: ship CSV export — Fri Jul 17 → ticket ENG-291 created
+             ② Priya: reply to Northwind pricing → <span class="text-amber-400">EXTERNAL EMAIL</span>,
+               draft held for approval
+<span class="text-followthrough">─ memory</span>     <span class="text-amber-400">⚠</span> carry-over: "Alice: fix onboarding bug" (Jul 5) — <span class="text-rose-400">STILL OPEN</span>,
+               re-flagged in digest
+<span class="text-followthrough">─ digest</span>     summary + 2 new actions + 1 overdue → sent to participants
+   nothing said in a meeting gets to quietly die</pre>
+
+  <pre data-sample="redline" data-name="Redline" data-noun="contracts"><span class="text-redline">CONTRACT</span>  vendor-msa_draft3.docx — 41 clauses vs your playbook
+<span class="text-rose-400">─ CRITICAL</span>   §9 Indemnification — uncapped. Violates rule LIA-2
+             ("liability capped at 12 months of fees")  [cites §9 + LIA-2]
+             suggested redline: "…liability shall not exceed fees paid in
+             the twelve (12) months preceding the claim." (SUGGESTION)
+<span class="text-amber-400">─ HIGH</span>       §14 auto-renewal, 12-mo term, 90-day notice → rule REN-1
+<span class="text-muted">─ INFO</span>       governing law: Delaware ✓ matches playbook
+<span class="text-redline">─ status</span>     REPORT → HUMAN REVIEW. Assist, not legal advice.
+   every finding cites the exact clause and the rule it breaks</pre>
+</div>
+
+<!-- ==================== SAMPLE-RUN MODAL (Section 4b) ==================== -->
+<div id="modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="absolute inset-0 bg-ink/60" data-modal-close></div>
+  <div class="relative min-h-full flex items-stretch sm:items-center justify-center sm:p-6">
+    <div class="bg-panel w-full sm:max-w-2xl sm:rounded-2xl overflow-hidden flex flex-col max-h-full">
+      <!-- window bar -->
+      <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10">
+        <span class="w-3 h-3 rounded-full bg-rose-400"></span>
+        <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+        <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+        <span class="ml-3 font-mono text-xs text-panel-text/70">sample-output.log — illustrative</span>
+        <button type="button" class="ml-auto text-panel-text hover:text-white text-xl leading-none" data-modal-close aria-label="Close">✕</button>
+      </div>
+      <div class="p-5 overflow-y-auto">
+        <h2 id="modal-title" class="text-sm font-medium text-panel-text mb-3"><span class="italic">Sample output — this is what <span data-modal-name>Triage</span> produces.</span></h2>
+        <div id="modal-body" class="overflow-x-auto font-mono text-panel-text" style="font-size:0.8125rem;line-height:1.6"></div>
+
+        <div class="mt-6 pt-5 border-t border-white/10">
+          <p class="text-panel-text text-sm mb-3" data-modal-cta-text></p>
+          <form class="capture-form" data-source="sample_modal" novalidate>
+            <input type="hidden" name="product" value="triage">
+            <input type="hidden" name="source_cta" value="sample_modal">
+            <input type="hidden" name="_subject" value="Get started: triage (sample modal)">
+            <input type="hidden" name="utm_source" value="" data-utm="utm_source">
+            <input type="hidden" name="utm_campaign" value="" data-utm="utm_campaign">
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+            <div class="flex flex-col sm:flex-row gap-2">
+              <label class="block flex-1"><span class="sr-only-label">Work email</span><input class="input bg-white/5 border-white/15 text-white placeholder:text-panel-text/60" type="email" name="email" required placeholder="you@company.com"></label>
+              <button type="submit" class="btn text-white bg-accent hover:bg-accent-hover whitespace-nowrap" data-cta data-modal-submit>Get Triage</button>
+            </div>
+            <p class="capture-error text-sm text-rose-400 mt-3 hidden" role="alert" aria-live="polite">That didn't go through — mind trying again?</p>
+          </form>
+          <p class="capture-success text-emerald-400 font-medium mt-3 hidden" role="status" aria-live="polite" data-modal-success></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="main.js"></script>

@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Design tokens as CSS variables (mirror tailwind.config.js §2) ---- */
+:root {
+  --ink: #0F172A;
+  --body: #334155;
+  --muted: #64748B;
+  --bg: #FAFAF7;
+  --surface: #FFFFFF;
+  --border: #E2E8F0;
+  --accent: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-soft: #EEF2FF;
+  --success: #059669;
+  --panel: #0B1220;
+  --panel-text: #C9D4E3;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-body font-sans antialiased;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  h1, h2, h3 {
+    @apply font-display text-ink;
+  }
+  h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); letter-spacing: -0.02em; line-height: 1.05; font-weight: 700; }
+  h2 { font-size: 2rem; letter-spacing: -0.02em; font-weight: 700; }
+  h3 { font-size: 1.25rem; font-weight: 500; }
+
+  /* Focus-visible ring everywhere (a11y §6) */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-1 rounded-lg font-semibold px-5 py-3 text-base transition-colors duration-150;
+    min-height: 44px;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { @apply bg-accent text-white hover:bg-accent-hover; }
+  .btn-secondary { @apply bg-surface border border-border text-ink hover:bg-accent-soft; }
+
+  .input {
+    @apply w-full rounded-lg border border-border bg-surface text-ink text-base px-4 py-3;
+    min-height: 44px;
+  }
+  .input::placeholder { @apply text-muted; }
+
+  .card { @apply bg-surface border border-border rounded-2xl shadow-sm; }
+
+  /* Visually-hidden label helper */
+  .sr-only-label {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+}
+
+/* ---- Scroll-reveal (§4) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 350ms ease-out, transform 350ms ease-out;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Product-card hover top border (§4) ---- */
+.agent-card {
+  border-top: 4px solid transparent;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+.agent-card:hover {
+  box-shadow: 0 4px 6px -1px rgb(15 23 42 / 0.10), 0 2px 4px -2px rgb(15 23 42 / 0.10);
+}
+
+/* ---- Native range slider styling ---- */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--border);
+  outline-offset: 4px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px; height: 22px;
+  border-radius: 9999px;
+  background: var(--accent);
+  cursor: pointer;
+  border: 3px solid #fff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px;
+  border-radius: 9999px;
+  background: var(--accent);
+  cursor: pointer;
+  border: 3px solid #fff;
+}
+
+/* ---- FAQ accordion (native details) ---- */
+details.faq > summary { list-style: none; cursor: pointer; }
+details.faq > summary::-webkit-details-marker { display: none; }
+details.faq > summary .chev { transition: transform 150ms ease; }
+details.faq[open] > summary .chev { transform: rotate(180deg); }
+
+/* ---- Reduced motion (§4/§6) ---- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .agent-card { transition: none; }
+  details.faq > summary .chev { transition: none; }
+  * { scroll-behavior: auto !important; }
+}
