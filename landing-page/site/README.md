@@ -67,6 +67,14 @@ The folder is self-contained static files. Pick one:
 
 There is no server logic and no build to run at deploy time — just publish the files as-is.
 
+## Run locally
+
+Zero dependencies.
+```
+cd ~/prod-agents/landing-page/site
+python3 -m http.server 8000
+```
+
 ## Notes / to-do before going live
 
 - `index.html` references `og.png` for social sharing. Create a 1200×630 OG image
