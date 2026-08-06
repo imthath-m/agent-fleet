@@ -14,6 +14,7 @@ from __future__ import annotations
 from spine.agent import Tool
 
 from triage import config
+from triage.tools.crm_update import crm_update
 from triage.tools.issue_refund import issue_refund
 from triage.tools.kb_search import kb_search
 from triage.tools.order_lookup import order_lookup
@@ -40,6 +41,11 @@ TOOLS: tuple[Tool, ...] = (
         description="Draft a refund for human approval. Never executes.",
         fn=issue_refund,
     ),
+    Tool(
+        name="crm_update",
+        description="Draft a CRM record update for human approval. Never executes.",
+        fn=crm_update,
+    ),
 )
 
 TOOLS_BY_NAME: dict[str, Tool] = {t.name: t for t in TOOLS}
@@ -47,6 +53,7 @@ TOOLS_BY_NAME: dict[str, Tool] = {t.name: t for t in TOOLS}
 __all__ = [
     "TOOLS",
     "TOOLS_BY_NAME",
+    "crm_update",
     "issue_refund",
     "kb_search",
     "order_lookup",
