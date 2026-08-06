@@ -4,10 +4,10 @@ from spine.guardrails import Decision
 from spine.logging import get_logger
 from spine.models import FakeModelClient
 from spine.rag import InMemoryRetriever, Passage
-from spine.reference_agent import default_responder
 from spine.tracing import configure_tracing
 
 from triage import config
+from triage.fakes import resolver_responder
 from triage.kb import check_grounding, load_kb
 from triage.resolver import build_prompt, build_query, content_terms, resolve
 from triage.schemas import Classification, Ticket
@@ -37,7 +37,7 @@ def make_classification(product_area: str = "users_permissions") -> Classificati
 
 
 def run(ticket, classification, *, retriever=RETRIEVER, model=None):
-    model = model if model is not None else FakeModelClient(responder=default_responder)
+    model = model if model is not None else FakeModelClient(responder=resolver_responder)
     logger = get_logger("triage.test_resolver", stream=io.StringIO())
     return resolve(ticket, classification, retriever=retriever, model=model, logger=logger)
 

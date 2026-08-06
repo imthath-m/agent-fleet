@@ -7,12 +7,19 @@ reads only the text after the `User:` marker that
 in the prompt can never match themselves. Nothing here looks at ticket ids or
 any golden-set-only token: the rules are ordinary support-desk heuristics, so
 the eval numbers they produce mean something.
+
+`resolver_responder` is the same idea for the resolver stage, and
+`resolution_judge_client` is the fake grader for what it produces.
 """
 
 from __future__ import annotations
 
 import json
 import re
+
+from spine.models import FakeModelClient
+
+from triage.resolver import CONTEXT_MARKER, USER_MARKER, content_terms
 
 _USER_MARKER = "User:"
 
@@ -375,3 +382,71 @@ def classifier_responder(prompt: str) -> str:
             "sentiment": _pick(text, _SENTIMENT_PATTERNS, _SENTIMENT_DEFAULT),
         }
     )
+
+
+# --------------------------------------------------------------------------- #
+# Resolver
+# --------------------------------------------------------------------------- #
+
+_NO_ANSWER = "I don't have enough grounded information to answer that confidently."
+
+
+def resolver_responder(prompt: str) -> str:
+    """A grounded answer assembled from *every* retrieved passage.
+
+    `spine.reference_agent.default_responder` answers from the first context
+    line only, because its demo corpus is one sentence per document. Here a
+    passage is a ~1000-character KB chunk and `Resolution.citations` names all
+    `config.RETRIEVAL_TOP_K` of them, so answering from the first alone would
+    cite three documents the answer never drew on. Reading the whole context
+    block is also what a real model does with it.
+    """
+    context = prompt.partition(CONTEXT_MARKER)[2].partition(USER_MARKER)[0].strip()
+    if not context:
+        return _NO_ANSWER
+    # Each line is "- <doc_id>: <chunk text>"; the first ": " is the separator.
+    bodies = [line.lstrip("- ").partition(": ")[2].strip() for line in context.splitlines()]
+    bodies = [b for b in bodies if b]
+    if not bodies:
+        return _NO_ANSWER
+    return "Based on our documentation: " + " ".join(bodies)
+
+
+# --------------------------------------------------------------------------- #
+# Resolution judge
+# --------------------------------------------------------------------------- #
+
+_JUDGE_REFERENCE_MARKER = "Reference / expected:"
+_JUDGE_ANSWER_MARKER = "Agent answer:"
+# `spine.eval.metrics.DEFAULT_JUDGE_TEMPLATE` puts its own closing instructions
+# after the answer; they are template text, not the agent's words.
+_JUDGE_INSTRUCTION_MARKER = "Reply with a JSON object"
+
+
+def resolution_judge_client() -> FakeModelClient:
+    """Deterministic stand-in for the real judge (a real one is Phase 8).
+
+    Same canned-JSON contract as `spine.eval.example.demo_judge_client`, but
+    graded instead of all-or-nothing: it scores the share of the reference
+    answer's content words that the agent's answer actually contains. That asks
+    the question the resolver is on the hook for — did retrieval put the facts a
+    correct answer needs in front of the model — and a partially-right answer
+    scores between an exact one and an unrelated one.
+    """
+
+    def respond(prompt: str) -> str:
+        head, _, tail = prompt.partition(_JUDGE_ANSWER_MARKER)
+        reference = head.partition(_JUDGE_REFERENCE_MARKER)[2]
+        answer = tail.partition(_JUDGE_INSTRUCTION_MARKER)[0].lower()
+        terms = content_terms(reference)
+        if not terms:
+            return json.dumps({"score": 0.0, "reason": "no reference answer to judge against"})
+        hits = sum(1 for term in terms if term in answer)
+        return json.dumps(
+            {
+                "score": round(hits / len(terms), 3),
+                "reason": f"{hits}/{len(terms)} reference terms present in the answer",
+            }
+        )
+
+    return FakeModelClient(responder=respond)
