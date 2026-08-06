@@ -413,6 +413,28 @@ def resolver_responder(prompt: str) -> str:
 
 
 # --------------------------------------------------------------------------- #
+# Whole-pipeline responder
+# --------------------------------------------------------------------------- #
+
+# The classifier's instruction block names itself; the resolver's never does.
+# Keying on that rather than on the `Context:` block matters because a resolver
+# prompt with no retrieved passages carries no context at all.
+_CLASSIFIER_MARKER = "support ticket classifier"
+
+
+def triage_responder(prompt: str) -> str:
+    """One responder for the whole pipeline: both stages share a model client.
+
+    `triage.pipeline.TriageAgent` wraps a single `WrappedModelClient` so retry
+    and cost accounting live in one place, which means one fake has to answer
+    both prompts.
+    """
+    if _CLASSIFIER_MARKER in prompt:
+        return classifier_responder(prompt)
+    return resolver_responder(prompt)
+
+
+# --------------------------------------------------------------------------- #
 # Resolution judge
 # --------------------------------------------------------------------------- #
 
