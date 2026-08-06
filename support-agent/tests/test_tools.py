@@ -1,8 +1,9 @@
+import pytest
 from spine.tracing import ATTR_STEP, StepType, configure_tracing
 
 from triage import config
 from triage.kb import check_grounding
-from triage.tools import TOOLS_BY_NAME, kb_search, order_lookup, risk_of
+from triage.tools import TOOLS_BY_NAME, issue_refund, kb_search, order_lookup, risk_of
 from triage.tools.kb_search import default_retriever
 from triage.tools.order_lookup import ORDERS_PATH, order_exists
 
@@ -82,3 +83,65 @@ def test_order_exists_matches_the_store():
 def test_order_lookup_is_registered_as_a_low_risk_tool():
     assert TOOLS_BY_NAME["order_lookup"].fn is order_lookup
     assert risk_of("order_lookup") == "low"
+
+
+# --------------------------------------------------------------------------- #
+# issue_refund (4.3) — high risk, drafts only
+# --------------------------------------------------------------------------- #
+
+
+def test_issue_refund_never_executes():
+    before = ORDERS_PATH.read_bytes()
+
+    action = issue_refund("ORD-1001", 49.0, "duplicate charge")
+
+    assert action.executed is False
+    assert action.risk == "high"
+    assert action.tool == "issue_refund"
+    assert action.args == {
+        "order_id": "ORD-1001",
+        "amount": 49.0,
+        "reason": "duplicate charge",
+    }
+    # The only store this package can reach is byte-identical afterwards.
+    assert ORDERS_PATH.read_bytes() == before
+
+
+def test_issue_refund_idempotency_key_is_stable():
+    first = issue_refund("ORD-1001", 49.0, "duplicate charge")
+    same = issue_refund("ORD-1001", 49.0, "duplicate charge")
+    assert first.idempotency_key == same.idempotency_key
+
+    # Every arg, changed on its own, changes the key.
+    assert issue_refund("ORD-1002", 49.0, "duplicate charge").idempotency_key != (
+        first.idempotency_key
+    )
+    assert issue_refund("ORD-1001", 25.0, "duplicate charge").idempotency_key != (
+        first.idempotency_key
+    )
+    assert issue_refund("ORD-1001", 49.0, "cancelled order").idempotency_key != (
+        first.idempotency_key
+    )
+
+
+def test_issue_refund_validates_before_proposing():
+    with pytest.raises(ValueError, match="positive"):
+        issue_refund("ORD-1001", 0.0, "nothing to refund")
+    with pytest.raises(ValueError, match="positive"):
+        issue_refund("ORD-1001", -5.0, "negative refund")
+    with pytest.raises(ValueError, match="unknown order_id"):
+        issue_refund("ORD-9999", 49.0, "no such order")
+
+
+def test_issue_refund_emits_a_tool_span():
+    exporter = configure_tracing()
+    issue_refund("ORD-1001", 49.0, "duplicate charge")
+    spans = exporter.get_finished_spans()
+    assert [s.name for s in spans] == ["tool.issue_refund"]
+    assert spans[0].attributes[ATTR_STEP] == StepType.TOOL_CALL
+
+
+def test_issue_refund_is_registered_as_a_high_risk_tool():
+    assert TOOLS_BY_NAME["issue_refund"].fn is issue_refund
+    assert risk_of("issue_refund") == "high"
+    assert "issue_refund" in config.HIGH_RISK_TOOLS
