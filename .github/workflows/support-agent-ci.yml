@@ -35,3 +35,33 @@ jobs:
 
       - name: Pytest
         run: uv run pytest
+
+      - name: Eval gate (classification)
+        run: >
+          uv run python -m spine.eval gate
+          --suite triage.eval.suites:build_classification_suite
+          --baseline baselines/classification.json
+
+      - name: Eval gate (resolution)
+        run: >
+          uv run python -m spine.eval gate
+          --suite triage.eval.suites:build_resolution_suite
+          --baseline baselines/resolution.json
+
+      - name: Eval gate (actions)
+        run: >
+          uv run python -m spine.eval gate
+          --suite triage.eval.suites:build_actions_suite
+          --baseline baselines/actions.json
+
+      - name: Eval gate (escalation)
+        run: >
+          uv run python -m spine.eval gate
+          --suite triage.eval.suites:build_escalation_suite
+          --baseline baselines/escalation.json
+
+      - name: Eval gate (triage)
+        run: >
+          uv run python -m spine.eval gate
+          --suite triage.eval.suites:build_triage_suite
+          --baseline baselines/triage.json
