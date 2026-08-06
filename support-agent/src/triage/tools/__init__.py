@@ -15,6 +15,7 @@ from spine.agent import Tool
 
 from triage import config
 from triage.tools.kb_search import kb_search
+from triage.tools.order_lookup import order_lookup
 
 
 def risk_of(tool_name: str) -> str:
@@ -28,8 +29,13 @@ TOOLS: tuple[Tool, ...] = (
         description="Search the Ubuntu knowledge base and return cited passages.",
         fn=kb_search,
     ),
+    Tool(
+        name="order_lookup",
+        description="Look up one order by id in the order store. Read-only.",
+        fn=order_lookup,
+    ),
 )
 
 TOOLS_BY_NAME: dict[str, Tool] = {t.name: t for t in TOOLS}
 
-__all__ = ["TOOLS", "TOOLS_BY_NAME", "kb_search", "risk_of"]
+__all__ = ["TOOLS", "TOOLS_BY_NAME", "kb_search", "order_lookup", "risk_of"]

@@ -1,0 +1,47 @@
+{
+  "ORD-1001": {
+    "order_id": "ORD-1001",
+    "customer_id": "cust-2001",
+    "status": "delivered",
+    "amount": 49.0,
+    "currency": "USD",
+    "item": "Ubuntu Pro subscription (1 year, 1 machine)",
+    "placed_at": "2026-01-14T10:22:00Z"
+  },
+  "ORD-1002": {
+    "order_id": "ORD-1002",
+    "customer_id": "cust-2002",
+    "status": "delivered",
+    "amount": 25.0,
+    "currency": "USD",
+    "item": "Support incident pack (5 incidents)",
+    "placed_at": "2026-01-19T15:41:00Z"
+  },
+  "ORD-1003": {
+    "order_id": "ORD-1003",
+    "customer_id": "cust-2003",
+    "status": "refund_pending",
+    "amount": 120.0,
+    "currency": "USD",
+    "item": "Ubuntu Pro subscription (1 year, 3 machines)",
+    "placed_at": "2026-01-22T08:05:00Z"
+  },
+  "ORD-1004": {
+    "order_id": "ORD-1004",
+    "customer_id": "cust-2004",
+    "status": "shipped",
+    "amount": 15.0,
+    "currency": "USD",
+    "item": "Ubuntu install media (USB)",
+    "placed_at": "2026-02-02T11:30:00Z"
+  },
+  "ORD-1005": {
+    "order_id": "ORD-1005",
+    "customer_id": "cust-2005",
+    "status": "cancelled",
+    "amount": 49.0,
+    "currency": "USD",
+    "item": "Ubuntu Pro subscription (1 year, 1 machine)",
+    "placed_at": "2026-02-04T09:12:00Z"
+  }
+}
