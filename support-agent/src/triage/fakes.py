@@ -12,8 +12,12 @@ the eval numbers they produce mean something.
 from __future__ import annotations
 
 import json
+import re
 
 _USER_MARKER = "User:"
+
+# An ordered (label, pattern) table, compiled from a signal-word table below.
+_Rules = tuple[tuple[str, "re.Pattern[str]"], ...]
 
 # Each table is ordered: the first label with a signal word present wins, and
 # the last entry of each group is the fallback used when nothing matches.
@@ -93,6 +97,19 @@ _INTENT_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
             "frozen",
             "hangs",
             "no longer works",
+            # Symptom phrasing, for tickets that describe a fault without ever
+            # using the word "error".
+            "will not boot",
+            "won't boot",
+            "not detected",
+            "nothing happens",
+            "rescue prompt",
+            "stays black",
+            "no signal",
+            "drops every",
+            "disconnect",
+            "refuses",
+            "block",
         ),
     ),
 )
@@ -125,11 +142,14 @@ _PRIORITY_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
             "unable to work",
             "can't log in",
             "cannot log in",
+            "can't sign in",
+            "cannot sign in",
             "locked out",
             "deadline",
             "won't boot",
             "will not boot",
             "no internet",
+            "been down",
         ),
     ),
     (
@@ -227,6 +247,11 @@ _PRODUCT_AREA_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
             "group membership",
             "password",
             "acl",
+            # Sign-in problems land on the same KB pages (LostPassword, RootSudo).
+            "log in",
+            "login",
+            "sign in",
+            "locked out",
         ),
     ),
     (
@@ -301,9 +326,31 @@ _SENTIMENT_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
 _SENTIMENT_DEFAULT = "neutral"
 
 
-def _pick(text: str, rules: tuple[tuple[str, tuple[str, ...]], ...], default: str) -> str:
-    for label, signals in rules:
-        if any(signal in text for signal in signals):
+def _compile(signals: tuple[str, ...]) -> re.Pattern[str]:
+    """One alternation per label, anchored at a word start.
+
+    The leading `\\b` is what stops "laptop" matching the "apt" signal. There is
+    deliberately no trailing boundary, so prefix signals ("frustrat",
+    "repositor", "dependenc") still match their inflections. Signals that do not
+    begin with a word character ("!!!", ".deb") are matched literally.
+    """
+    parts = [rf"\b{re.escape(s)}" if s[0].isalnum() else re.escape(s) for s in signals]
+    return re.compile("|".join(parts))
+
+
+def _compile_rules(rules: tuple[tuple[str, tuple[str, ...]], ...]) -> _Rules:
+    return tuple((label, _compile(signals)) for label, signals in rules)
+
+
+_INTENT_PATTERNS = _compile_rules(_INTENT_RULES)
+_PRIORITY_PATTERNS = _compile_rules(_PRIORITY_RULES)
+_PRODUCT_AREA_PATTERNS = _compile_rules(_PRODUCT_AREA_RULES)
+_SENTIMENT_PATTERNS = _compile_rules(_SENTIMENT_RULES)
+
+
+def _pick(text: str, rules: _Rules, default: str) -> str:
+    for label, pattern in rules:
+        if pattern.search(text):
             return label
     return default
 
@@ -322,9 +369,9 @@ def classifier_responder(prompt: str) -> str:
     text = ticket_text(prompt)
     return json.dumps(
         {
-            "intent": _pick(text, _INTENT_RULES, _INTENT_DEFAULT),
-            "priority": _pick(text, _PRIORITY_RULES, _PRIORITY_DEFAULT),
-            "product_area": _pick(text, _PRODUCT_AREA_RULES, _PRODUCT_AREA_DEFAULT),
-            "sentiment": _pick(text, _SENTIMENT_RULES, _SENTIMENT_DEFAULT),
+            "intent": _pick(text, _INTENT_PATTERNS, _INTENT_DEFAULT),
+            "priority": _pick(text, _PRIORITY_PATTERNS, _PRIORITY_DEFAULT),
+            "product_area": _pick(text, _PRODUCT_AREA_PATTERNS, _PRODUCT_AREA_DEFAULT),
+            "sentiment": _pick(text, _SENTIMENT_PATTERNS, _SENTIMENT_DEFAULT),
         }
     )
