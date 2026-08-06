@@ -18,3 +18,11 @@ uv sync
 uv run pytest
 uv run ruff check
 ```
+
+## Attribution
+
+The demo knowledge base (`data/kb/ubuntu_docs.jsonl`) is sourced from the
+[Ubuntu Community Help Wiki](https://help.ubuntu.com/community/), licensed
+under **CC BY-SA 4.0** (https://creativecommons.org/licenses/by-sa/4.0/). See
+[`data/kb/ATTRIBUTION.md`](data/kb/ATTRIBUTION.md) for full details and the
+display obligation for any surface showing KB text.
