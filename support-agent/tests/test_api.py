@@ -83,3 +83,30 @@ def test_resolve_removes_item_from_queue():
 def test_resolve_unknown_id_is_404():
     resp = client.post("/queue/does-not-exist/resolve", json={"note": "n/a"})
     assert resp.status_code == 404
+
+
+# --------------------------------------------------------------------------- #
+# include_trace
+# --------------------------------------------------------------------------- #
+
+
+def test_include_trace_attaches_span_tree():
+    resp = client.post(
+        "/tickets?include_trace=true",
+        json={
+            "text": "How do I mount a drive in Ubuntu?",
+            "subject": "Mounting a drive",
+            "customer_id": "cust-api-6",
+        },
+    )
+    body = resp.json()
+    assert body["trace"][0]["name"] == "request"
+    assert body["trace"][0]["step"] == "request"
+
+
+def test_no_trace_by_default():
+    resp = client.post(
+        "/tickets",
+        json={"text": "How do I mount a drive?", "subject": "Mounting", "customer_id": "c-api-7"},
+    )
+    assert "trace" not in resp.json()

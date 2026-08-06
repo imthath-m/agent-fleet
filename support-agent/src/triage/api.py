@@ -26,11 +26,14 @@ from spine.tracing import configure_tracing
 
 from triage.pipeline import TriageAgent
 from triage.schemas import Ticket
+from triage.trace_view import span_tree
 
 app = FastAPI(title="triage-api", version="0.1.0")
-# One provider for the app's life, so every response carries a real trace_id
-# (spans go nowhere without a configured provider). 7.2 reads this same
-# exporter's finished spans back for `include_trace`.
+# A provider from app start, so every response carries a real trace_id (spans
+# go nowhere without one configured). `?include_trace=true` reconfigures with a
+# fresh exporter right before that one run, so its tree is exactly that
+# request's spans — safe here because this app is single-process and requests
+# are handled sequentially (Decision 6: local-first, not built for concurrency).
 configure_tracing(service_name="triage-api")
 _agent = TriageAgent()
 
@@ -54,7 +57,11 @@ def healthz() -> dict[str, str]:
 
 
 @app.post("/tickets")
-def create_ticket(body: TicketRequest) -> dict[str, Any]:
+def create_ticket(body: TicketRequest, include_trace: bool = False) -> dict[str, Any]:
+    # Reconfigure with a fresh exporter right before this run, so its finished
+    # spans are exactly (and only) this request's tree.
+    exporter = configure_tracing(service_name="triage-api") if include_trace else None
+
     ticket = Ticket(
         ticket_id=body.ticket_id or f"TK-{uuid.uuid4().hex[:8]}",
         text=body.text,
@@ -64,7 +71,10 @@ def create_ticket(body: TicketRequest) -> dict[str, Any]:
         received_at=body.received_at or datetime.now(UTC).isoformat(),
     )
     result = _agent.run(ticket)
-    return result.to_dict()
+    payload = result.to_dict()
+    if exporter is not None:
+        payload["trace"] = span_tree(exporter)
+    return payload
 
 
 @app.get("/queue")
