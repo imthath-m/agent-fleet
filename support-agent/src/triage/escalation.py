@@ -1,8 +1,8 @@
 """Escalation policy: which triaged tickets a human has to see.
 
-Five rules, checked in order, first match wins. They are deliberately separate
-and side-effect free so each one can be tested on its own and read by someone
-who has to defend the escalation rate to a customer:
+Five rules, every one of them checked and every one that fires reported. They
+are deliberately separate and side-effect free so each can be tested on its own
+and read by someone who has to defend the escalation rate to a customer:
 
 1. **low confidence** — the output guardrails escalated (`ConfidenceGuard`
    tripped on `retrieval_score < config.CONFIDENCE_THRESHOLD`). This is the
@@ -49,24 +49,32 @@ def should_escalate(
     actions: list[ProposedAction],
     output_report: GuardrailReport,
 ) -> tuple[bool, str]:
-    """`(escalate?, reason)` for one triaged ticket. Pure; no side effects."""
+    """`(escalate?, reasons)` for one triaged ticket. Pure; no side effects.
+
+    Every rule that fires is reported, not just the first. Rule 1 is a wide net
+    — it catches most escalations on its own — and a reviewer opening a refund
+    case is far better served by "high-risk action proposed: issue_refund" than
+    by a retrieval score.
+    """
+    reasons: list[str] = []
+
     if output_report.decision == Decision.ESCALATE:
-        return True, f"low confidence: retrieval score {resolution.retrieval_score:.2f}"
+        reasons.append(f"low confidence: retrieval score {resolution.retrieval_score:.2f}")
 
     if not resolution.grounded:
-        return True, "answer is not grounded in the knowledge base"
+        reasons.append("answer is not grounded in the knowledge base")
 
     high_risk = [a.tool for a in actions if a.tool in config.HIGH_RISK_TOOLS]
     if high_risk:
-        return True, f"high-risk action proposed: {', '.join(high_risk)}"
+        reasons.append(f"high-risk action proposed: {', '.join(high_risk)}")
 
     if classification.priority == "urgent":
-        return True, "urgent priority"
+        reasons.append("urgent priority")
 
     if classification.sentiment == "angry" and classification.priority in _ESCALATING_PRIORITIES:
-        return True, f"angry customer on a {classification.priority}-priority ticket"
+        reasons.append(f"angry customer on a {classification.priority}-priority ticket")
 
-    return False, ""
+    return bool(reasons), "; ".join(reasons)
 
 
 def escalate(

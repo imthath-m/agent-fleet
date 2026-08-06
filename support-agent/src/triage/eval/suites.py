@@ -30,15 +30,16 @@ from spine.eval.metrics import (
     SchemaPassRate,
     ToolCallCorrectness,
 )
-from spine.eval.runner import EvalSuite
+from spine.eval.runner import EvalResult, EvalSuite
 from spine.logging import get_logger
 from spine.models import FakeModelClient
 
 from triage.actions import plan_actions
 from triage.classifier import CLASSIFIED_FIELDS, classify
-from triage.eval.metrics import GroundingRate
+from triage.eval.metrics import EscalationPrecisionRecall, GroundingRate
 from triage.fakes import classifier_responder, resolution_judge_client, resolver_responder
 from triage.kb import load_kb
+from triage.pipeline import TriageAgent
 from triage.resolver import resolve
 from triage.schemas import Ticket
 
@@ -47,6 +48,7 @@ _GOLDEN = Path(__file__).resolve().parents[3] / "data" / "golden"
 CLASSIFICATION_DATASET = _GOLDEN / "classification.jsonl"
 RESOLUTION_DATASET = _GOLDEN / "resolution.jsonl"
 ACTIONS_DATASET = _GOLDEN / "actions.jsonl"
+ESCALATION_DATASET = _GOLDEN / "escalation.jsonl"
 
 CLASSIFICATION_REQUIRED_FIELDS = [*CLASSIFIED_FIELDS, "pii_flag"]
 
@@ -180,3 +182,63 @@ def build_actions_suite() -> EvalSuite:
         )
 
     return EvalSuite(dataset, predict, actions_metrics())
+
+
+# --------------------------------------------------------------------------- #
+# Escalation
+# --------------------------------------------------------------------------- #
+
+
+class _EscalationSuite(EvalSuite):
+    """An `EvalSuite` that publishes the confusion matrix alongside the mean.
+
+    `run_eval` can only aggregate per-example scores into means, and precision
+    and recall are not means. The matrix the metric accumulated is lifted into
+    `mean_scores` after the run so `python -m spine.eval run` prints both
+    numbers and `gate` guards them like any other score.
+    """
+
+    def __init__(self, dataset, predict, metric: EscalationPrecisionRecall) -> None:
+        super().__init__(dataset, predict, [metric])
+        self.metric = metric
+
+    def run(self) -> EvalResult:
+        self.metric.reset()  # one instance, many runs (baseline then gate)
+        result = super().run()
+        result.mean_scores.update(self.metric.aggregate())
+        return result
+
+
+def build_escalation_suite() -> _EscalationSuite:
+    """Run the whole `TriageAgent` and score whether it escalated.
+
+    The system under test is the composed pipeline, because escalation is a
+    decision about all three stages at once: confidence comes from retrieval,
+    risk from the planned actions, priority and sentiment from the classifier.
+
+    Labels are the human call on whether a reviewer must see the ticket,
+    written before any run. Two things the numbers will not tell you:
+
+    * rule 2 (`not resolution.grounded`) never fires here. `check_grounding`
+      verifies cited ids *exist*, and a substring retriever always finds
+      something in 382 chunks — off-corpus tickets are caught by rule 1's
+      confidence floor instead, which is why `off-corpus-salesforce` escalates.
+    * a vague ticket ("Nothing works. Fix it.") is *not* caught: its two or
+      three content words match some chunk with a high score, so no rule sees
+      it. Ambiguity detection is not one of the five rules, and this set does
+      not pretend otherwise — the gap is real and belongs to a later phase.
+    """
+    dataset = load_dataset(ESCALATION_DATASET)
+    agent = TriageAgent(logger=get_logger("triage.eval.escalation", stream=io.StringIO()))
+
+    def predict(agent_input: Any) -> Prediction:
+        result = agent.run(Ticket.from_dict(agent_input))
+        escalated = result.escalation is not None
+        output = {
+            "escalated": escalated,
+            "reason": result.escalation.reason if escalated else "",
+            "retrieval_score": result.resolution.retrieval_score if result.resolution else 0.0,
+        }
+        return Prediction(output=output, text=json.dumps(output))
+
+    return _EscalationSuite(dataset, predict, EscalationPrecisionRecall())
