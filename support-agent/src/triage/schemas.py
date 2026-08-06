@@ -9,6 +9,7 @@ and the API response share one serialization path.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from hashlib import sha256
 from typing import Any
 
 from spine.hitl import EscalationItem
@@ -105,6 +106,16 @@ class Resolution:
 # --------------------------------------------------------------------------- #
 # ProposedAction
 # --------------------------------------------------------------------------- #
+
+
+def idempotency_key(*parts: object) -> str:
+    """`sha256` over the pipe-joined parts — the same call always keys the same.
+
+    Lives here rather than in `triage.tools` because it is how a
+    `ProposedAction` is keyed, and because the tools package imports this
+    module (the reverse would be a cycle).
+    """
+    return sha256("|".join(str(p) for p in parts).encode()).hexdigest()
 
 
 @dataclass(frozen=True)
