@@ -1,0 +1,38 @@
+[project]
+name = "triage"
+version = "0.1.0"
+description = "Support-ticket triage agent built on the spine platform."
+requires-python = "==3.11.*"
+dependencies = [
+    "spine",
+    "fastapi>=0.110",
+    "httpx>=0.27",
+]
+
+[tool.uv.sources]
+spine = { path = "../shared-infra", editable = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/triage"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
