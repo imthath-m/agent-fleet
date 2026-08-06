@@ -1,0 +1,119 @@
+<!-- Fleet — Triage live trial. Static: trial.html + dist/style.css (Tailwind CLI) + trial.js -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triage — live trial · Fleet</title>
+<meta name="description" content="Submit a real ticket to the Triage agent and watch the actual trace: classify, retrieve and cite, resolve, and the confidence-driven escalation decision.">
+<meta name="theme-color" content="#FAFAF7">
+
+<!-- Favicon: "F" ink glyph on accent-soft, inline SVG data URI (same as index.html) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='6'%20fill='%23EEF2FF'/%3E%3Ctext%20x='16'%20y='23'%20font-family='sans-serif'%20font-size='20'%20font-weight='700'%20text-anchor='middle'%20fill='%230F172A'%3EF%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="dist/style.css">
+
+<!-- ============================ HEADER ============================ -->
+<header class="sticky top-0 z-40 bg-bg/90 backdrop-blur border-b border-border">
+  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Primary">
+    <a href="index.html#top" class="brand font-display font-bold text-xl text-ink">Fleet</a>
+    <a href="index.html#card-triage" class="text-sm font-medium text-triage hover:underline underline-offset-2">← Back to Triage</a>
+  </nav>
+</header>
+
+<main class="max-w-3xl mx-auto px-6 py-12">
+
+  <!-- ============================ INTRO ============================ -->
+  <span class="inline-flex items-center gap-2 rounded-full bg-triage-soft text-ink px-3 py-1 text-sm font-medium"><span class="w-2.5 h-2.5 rounded-full bg-triage"></span>Triage · Support</span>
+  <h1 class="mt-4 text-3xl">Live trial: watch the actual trace</h1>
+  <p class="mt-3 text-body">Pick a ticket below. It runs through the real pipeline — classify, retrieve &amp; cite, resolve, escalate — and everything on this page comes straight out of that run: the span tree, the citation, the grounding check, and the confidence score. Nothing here is a mockup.</p>
+
+  <!-- ============================ API CONFIG ============================ -->
+  <div class="card mt-8 p-5">
+    <label class="block text-sm font-medium text-ink" for="api-base">Triage API base URL</label>
+    <p class="text-sm text-muted mt-1">Running the API locally? Point at it here. Unreachable (e.g. viewing this on GitHub Pages with no backend running) falls back to a captured example run.</p>
+    <div class="mt-3 flex flex-col sm:flex-row gap-2">
+      <input id="api-base" class="input" type="text" value="http://localhost:8000" spellcheck="false" autocomplete="off">
+      <span id="api-status" class="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-muted whitespace-nowrap">checking…</span>
+    </div>
+  </div>
+
+  <!-- ============================ DEMO TICKETS ============================ -->
+  <div class="mt-6 grid sm:grid-cols-2 gap-4">
+    <div class="card p-5 flex flex-col">
+      <span class="inline-flex items-center gap-2 rounded-full bg-success/10 text-success px-2.5 py-1 text-xs font-medium w-fit">Deflects automatically</span>
+      <h3 class="mt-3">Routine how-to ticket</h3>
+      <p class="mt-2 text-sm text-body flex-1">"How do I add a user to a group? I need to add a new user account on Ubuntu and put that username into a group."</p>
+      <button type="button" class="btn btn-primary mt-4" data-run="deflected">Run this ticket →</button>
+    </div>
+    <div class="card p-5 flex flex-col">
+      <span class="inline-flex items-center gap-2 rounded-full bg-redline-soft text-redline px-2.5 py-1 text-xs font-medium w-fit">Escalates to a human</span>
+      <h3 class="mt-3">Refund ticket</h3>
+      <p class="mt-2 text-sm text-body flex-1">"Charged twice for ORD-1001. My card was charged twice for order ORD-1001. Please refund $49.00 of it."</p>
+      <button type="button" class="btn btn-primary mt-4" data-run="escalated">Run this ticket →</button>
+    </div>
+  </div>
+
+  <!-- ============================ RESULT ============================ -->
+  <div id="result" class="mt-10" hidden>
+    <div id="result-source" class="text-sm font-medium rounded-lg px-3 py-2 mb-6"></div>
+
+    <!-- classification -->
+    <div class="flex flex-wrap gap-1.5 font-mono text-xs" id="result-classification"></div>
+
+    <!-- confidence + escalation -->
+    <div class="card mt-5 p-5">
+      <h3>Confidence &amp; escalation decision</h3>
+      <div id="result-confidence" class="mt-3 text-sm text-body"></div>
+    </div>
+
+    <!-- grounding -->
+    <div class="card mt-5 p-5">
+      <h3>Grounding check</h3>
+      <div id="result-grounding" class="mt-3"></div>
+    </div>
+
+    <!-- citations -->
+    <div class="card mt-5 p-5">
+      <h3>Resolved citations</h3>
+      <ul id="result-citations" class="mt-3 space-y-3 text-sm"></ul>
+    </div>
+
+    <!-- draft answer -->
+    <div class="card mt-5 p-5">
+      <h3>Draft answer</h3>
+      <p id="result-answer-note" class="mt-1 text-xs font-medium text-redline hidden">Withheld — pending human review. Not sent to the customer.</p>
+      <p id="result-answer" class="mt-3 text-sm text-body whitespace-pre-wrap"></p>
+    </div>
+
+    <!-- proposed actions -->
+    <div id="result-actions-card" class="card mt-5 p-5 hidden">
+      <h3>Proposed actions</h3>
+      <ul id="result-actions" class="mt-3 space-y-2 text-sm font-mono"></ul>
+    </div>
+
+    <!-- span tree -->
+    <div class="mt-5">
+      <h3 class="text-ink">Span tree</h3>
+      <div class="mt-3 bg-panel rounded-2xl overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10">
+          <span class="w-3 h-3 rounded-full bg-rose-400"></span>
+          <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+          <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+          <span class="ml-3 font-mono text-xs text-panel-text/70">trace — <span id="result-trace-id"></span></span>
+        </div>
+        <pre id="result-trace" class="p-4 overflow-x-auto font-mono text-panel-text" style="font-size:0.8125rem;line-height:1.7"></pre>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="bg-ink text-panel-text mt-16">
+  <div class="max-w-6xl mx-auto px-6 py-10 text-sm">
+    <p>Fleet — Triage is one of five agents. <a class="underline hover:text-white" href="index.html#top">See the full fleet →</a></p>
+  </div>
+</footer>
+
+<script src="trial.js"></script>

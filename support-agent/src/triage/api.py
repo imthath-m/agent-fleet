@@ -21,6 +21,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from spine.tracing import configure_tracing
 
@@ -29,6 +30,15 @@ from triage.schemas import Ticket
 from triage.trace_view import span_tree
 
 app = FastAPI(title="triage-api", version="0.1.0")
+# The landing-page trial (a static site on its own origin, e.g. GitHub Pages)
+# calls this API directly from the browser — no cookies, no auth, a public
+# demo endpoint, so a wide-open CORS policy is the right amount of complexity.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 # A provider from app start, so every response carries a real trace_id (spans
 # go nowhere without one configured). `?include_trace=true` reconfigures with a
 # fresh exporter right before that one run, so its tree is exactly that
