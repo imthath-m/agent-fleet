@@ -22,11 +22,19 @@ from pathlib import Path
 from typing import Any
 
 from spine.eval.dataset import load_dataset
-from spine.eval.metrics import FieldAccuracy, LlmJudge, Metric, Prediction, SchemaPassRate
+from spine.eval.metrics import (
+    FieldAccuracy,
+    LlmJudge,
+    Metric,
+    Prediction,
+    SchemaPassRate,
+    ToolCallCorrectness,
+)
 from spine.eval.runner import EvalSuite
 from spine.logging import get_logger
 from spine.models import FakeModelClient
 
+from triage.actions import plan_actions
 from triage.classifier import CLASSIFIED_FIELDS, classify
 from triage.eval.metrics import GroundingRate
 from triage.fakes import classifier_responder, resolution_judge_client, resolver_responder
@@ -38,6 +46,7 @@ _GOLDEN = Path(__file__).resolve().parents[3] / "data" / "golden"
 
 CLASSIFICATION_DATASET = _GOLDEN / "classification.jsonl"
 RESOLUTION_DATASET = _GOLDEN / "resolution.jsonl"
+ACTIONS_DATASET = _GOLDEN / "actions.jsonl"
 
 CLASSIFICATION_REQUIRED_FIELDS = [*CLASSIFIED_FIELDS, "pii_flag"]
 
@@ -113,3 +122,61 @@ def build_resolution_suite() -> EvalSuite:
         return Prediction(output=output, text=resolution.answer)
 
     return EvalSuite(dataset, predict, resolution_metrics(retriever))
+
+
+# --------------------------------------------------------------------------- #
+# Actions
+# --------------------------------------------------------------------------- #
+
+
+def actions_metrics() -> list[Metric]:
+    """`ordered=False`: the routing rules fire in a fixed order, but which tools
+    a ticket needs is the claim under test, not the sequence."""
+    return [
+        ToolCallCorrectness(ordered=False),
+        FieldAccuracy(fields=["tool_errors"]),
+    ]
+
+
+def build_actions_suite() -> EvalSuite:
+    """Classify, resolve, then plan actions for every golden ticket.
+
+    Composed rather than hand-fed for the same reason as the resolution suite:
+    `plan_actions` routes on `classification.intent`/`sentiment` and on whether
+    the resolution grounded, so scoring it against labels the earlier stages
+    would never produce would measure a pipeline that does not exist.
+
+    `kb_search` is deliberately absent from every expected list. Its rule fires
+    only when the KB grounded nothing at all, which a 382-chunk corpus and
+    substring scoring make unreachable for realistic ticket text — that path is
+    covered by `tests/test_actions.py` instead, where the input can be made
+    genuinely unanswerable.
+    """
+    dataset = load_dataset(ACTIONS_DATASET)
+    retriever = load_kb()
+    classifier_model = FakeModelClient(responder=classifier_responder)
+    resolver_model = FakeModelClient(responder=resolver_responder)
+    logger = get_logger("triage.eval.actions", stream=io.StringIO())
+
+    def predict(agent_input: Any) -> Prediction:
+        ticket = Ticket.from_dict(agent_input)
+        classification, _ = classify(ticket, model=classifier_model, logger=logger)
+        resolution, _ = resolve(
+            ticket,
+            classification,
+            retriever=retriever,
+            model=resolver_model,
+            logger=logger,
+        )
+        actions, tool_errors = plan_actions(ticket, classification, resolution, logger=logger)
+        output = {
+            "actions": [a.to_dict() for a in actions],
+            "tool_errors": tool_errors,
+        }
+        return Prediction(
+            output=output,
+            tool_calls=tuple(a.tool for a in actions),
+            text=json.dumps(output),
+        )
+
+    return EvalSuite(dataset, predict, actions_metrics())
