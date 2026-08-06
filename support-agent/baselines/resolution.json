@@ -1,0 +1,9 @@
+{
+  "dataset_name": "triage_resolution",
+  "dataset_version": "1",
+  "mean_scores": {
+    "grounding_rate": 1.0,
+    "llm_judge": 0.8485555555555555,
+    "schema_pass_rate": 1.0
+  }
+}
