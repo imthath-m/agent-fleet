@@ -19,6 +19,18 @@ uv run pytest
 uv run ruff check
 ```
 
+## Demo
+
+`python -m triage.demo` runs one scripted ticket (an escalated refund
+request) through the whole pipeline, no API or network required, and prints
+five sections: the span tree, correlated JSON logs, guardrail decisions, the
+result (answer, grounded citations with their real help.ubuntu.com URLs,
+proposed actions, escalation status), and a metrics summary.
+
+```sh
+uv run python -m triage.demo
+```
+
 ## Attribution
 
 The demo knowledge base (`data/kb/ubuntu_docs.jsonl`) is sourced from the
