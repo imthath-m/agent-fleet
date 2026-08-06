@@ -19,9 +19,10 @@ low-confidence signal from a keyword retriever, not a bug to tune away; Phase 5'
 escalation policy is what consumes it.
 
 The `Context:`/`User:` prompt shape is `spine.reference_agent._build_prompt`'s,
-so `spine.reference_agent.default_responder` drives this stage in tests and
-evals with no model. Passage text is whitespace-collapsed onto one line each so
-that fake reads a whole chunk rather than its first line.
+so `default_responder`-style fakes drive this stage with no model —
+`triage.fakes.resolver_responder` is the one the tests and evals use. Passage
+text is whitespace-collapsed onto one line each so such a fake reads whole
+chunks rather than their first lines.
 """
 
 from __future__ import annotations
@@ -46,8 +47,8 @@ from triage import config
 from triage.kb import check_grounding
 from triage.schemas import Classification, Resolution, Ticket
 
-_CONTEXT_MARKER = "Context:"
-_USER_MARKER = "User:"
+CONTEXT_MARKER = "Context:"
+USER_MARKER = "User:"
 
 # Function words plus support-desk pleasantries. Every one of these appears as a
 # substring of almost any KB chunk, so keeping them would score every document
@@ -87,8 +88,8 @@ def build_prompt(ticket: Ticket, passages: list[Passage]) -> str:
     parts = ["You are a helpful, grounded Ubuntu support agent."]
     if passages:
         context = "\n".join(f"- {p.doc_id}: {' '.join(p.text.split())}" for p in passages)
-        parts.append(f"{_CONTEXT_MARKER}\n{context}")
-    parts.append(f"{_USER_MARKER} {ticket.subject}. {ticket.text}")
+        parts.append(f"{CONTEXT_MARKER}\n{context}")
+    parts.append(f"{USER_MARKER} {ticket.subject}. {ticket.text}")
     return "\n\n".join(parts)
 
 
