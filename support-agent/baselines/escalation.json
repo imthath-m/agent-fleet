@@ -1,0 +1,9 @@
+{
+  "dataset_name": "triage_escalation",
+  "dataset_version": "1",
+  "mean_scores": {
+    "escalation_accuracy": 0.9333333333333333,
+    "escalation_precision": 0.875,
+    "escalation_recall": 1.0
+  }
+}
