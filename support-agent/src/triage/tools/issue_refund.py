@@ -11,11 +11,9 @@ could not have been valid in the first place.
 
 from __future__ import annotations
 
-from hashlib import sha256
-
 from spine.tracing import StepType, timed_span
 
-from triage.schemas import ProposedAction
+from triage.schemas import ProposedAction, idempotency_key
 from triage.tools.order_lookup import order_exists
 
 
@@ -29,7 +27,7 @@ def issue_refund(order_id: str, amount: float, reason: str) -> ProposedAction:
         return ProposedAction(
             tool="issue_refund",
             args={"order_id": order_id, "amount": amount, "reason": reason},
-            idempotency_key=sha256(f"{order_id}|{amount}|{reason}".encode()).hexdigest(),
+            idempotency_key=idempotency_key(order_id, amount, reason),
             risk="high",
             executed=False,
         )

@@ -7,11 +7,9 @@ describing the record change a human would approve, and stops there.
 
 from __future__ import annotations
 
-from hashlib import sha256
-
 from spine.tracing import StepType, timed_span
 
-from triage.schemas import ProposedAction
+from triage.schemas import ProposedAction, idempotency_key
 
 
 def crm_update(ticket_id: str, resolution_summary: str, tags: list[str]) -> ProposedAction:
@@ -29,9 +27,9 @@ def crm_update(ticket_id: str, resolution_summary: str, tags: list[str]) -> Prop
                 "resolution_summary": resolution_summary,
                 "tags": ordered_tags,
             },
-            idempotency_key=sha256(
-                f"{ticket_id}|{resolution_summary}|{','.join(ordered_tags)}".encode()
-            ).hexdigest(),
+            idempotency_key=idempotency_key(
+                ticket_id, resolution_summary, ",".join(ordered_tags)
+            ),
             risk="high",
             executed=False,
         )
