@@ -19,7 +19,7 @@ Any SMB with a support inbox and a help center but no large support team. Value
 prop: deflect routine tickets, cut first-response time, keep humans for the hard
 cases — with full auditability.
 
-## Agent design (multi-agent via A2A)
+## Agent design (sequential in-process chain)
 
 ```
         inbound ticket
@@ -27,7 +27,7 @@ cases — with full auditability.
       ┌──────▼───────┐
       │  Classifier  │  intent, priority, product area, sentiment
       └──────┬───────┘
-             │ A2A handoff
+             │ handoff
       ┌──────▼───────┐
       │   Resolver   │  RAG over KB → grounded answer w/ citations
       └──────┬───────┘
@@ -43,29 +43,36 @@ cases — with full auditability.
 
 - **Classifier agent** — Gemini structured output: intent, priority, product
   area, sentiment, PII flag.
-- **Resolver agent** — retrieves from the product's **Vertex AI Search** KB
-  datastore, produces a grounded, cited answer.
-- **Action agent** — ADK tools calling the SMB's systems (order lookup, refund,
-  CRM update). Actions are **idempotent** and guarded.
-- Handoffs use **A2A**; every hop is traced.
+- **Resolver agent** — retrieves from the KB via `spine/rag.py`, produces a
+  grounded, cited answer.
+- **Action agent** — tools calling the SMB's systems (order lookup, refund,
+  CRM update). Actions are **idempotent** and guarded. Pre-sale they are mock
+  adapters that only ever *propose* an action — nothing is executed.
+- Handoffs are plain sequential function calls in one process; every hop is
+  traced. A2A is deferred until a second agent actually needs a wire protocol.
 
-## Tools (Cloud Run backends)
+## Tools
 
-- `kb_search` — query the product's Vertex AI Search datastore.
-- `order_lookup` — read order/customer status (mock adapter first, real
+- `kb_search` — query the KB retriever.
+- `order_lookup` — read order/customer status (fixture store first, real
   integrations per customer).
-- `issue_refund` — high-risk; requires confidence + policy check, else HITL.
-- `crm_update` — write resolution + tags back to CRM.
+- `issue_refund` — high-risk; always routed to HITL as a proposed action.
+- `crm_update` — propose resolution + tags for a CRM write; never writes
+  pre-sale.
 
 All tools validate inputs, are idempotent, and emit trace spans + structured logs
 via the spine.
 
 ## Data & memory
 
-- **Firestore**: ticket state, conversation, escalation status.
-- **Vertex Memory Bank**: per-customer history so repeat contacts have context.
-- **Vertex AI Search datastore**: the SMB's help-center/KB articles, ingested via
-  `spine/rag.py`.
+Local-first: the in-memory spine stores are the default, and the GCP backends
+below sit behind the same interfaces, swapped in during the GCP cutover phase.
+
+- **Session/ticket state**: `spine.memory` stores → Firestore later.
+- **Per-customer history** so repeat contacts have context: `spine.memory` →
+  Vertex Memory Bank later.
+- **KB articles**: help.ubuntu.com docs (CC BY-SA 4.0) for the demo corpus,
+  ingested via `spine/rag.py` → Vertex AI Search datastore later.
 
 ## Guardrails & HITL
 
@@ -77,8 +84,8 @@ via the spine.
 
 ## Evaluation (uses `spine/eval/`)
 
-Golden dataset: real-ish tickets → expected classification, expected resolution,
-expected action.
+Golden dataset: tickets synthesized from real KB chunks → expected
+classification, expected resolution, expected action.
 
 Metrics:
 - **Classification accuracy / F1** (deterministic).
@@ -99,22 +106,30 @@ regression, cost spikes, and error-rate SLO breaches.
 
 ## Integrations (go-to-market)
 
-- Ingest: email (Gmail/IMAP), webform webhook, and a generic REST endpoint.
+- Ingest: a generic REST endpoint first; email (Gmail/IMAP) and webform webhook
+  after.
 - KB: upload docs or point at an existing help center.
-- CRM: start with one (e.g. HubSpot or Zendesk) via adapter; add more per demand.
+- CRM: read-only and drafts-only pre-sale — no customer system is written to
+  until someone has bought. Which CRM to adapt first stays open until a
+  customer names one.
 
 ## Build phases
 
-1. **Classifier only** on the spine — traced, logged, with an eval set. Verify:
-   classification metrics reported in CI + dashboard.
-2. **Resolver + RAG** — ingest a sample KB, grounded cited answers. Verify:
-   grounding rate measured; hallucinations caught by the gate.
-3. **Action agent + tools** — mock adapters, idempotent, guarded. Verify:
-   tool-call correctness in eval; high-risk actions route to HITL.
-4. **HITL + confidence gating** — human queue UI (minimal) + escalation flow.
-   Verify: low-confidence tickets escalate; precision/recall tracked.
-5. **End-to-end demo** — one real inbox → resolution or escalation, fully traced
-   and observable. Verify: a prospect can watch a ticket flow through live.
+See **[`tasks.md`](./tasks.md)** for the executable decomposition — fixed
+decisions, open questions, and 43 numbered tasks across these phases with
+per-task verification criteria and a parallelism map.
+
+0. **Scaffold** — package, config, CI job.
+1. **KB ingestion** — real Ubuntu docs, chunked and attributed.
+2. **Classifier** — structured output, schema-guarded, eval metrics.
+3. **Resolver + RAG** — grounded cited answers; grounding rate measured.
+4. **Action agent + tools** — mock adapters, idempotent, guarded, drafts-only.
+5. **Pipeline + HITL + confidence gating** — human queue UI (minimal).
+6. **Golden set + CI eval gate** — regression gate blocks deploy.
+7. **Ingestion surface + landing-page trial** — a prospect watches a ticket flow
+   through live, with the trace, citation, and escalation decision visible.
+8. **GCP cutover (deferred)** — real Gemini, Vertex AI Search, Firestore,
+   BigQuery dashboards, real Terraform.
 
 ## Definition of done
 
