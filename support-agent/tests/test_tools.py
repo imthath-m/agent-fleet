@@ -3,7 +3,14 @@ from spine.tracing import ATTR_STEP, StepType, configure_tracing
 
 from triage import config
 from triage.kb import check_grounding
-from triage.tools import TOOLS_BY_NAME, issue_refund, kb_search, order_lookup, risk_of
+from triage.tools import (
+    TOOLS_BY_NAME,
+    crm_update,
+    issue_refund,
+    kb_search,
+    order_lookup,
+    risk_of,
+)
 from triage.tools.kb_search import default_retriever
 from triage.tools.order_lookup import ORDERS_PATH, order_exists
 
@@ -145,3 +152,57 @@ def test_issue_refund_is_registered_as_a_high_risk_tool():
     assert TOOLS_BY_NAME["issue_refund"].fn is issue_refund
     assert risk_of("issue_refund") == "high"
     assert "issue_refund" in config.HIGH_RISK_TOOLS
+
+
+# --------------------------------------------------------------------------- #
+# crm_update (4.4) — high risk, drafts only
+# --------------------------------------------------------------------------- #
+
+
+def test_crm_update_proposes_only():
+    action = crm_update("TK-3001", "Reset the password from recovery mode.", ["account", "high"])
+
+    assert action.executed is False
+    assert action.risk == "high"
+    assert action.tool == "crm_update"
+    assert action.args == {
+        "ticket_id": "TK-3001",
+        "resolution_summary": "Reset the password from recovery mode.",
+        "tags": ["account", "high"],
+    }
+    assert risk_of("crm_update") == "high"
+    assert "crm_update" in config.HIGH_RISK_TOOLS
+    assert TOOLS_BY_NAME["crm_update"].fn is crm_update
+
+
+def test_crm_update_idempotency_key_is_stable():
+    first = crm_update("TK-3001", "summary", ["a", "b"])
+    assert first.idempotency_key == crm_update("TK-3001", "summary", ["a", "b"]).idempotency_key
+    # Tag order is not meaningful to the CRM, so it must not change the key.
+    assert first.idempotency_key == crm_update("TK-3001", "summary", ["b", "a"]).idempotency_key
+
+    assert crm_update("TK-3002", "summary", ["a", "b"]).idempotency_key != first.idempotency_key
+    assert crm_update("TK-3001", "other", ["a", "b"]).idempotency_key != first.idempotency_key
+    assert crm_update("TK-3001", "summary", ["a", "c"]).idempotency_key != first.idempotency_key
+
+
+def test_crm_update_validates_before_proposing():
+    with pytest.raises(ValueError, match="ticket_id"):
+        crm_update("", "summary", [])
+
+
+def test_crm_update_emits_a_tool_span():
+    exporter = configure_tracing()
+    crm_update("TK-3001", "summary", ["account"])
+    spans = exporter.get_finished_spans()
+    assert [s.name for s in spans] == ["tool.crm_update"]
+    assert spans[0].attributes[ATTR_STEP] == StepType.TOOL_CALL
+
+
+# --------------------------------------------------------------------------- #
+# The whole registry
+# --------------------------------------------------------------------------- #
+
+
+def test_all_four_tools_are_registered():
+    assert set(TOOLS_BY_NAME) == {"kb_search", "order_lookup", "issue_refund", "crm_update"}
