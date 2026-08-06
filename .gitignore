@@ -8,3 +8,4 @@ __pycache__/
 *.tfstate
 *.tfstate.*
 .terraform/
+support-agent/data/kb/raw/
