@@ -1,0 +1,8 @@
+{
+  "dataset_name": "triage_actions",
+  "dataset_version": "1",
+  "mean_scores": {
+    "tool_call_correctness": 1.0,
+    "field_accuracy": 1.0
+  }
+}

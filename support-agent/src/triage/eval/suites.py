@@ -37,7 +37,12 @@ from spine.models import FakeModelClient
 from triage.actions import plan_actions
 from triage.classifier import CLASSIFIED_FIELDS, classify
 from triage.eval.metrics import EscalationPrecisionRecall, GroundingRate
-from triage.fakes import classifier_responder, resolution_judge_client, resolver_responder
+from triage.fakes import (
+    classifier_responder,
+    resolution_judge_client,
+    resolver_responder,
+    triage_responder,
+)
 from triage.kb import load_kb
 from triage.pipeline import TriageAgent
 from triage.resolver import resolve
@@ -242,3 +247,50 @@ def build_escalation_suite() -> _EscalationSuite:
         return Prediction(output=output, text=json.dumps(output))
 
     return _EscalationSuite(dataset, predict, EscalationPrecisionRecall())
+
+
+# --------------------------------------------------------------------------- #
+# Triage (composed pipeline)
+# --------------------------------------------------------------------------- #
+
+
+def triage_metrics(retriever) -> list[Metric]:
+    return [
+        GroundingRate(retriever=retriever),
+        SchemaPassRate(required_fields=RESOLUTION_REQUIRED_FIELDS),
+    ]
+
+
+def build_triage_suite() -> EvalSuite:
+    """Run the whole `TriageAgent` — classify, resolve, plan actions, escalate —
+    as the predictor over the resolution set: the analogue of
+    `spine.reference_agent.build_reference_suite`, covering the composed
+    pipeline rather than one stage in isolation.
+
+    Not itself one of tasks.md 6.4's four named baselines, but the task's own
+    rationale — "the gate covers the composed pipeline, not just stages" — is
+    unmet without a baseline for the suite that actually runs the composed
+    pipeline. So this one gets `baselines/triage.json` too: five suites, five
+    baselines, five gates. Noted as a deviation.
+
+    An escalated ticket withholds its answer by design (Phase 5's policy); this
+    suite does not special-case that, so a withheld example scores as an empty,
+    uncited prediction. The baseline this task captures is the pipeline's
+    honest current behaviour, escalations included.
+    """
+    dataset = load_dataset(RESOLUTION_DATASET)
+    retriever = load_kb()
+    agent = TriageAgent(
+        retriever=retriever,
+        model=FakeModelClient(responder=triage_responder),
+        logger=get_logger("triage.eval.triage", stream=io.StringIO()),
+    )
+
+    def predict(agent_input: Any) -> Prediction:
+        result = agent.run(Ticket.from_dict(agent_input))
+        if result.withheld or result.resolution is None:
+            return Prediction(output={"answer": "", "citations": []}, text="")
+        output = {"answer": result.resolution.answer, "citations": result.resolution.citations}
+        return Prediction(output=output, text=result.resolution.answer)
+
+    return EvalSuite(dataset, predict, triage_metrics(retriever))
