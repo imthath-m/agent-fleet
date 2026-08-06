@@ -19,9 +19,10 @@ Three things worth knowing:
 * **A blocked input still bills a metric.** `classify()` returns
   `(None, report)` when the injection guard blocks; the pipeline short-circuits
   to `_finish` rather than returning early, so the sink sees every request.
-* **Escalation is the guardrail decision for now.** Phase 5.2 replaces this
-  with `triage.escalation.should_escalate`, which adds the four policy rules a
-  confidence gate cannot see.
+* **Escalation is a policy, not just a guardrail decision.**
+  `triage.escalation.should_escalate` adds the four rules a confidence gate
+  cannot see (ungrounded, high-risk action, urgent, angry-and-important), and
+  anything it escalates is withheld pending review.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ import time
 import uuid
 
 from spine.guardrails import Decision
-from spine.hitl import EscalationItem, HumanQueue, escalate_if_needed
+from spine.hitl import EscalationItem, HumanQueue
 from spine.logging import current_trace_id, get_logger, log_event
 from spine.memory import InMemoryMemoryStore, InMemorySessionStore, MemoryStore, SessionStore
 from spine.models import FakeModelClient, ModelClient, WrappedModelClient
@@ -41,6 +42,7 @@ from spine.tracing import StepType, request_span
 from triage import config
 from triage.actions import plan_actions
 from triage.classifier import classify
+from triage.escalation import escalate, should_escalate
 from triage.fakes import triage_responder
 from triage.kb import load_kb
 from triage.resolver import resolve
@@ -128,20 +130,25 @@ class TriageAgent:
             )
 
             # 5. Escalation / delivery decision ------------------------------- #
-            escalation = escalate_if_needed(
-                output_report,
-                self.hitl,
-                payload=escalation_payload(trace_id, ticket, resolution, actions),
+            needs_human, reason = should_escalate(
+                classification, resolution, actions, output_report
             )
-            withheld = output_report.decision != Decision.PASS
-            if escalation is not None:
+            escalation = None
+            if needs_human:
+                escalation = escalate(
+                    output_report,
+                    self.hitl,
+                    reason=reason,
+                    payload=escalation_payload(trace_id, ticket, resolution, actions),
+                )
                 self._log(
                     request_id,
-                    "escalated to human queue",
+                    f"escalated to human queue: {reason}",
                     step=StepType.GUARDRAIL,
                     outcome="escalated",
                     guardrail_decision=output_report.decision,
                 )
+            withheld = needs_human or output_report.decision != Decision.PASS
 
             # 6. Session + memory write (delivered answers only) -------------- #
             self.session_store.append_message(
