@@ -1,0 +1,282 @@
+[
+  {
+    "slug": "Installation",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/Installation",
+    "fetched_at": "2026-08-06T17:06:10.599656+00:00",
+    "sha256": "a38afec9d7df0fc12401bb5876196d4a2c5e30c908cf2d8e76bbe3f598dd42e7"
+  },
+  {
+    "slug": "Installation/FromUSBStick",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/Installation/FromUSBStick",
+    "fetched_at": "2026-08-06T17:06:11.226297+00:00",
+    "sha256": "df9bf31a408cd5f96336017a0efe454e62952b25f96c2b924fa44b97ada7b97e"
+  },
+  {
+    "slug": "UEFI",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/UEFI",
+    "fetched_at": "2026-08-06T17:06:11.743305+00:00",
+    "sha256": "16346a2d2c7096765881c985c627071dc6868dfa4a908919120f589bbaac34d8"
+  },
+  {
+    "slug": "Grub2",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/Grub2",
+    "fetched_at": "2026-08-06T17:06:12.310099+00:00",
+    "sha256": "3b690c02fa53046e75e0194e97aeae07e76dd51ace1baf0d51dd3c1a2f2ac5c3"
+  },
+  {
+    "slug": "Installation/CDIntegrityCheck",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/Installation/CDIntegrityCheck",
+    "fetched_at": "2026-08-06T17:06:12.744703+00:00",
+    "sha256": "ded80599d7195ea4c54a0a39ec3148bb8999c9f28d859207947198b25a1d16ed"
+  },
+  {
+    "slug": "Installation/FromAnotherDistro",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/Installation/FromAnotherDistro",
+    "fetched_at": "2026-08-06T17:06:13.253405+00:00",
+    "sha256": "c2172c194d83d5b4d0e5275bbc2206c435793b6bb1b5327db16cacae256d3631"
+  },
+  {
+    "slug": "Installation/AMD64",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/Installation/AMD64",
+    "fetched_at": "2026-08-06T17:06:13.727132+00:00",
+    "sha256": "e0d573b0aa7c996375e7a07b7dc60f82407f18131c7965a0a3170a4f27ec4d26"
+  },
+  {
+    "slug": "LiveCD",
+    "category": "install",
+    "url": "https://help.ubuntu.com/community/LiveCD",
+    "fetched_at": "2026-08-06T17:06:14.259393+00:00",
+    "sha256": "f07b0592936bdfb9b39166c0ac1a2a0ebd312303bb173deec65a7a8081e85f0f"
+  },
+  {
+    "slug": "Firewall",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/Firewall",
+    "fetched_at": "2026-08-06T17:06:14.709056+00:00",
+    "sha256": "418a4b4484c8acce1a11cc12e4ed40f82f8cf1ede0c4a66299fdd371516fdd89"
+  },
+  {
+    "slug": "Gufw",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/Gufw",
+    "fetched_at": "2026-08-06T17:06:15.216728+00:00",
+    "sha256": "ded05c7bf5956556bf856b79ea1e84fdf9f848046dae6beba96916424dab425d"
+  },
+  {
+    "slug": "DoINeedAFirewall",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/DoINeedAFirewall",
+    "fetched_at": "2026-08-06T17:06:15.714438+00:00",
+    "sha256": "f57591ebebffadbd7f41a9b7031ef5cb11bc1b3570cc0e48f65c0eb3f0bf29a1"
+  },
+  {
+    "slug": "NetworkManager",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/NetworkManager",
+    "fetched_at": "2026-08-06T17:06:16.239049+00:00",
+    "sha256": "0798be05e519e5cd78f55e84256a19c674f48781c9d326e1876df3b9b814a4dd"
+  },
+  {
+    "slug": "NetworkManagerOptions",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/NetworkManagerOptions",
+    "fetched_at": "2026-08-06T17:06:16.647849+00:00",
+    "sha256": "4befd45e0b038adaa07ac68e869c6e491893ed713c83ca025eb2e184ff37b6be"
+  },
+  {
+    "slug": "DnsAndDhcp",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/DnsAndDhcp",
+    "fetched_at": "2026-08-06T17:06:17.096657+00:00",
+    "sha256": "0bb7222912af203b217b80f4a74711b238a2fefe96d8b16192c9297941122707"
+  },
+  {
+    "slug": "BridgingNetworkInterfaces",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/BridgingNetworkInterfaces",
+    "fetched_at": "2026-08-06T17:06:17.531033+00:00",
+    "sha256": "c37918aad043e1d2aea88a59f638430e21f702c9bd681f09212dbaba2489fc1e"
+  },
+  {
+    "slug": "WifiDocs",
+    "category": "networking",
+    "url": "https://help.ubuntu.com/community/WifiDocs",
+    "fetched_at": "2026-08-06T17:06:18.430426+00:00",
+    "sha256": "f9fb90b11b387af64872397d6a82eb5d3d4573c4819a2c0bf1931cb08a99d001"
+  },
+  {
+    "slug": "AptGet/Howto",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/AptGet/Howto",
+    "fetched_at": "2026-08-06T17:06:18.979772+00:00",
+    "sha256": "cdc2974ec9e6512dbf9d7ad8f7e478634dcf330e760761981e0ee51298f4bfa7"
+  },
+  {
+    "slug": "Repositories",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/Repositories",
+    "fetched_at": "2026-08-06T17:06:19.437764+00:00",
+    "sha256": "591c416d254488c153c3db7ba8dad172090d8cbdec91e37f457df1a101749f5b"
+  },
+  {
+    "slug": "Repositories/CommandLine",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/Repositories/CommandLine",
+    "fetched_at": "2026-08-06T17:06:19.912688+00:00",
+    "sha256": "700ab92efd312fc73b2cd09737e763b909556eff47bf60f8de7bcf164ac8a293"
+  },
+  {
+    "slug": "SynapticHowto",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/SynapticHowto",
+    "fetched_at": "2026-08-06T17:06:20.495009+00:00",
+    "sha256": "a381f984006f2cf1e00b9d272cbd81b8783da7d67e83c156c615d44385b01b5f"
+  },
+  {
+    "slug": "PPA",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/PPA",
+    "fetched_at": "2026-08-06T17:06:21.078847+00:00",
+    "sha256": "cb478d519c3f6201857aa2f5951045834756da3c31305526a210ee49ce70e375"
+  },
+  {
+    "slug": "AptCdrom",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/AptCdrom",
+    "fetched_at": "2026-08-06T17:06:21.549533+00:00",
+    "sha256": "ce644f47ea16083418eeb4d352b176d41462234f6d1aab3e12b79acbb475156f"
+  },
+  {
+    "slug": "PackageManagerTroubleshootingProcedure",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/PackageManagerTroubleshootingProcedure",
+    "fetched_at": "2026-08-06T17:06:22.113345+00:00",
+    "sha256": "e845311e2cc29e1d977db73b8a08ba66ba24cd0c7211d019f8c748fb7870a359"
+  },
+  {
+    "slug": "AptitudeSurvivalGuide",
+    "category": "packaging",
+    "url": "https://help.ubuntu.com/community/AptitudeSurvivalGuide",
+    "fetched_at": "2026-08-06T17:06:22.601602+00:00",
+    "sha256": "205be7d0a0da65e3198a3b9c4cefd16d673b1988a2c2eaa950abc49359b4ddf9"
+  },
+  {
+    "slug": "RootSudo",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/RootSudo",
+    "fetched_at": "2026-08-06T17:06:23.160733+00:00",
+    "sha256": "b2a3606fbfcbf6320f09d3fc1838bdc78b0570bd0fbce92646fe2df1af3e2c26"
+  },
+  {
+    "slug": "Sudoers",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/Sudoers",
+    "fetched_at": "2026-08-06T17:06:23.679120+00:00",
+    "sha256": "c6d919230a84ad04c584028fce735b20d1e4554e913531c0c42151daefe4d4b3"
+  },
+  {
+    "slug": "AddUsersHowto",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/AddUsersHowto",
+    "fetched_at": "2026-08-06T17:06:24.151336+00:00",
+    "sha256": "9b62a348aee16be03d2e224c422bfe8bd84929faa0f3837554e105379cddb55f"
+  },
+  {
+    "slug": "FilePermissions",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/FilePermissions",
+    "fetched_at": "2026-08-06T17:06:24.744777+00:00",
+    "sha256": "04ff0e14a0edb9fd87ec8e3f4de21508e29e1b172dd9e4cca8f791a5b4265d12"
+  },
+  {
+    "slug": "FilePermissionsACLs",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/FilePermissionsACLs",
+    "fetched_at": "2026-08-06T17:06:25.195396+00:00",
+    "sha256": "359783920e494e4f7d87dd462d6b576be100fb567a3f78111ca410a6eafb39ec"
+  },
+  {
+    "slug": "StrongPasswords",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/StrongPasswords",
+    "fetched_at": "2026-08-06T17:06:25.836801+00:00",
+    "sha256": "9b5e5df459c206e0f75d6ec0769e2bbdb4479ab7029ad1d91448bdbe2495dd7a"
+  },
+  {
+    "slug": "LostPassword",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/LostPassword",
+    "fetched_at": "2026-08-06T17:06:26.306952+00:00",
+    "sha256": "473e74070ce0b018bc97768bddfaf768d2f57e986fdd1c39a5a88c567d2d0c87"
+  },
+  {
+    "slug": "AutoAdminGroup",
+    "category": "users_permissions",
+    "url": "https://help.ubuntu.com/community/AutoAdminGroup",
+    "fetched_at": "2026-08-06T17:06:26.723451+00:00",
+    "sha256": "7c8cb97944b3367c5aeacb164f0e49363081ab3c3b0ffdc98914b2045ba3b58e"
+  },
+  {
+    "slug": "HardwareSupportComponentsWireless",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/HardwareSupportComponentsWireless",
+    "fetched_at": "2026-08-06T17:06:27.128284+00:00",
+    "sha256": "e98241907b845d78f4162ba4bf5b6a983ac3196a48ce60d282b0e915aabed71e"
+  },
+  {
+    "slug": "BluetoothDevices",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/BluetoothDevices",
+    "fetched_at": "2026-08-06T17:06:27.547872+00:00",
+    "sha256": "45a578596c908a975b1805f21758f8f8517fe88ba07ace8a543995523d44d44d"
+  },
+  {
+    "slug": "BinaryDriverHowto",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/BinaryDriverHowto",
+    "fetched_at": "2026-08-06T17:06:30.447953+00:00",
+    "sha256": "75f6cde04dbe7555a5c7b6d595b1760259ba517f7f227981388fcc2c4fc2e5b6"
+  },
+  {
+    "slug": "BinaryDriverHowto/Nvidia",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/BinaryDriverHowto/Nvidia",
+    "fetched_at": "2026-08-06T17:06:31.542436+00:00",
+    "sha256": "db2bbf1cb75f7939920bb46da318533674fd4f07513a3cbb1d9e9bbd209980ca"
+  },
+  {
+    "slug": "Printers",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/Printers",
+    "fetched_at": "2026-08-06T17:06:31.991170+00:00",
+    "sha256": "7fbdd0b576b63b58b369c4c20fb1c5b7e748fedb72990cb262814f0b069fa540"
+  },
+  {
+    "slug": "Scanners",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/Scanners",
+    "fetched_at": "2026-08-06T17:06:32.490616+00:00",
+    "sha256": "06aadc9f9bc2503035f30cd144f4da55445e49da001b273429216ce122286e63"
+  },
+  {
+    "slug": "SynapticsTouchpad",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/SynapticsTouchpad",
+    "fetched_at": "2026-08-06T17:06:33.015613+00:00",
+    "sha256": "6a6a0146be8f0da36a39a00250dd7a4df4d5df8b1c49dbe29ae8a3dd4f9d9e0d"
+  },
+  {
+    "slug": "Webcam",
+    "category": "hardware",
+    "url": "https://help.ubuntu.com/community/Webcam",
+    "fetched_at": "2026-08-06T17:06:33.604767+00:00",
+    "sha256": "6f4c9cc2841531853022a8ec8fe6c73cdc5b16ae042e50f15336e8712c271acb"
+  }
+]
