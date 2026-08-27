@@ -61,7 +61,9 @@ The folder is self-contained static files. Pick one:
   Actions workflow, or copy it to a `docs/` folder and set Pages → *Deploy from branch → /docs*.
   Custom domain later via a `CNAME` file.
 - **Vercel** — `vercel deploy` with the project root set to `landing-page/site/` (framework
-  preset: *Other*). No build command needed.
+  preset: *Other*). No build command needed. `vercel.json` here disables automatic
+  deployments on every branch except `main`, so PRs elsewhere in the repo get no Vercel
+  check; pushes to `main` rebuild only when this folder changed.
 - **Cloud Run / GCS bucket** — upload the folder to a bucket and enable static website
   hosting (aligns with the GCP stack), or serve it from any static file server.
 
