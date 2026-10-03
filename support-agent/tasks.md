@@ -55,9 +55,9 @@ A phase is not complete until **every** `Verify:` in it passes.
 
 | # | Question | Options | Resolved by |
 | --- | --- | --- | --- |
-| Q1 | Exact classifier output schema. | (a) 4 fields `intent/priority/product_area/sentiment` + `pii_flag` per plan.md; (b) add free-text `reason` for judge/debug; (c) add `confidence` self-report (unreliable, prefer retrieval score). Enum vocabularies for each field also undecided. | Blocks **2.1**. Decide by writing 20 candidate tickets and checking which fields a human labeller can agree on; pin the enums in `triage/schemas.py` and never widen without a dataset version bump. |
+| Q1 | ✅ **Resolved** — enums pinned in `triage/schemas.py`. Exact classifier output schema. | (a) 4 fields `intent/priority/product_area/sentiment` + `pii_flag` per plan.md; (b) add free-text `reason` for judge/debug; (c) add `confidence` self-report (unreliable, prefer retrieval score). Enum vocabularies for each field also undecided. | Blocks **2.1**. Decide by writing 20 candidate tickets and checking which fields a human labeller can agree on; pin the enums in `triage/schemas.py` and never widen without a dataset version bump. |
 | Q2 | Which CRM adapter first, if ever pre-sale. | (a) none — `crm_update` stays a mock forever until a paying customer names one; (b) HubSpot (free dev tier, generous API); (c) Zendesk (closer to the support inbox). | Only relevant at Phase 8+. Decision 4 makes (a) the default; a signed customer overrides. |
-| Q3 | Golden set: model-generated or hand-curated. | (a) fully generated from KB chunks + spot-reviewed; (b) generated then 100% human-corrected labels; (c) hand-written. (a) scales but risks the eval measuring the generator; (b) is the honest middle. | Blocks **6.3**. Recommendation: (b) — generate inputs, hand-correct every `expected`. Whoever owns eval credibility decides. |
+| Q3 | Golden set: model-generated or hand-curated. | (a) fully generated from KB chunks + spot-reviewed; (b) generated then 100% human-corrected labels; (c) hand-written. (a) scales but risks the eval measuring the generator; (b) is the honest middle. | Still blocks **6.3** (the only open Phase 0–7 task). Recommendation: (b) — generate inputs, hand-correct every `expected`. Whoever owns eval credibility decides. |
 | Q4 | Real-Gemini cutover timing. | (a) after Phase 6 (gate exists, so regressions are visible); (b) after Phase 7 (trial demoable first, cheapest path to a prospect); (c) never pre-revenue. | Blocks **8.1**. Needs a cost ceiling per ticket and a funded GCP project; neither exists yet. |
 | Q5 | Multi-tenancy model. | Today the only tenancy primitive is the `namespace: str` argument on `spine.rag.Retriever.ingest/query`. Options: (a) namespace-per-customer string only; (b) namespace + a `tenant_id` threaded through `MetricRecord`/`SessionStore`/`HumanQueue` keys; (c) process-per-tenant. | Blocks any second tenant, and blocks **8.3**/**8.5**. (a) is sufficient for one demo tenant — do not build (b) speculatively, but do not hardcode the namespace anywhere outside `triage/config.py`. |
 
@@ -80,7 +80,7 @@ A phase is not complete until **every** `Verify:` in it passes.
 
 ---
 
-## Phase 0 — Scaffold
+## Phase 0 — Scaffold — ✅ done
 
 **Goal:** an importable, lintable, testable `triage` package that depends on
 `spine` and has its own CI job. **Depends on:** nothing.
@@ -144,7 +144,7 @@ A phase is not complete until **every** `Verify:` in it passes.
 
 ---
 
-## Phase 1 — KB ingestion (real Ubuntu docs)
+## Phase 1 — KB ingestion (real Ubuntu docs) — ✅ done
 
 **Goal:** a real, attributed, chunked corpus queryable through
 `spine.rag.InMemoryRetriever`, committed to the repo so every later phase is
@@ -207,7 +207,7 @@ with a relevant chunk; attribution present.
 
 ---
 
-## Phase 2 — Classifier
+## Phase 2 — Classifier — ✅ done
 
 **Goal:** structured classification of a ticket, schema-guarded, traced, with a
 deterministic eval suite. **Depends on:** Phase 0 (Phase 1 not required).
@@ -278,7 +278,7 @@ deterministic eval suite. **Depends on:** Phase 0 (Phase 1 not required).
 
 ---
 
-## Phase 3 — Resolver + RAG grounding
+## Phase 3 — Resolver + RAG grounding — ✅ done
 
 **Goal:** grounded, cited answers over the real KB, with a grounding metric that
 catches fabricated citations. **Depends on:** Phase 1, Phase 2.
@@ -340,7 +340,7 @@ fabricated citation demonstrably drives the metric to 0.
 
 ---
 
-## Phase 4 — Tools + action agent (mocks, drafts-only)
+## Phase 4 — Tools + action agent (mocks, drafts-only) — ✅ done
 
 **Goal:** four named tools that validate inputs, are idempotent, emit tool spans,
 and never cause a real side effect. **Depends on:** Phase 1 (for `kb_search`),
@@ -416,7 +416,7 @@ returns nothing); tool-call correctness ≥ 0.90.
 
 ---
 
-## Phase 5 — Pipeline, HITL, confidence gating, queue UI
+## Phase 5 — Pipeline, HITL, confidence gating, queue UI — ✅ done
 
 **Goal:** the three stages composed into one traced request, with an explicit
 escalation policy and a minimal human queue. **Depends on:** Phases 2, 3, 4.
@@ -487,7 +487,7 @@ list and resolve them.
 
 ---
 
-## Phase 6 — Golden set expansion + CI eval gate
+## Phase 6 — Golden set expansion + CI eval gate — ✅ done except 6.3
 
 **Goal:** a golden set big enough that the gate means something, wired into CI.
 **Depends on:** Phases 2, 3, 4, 5. Resolve **Q3** before 6.3.
@@ -510,7 +510,7 @@ list and resolve them.
   - **Verify:** `uv run pytest tests/test_spotcheck.py::test_real_questions_do_not_crash`
     — all 10 produce a `TriageResult` and none produce an ungrounded delivered answer.
 
-- **6.3** `SEQ` · fable — Expand the golden sets.
+- **6.3** `SEQ` · fable — Expand the golden sets. **⏳ Not done** — sets are 16–19 rows each; `test_golden_coverage.py` absent.
   - Touches: `data/golden/classification.jsonl`, `resolution.jsonl`,
     `actions.jsonl`, `escalation.jsonl`; bump each header's `dataset_version`.
   - Target ≥ 60 examples per set drawn from 6.1, with **every `expected` field
@@ -547,7 +547,7 @@ deliberately degraded classifier fails the gate.
 
 ---
 
-## Phase 7 — Ingestion surface + landing-page trial
+## Phase 7 — Ingestion surface + landing-page trial — ✅ done
 
 **Goal:** a ticket can be submitted over HTTP and a prospect can watch the trace.
 **Depends on:** Phase 5 (Phase 6 not strictly required; run in parallel with 6).
