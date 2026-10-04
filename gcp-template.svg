@@ -1,0 +1,90 @@
+<svg width="100%" viewBox="-24 -8 1324 945" xmlns="http://www.w3.org/2000/svg" role="img"><style>
+text{font-family:Arial,Helvetica,sans-serif;}
+.th{font-size:14px;font-weight:500;fill:#1a1a1a;}
+.t{font-size:14px;fill:#1a1a1a;}
+.ts{font-size:12px;fill:#6b6f76;}
+.tg{font-size:12px;font-weight:600;fill:#1a1a1a;}
+.tn{font-size:13px;font-style:italic;fill:#3a3a3a;}
+.box{fill:#ffffff;stroke:#9aa0a6;}
+.arr{stroke:#6b6f76;}
+.c-purple rect,.c-purple circle,.c-purple ellipse{fill:#EEEDFE;stroke:#534AB7;}
+.c-purple .th{fill:#3C3489;}
+.c-purple .ts{fill:#534AB7;}
+.c-teal rect,.c-teal circle,.c-teal ellipse{fill:#E1F5EE;stroke:#0F6E56;}
+.c-teal .th{fill:#085041;}
+.c-teal .ts{fill:#0F6E56;}
+svg{background:#ffffff;}
+</style><title>Bare-bones agentic system template (GCP)</title><desc>User interface to Apigee API Gateway, which checks Identity Platform, then across the trust boundary to an ADK agent or workflow on Agent Runtime, optionally through async jobs (Pub/Sub, Cloud Scheduler, notify when done). The agent sits in the center. It writes Sessions and Memory Bank, screens input, tool results and output with Model Armor, discovers tools in the optional Agent Registry, retrieves from the optional Agent Search, calls Gemini through Apigee AI Gateway, and calls tools through Agent Gateway with the user's token. Agent Gateway reaches MCP servers on Cloud Run, which reach internal systems; outside the perimeter it reaches optional external MCP servers. Optional human handoff sits beside the user interface: the agent signals escalation with a summary, and the channel moves the session to a contact center (CCaaS with Agent Assist). Approvals are not handoff: the same user approves in the UI, another person through a tool. MCP servers can also reach optional external systems. Optional ingestion feeds Agent Search. Dashed boxes are optional. The ops layer sits inside the boundary. Italic notes marked › beside the boxes are talking points to say out loud, not components: e.g. Agent Registry is discovery only, and authorization comes from Agent Identity plus IAM.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#6b6f76" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="tn" x="1280" y="24" text-anchor="end" dominant-baseline="central">› = say it out loud</text>
+<text class="tn" x="530" y="32" text-anchor="middle" dominant-baseline="central">› Verify JWT at the edge; per-tenant quotas</text>
+<g><rect class="box" x="200" y="50" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="290" y="68" text-anchor="middle" dominant-baseline="central">User interface</text><text class="ts" x="290" y="88" text-anchor="middle" dominant-baseline="central">Web, mobile, Slack</text></g>
+<g class="c-purple"><rect x="440" y="50" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="530" y="68" text-anchor="middle" dominant-baseline="central">Apigee API Gateway</text><text class="ts" x="530" y="88" text-anchor="middle" dominant-baseline="central">Cloud Armor WAF, rate limits</text></g>
+<g class="c-purple"><rect x="680" y="50" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="770" y="68" text-anchor="middle" dominant-baseline="central">Identity Platform</text><text class="ts" x="770" y="88" text-anchor="middle" dominant-baseline="central">AuthN</text></g>
+<text class="tn" x="870" y="71" dominant-baseline="central">› User token end to end (on behalf of)</text>
+<text class="tn" x="870" y="85" dominant-baseline="central">Staff? Federate their IdP (SAML, OIDC)</text>
+<text class="tn" x="-12" y="10" dominant-baseline="central">› Agent signals + summary; channel moves the session</text>
+<text class="tn" x="-12" y="24" dominant-baseline="central">When: low confidence, angry, regulated, or user asks</text>
+<text class="tn" x="-12" y="38" dominant-baseline="central">Redact PII in the summary</text>
+<g><rect class="box" x="-12" y="50" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="78" y="68" text-anchor="middle" dominant-baseline="central">Human handoff</text><text class="ts" x="78" y="88" text-anchor="middle" dominant-baseline="central">CCaaS, Agent Assist</text></g>
+<line x1="170" y1="78" x2="198" y2="78" class="arr" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<line x1="380" y1="78" x2="438" y2="78" class="arr" marker-end="url(#arrow)"/>
+<line x1="620" y1="78" x2="678" y2="78" class="arr" marker-end="url(#arrow)"/>
+<rect x="-12" y="138" width="1076" height="783" rx="16" fill="none" stroke="#a9adb3" stroke-width="0.5" stroke-dasharray="5 4"/>
+<text class="ts" x="36" y="903" dominant-baseline="central">Trust boundary: VPC-SC, CMEK, region</text>
+<text class="tn" x="264" y="903" dominant-baseline="central">› VPC-SC stops exfiltration; regional endpoints = residency; CMEK = your keys</text>
+<line x1="530" y1="106" x2="530" y2="318" class="arr" marker-end="url(#arrow)"/>
+<g class="c-teal"><rect x="200" y="172" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="290" y="190" text-anchor="middle" dominant-baseline="central">Sessions, Memory Bank</text><text class="ts" x="290" y="210" text-anchor="middle" dominant-baseline="central">Short- and long-term state</text></g>
+<text class="tn" x="190" y="193" text-anchor="end" dominant-baseline="central">› Memory only if cross-session</text>
+<text class="tn" x="190" y="207" text-anchor="end" dominant-baseline="central">Per-user scope, TTL, delete</text>
+<g class="c-teal"><rect x="440" y="172" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="530" y="190" text-anchor="middle" dominant-baseline="central">Async jobs</text><text class="ts" x="530" y="210" text-anchor="middle" dominant-baseline="central">Pub/Sub, Cloud Scheduler</text></g>
+<text class="tn" x="522" y="246" text-anchor="end" dominant-baseline="central">› When: long-running, scheduled,</text>
+<text class="tn" x="522" y="260" text-anchor="end" dominant-baseline="central">event-driven (price drop, delay)</text>
+<text class="tn" x="522" y="274" text-anchor="end" dominant-baseline="central">Retries; notify via FCM</text>
+<g class="c-purple"><rect x="680" y="172" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="770" y="190" text-anchor="middle" dominant-baseline="central">Model Armor</text><text class="ts" x="770" y="210" text-anchor="middle" dominant-baseline="central">Input, tool results, output</text></g>
+<text class="tn" x="870" y="193" dominant-baseline="central">› Screen tool results too:</text>
+<text class="tn" x="870" y="207" dominant-baseline="central">indirect prompt injection</text>
+<g class="c-purple"><rect x="200" y="320" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="290" y="338" text-anchor="middle" dominant-baseline="central">Agent Registry</text><text class="ts" x="290" y="358" text-anchor="middle" dominant-baseline="central">Discovery, if many tools</text></g>
+<text class="tn" x="190" y="341" text-anchor="end" dominant-baseline="central">› Discovery only, not authZ</text>
+<text class="tn" x="190" y="355" text-anchor="end" dominant-baseline="central">AuthZ: Agent Identity + IAM</text>
+<g class="c-teal"><rect x="440" y="320" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="530" y="338" text-anchor="middle" dominant-baseline="central">Agent or workflow</text><text class="ts" x="530" y="358" text-anchor="middle" dominant-baseline="central">ADK on Agent Runtime</text></g>
+<text class="tn" x="630" y="342" dominant-baseline="central">› Managed: state, traces</text>
+<text class="tn" x="630" y="356" dominant-baseline="central">Cloud Run/GKE for control</text>
+<line x1="440" y1="330" x2="272" y2="230" class="arr" marker-end="url(#arrow)"/>
+<line x1="620" y1="330" x2="788" y2="230" class="arr" marker-end="url(#arrow)"/>
+<line x1="440" y1="348" x2="382" y2="348" class="arr" marker-end="url(#arrow)"/>
+<g class="c-teal"><rect x="200" y="444" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="290" y="462" text-anchor="middle" dominant-baseline="central">Agent Search</text><text class="ts" x="290" y="482" text-anchor="middle" dominant-baseline="central">Knowledge: RAG with ACLs</text></g>
+<text class="tn" x="190" y="465" text-anchor="end" dominant-baseline="central">› Hybrid search + rerank</text>
+<text class="tn" x="190" y="479" text-anchor="end" dominant-baseline="central">ACL filter at query time</text>
+<g class="c-teal"><rect x="440" y="444" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="530" y="462" text-anchor="middle" dominant-baseline="central">Apigee AI Gateway</text><text class="ts" x="530" y="482" text-anchor="middle" dominant-baseline="central">Gemini: route, failover</text></g>
+<text class="tn" x="530" y="516" text-anchor="middle" dominant-baseline="central">› Token quotas + cost caps per tenant</text>
+<text class="tn" x="530" y="530" text-anchor="middle" dominant-baseline="central">Circuit breaker to 2nd region</text>
+<g class="c-purple"><rect x="680" y="444" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="770" y="462" text-anchor="middle" dominant-baseline="central">Agent Gateway</text><text class="ts" x="770" y="482" text-anchor="middle" dominant-baseline="central">User token, registry check</text></g>
+<text class="tn" x="870" y="449" dominant-baseline="central">› Least privilege per tool</text>
+<text class="tn" x="870" y="463" dominant-baseline="central">Writes: approval, idempotency key</text>
+<text class="tn" x="870" y="477" dominant-baseline="central">Approver: user → UI; other → tool</text>
+<line x1="470" y1="376" x2="342" y2="442" class="arr" marker-end="url(#arrow)"/>
+<line x1="530" y1="376" x2="530" y2="442" class="arr" marker-end="url(#arrow)"/>
+<line x1="590" y1="376" x2="718" y2="442" class="arr" marker-end="url(#arrow)"/>
+<g><rect class="box" x="200" y="564" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="290" y="582" text-anchor="middle" dominant-baseline="central">Ingestion</text><text class="ts" x="290" y="602" text-anchor="middle" dominant-baseline="central">Pub/Sub, async pipeline</text></g>
+<text class="tn" x="190" y="585" text-anchor="end" dominant-baseline="central">› Parse, chunk, embed + ACLs</text>
+<text class="tn" x="190" y="599" text-anchor="end" dominant-baseline="central">Freshness SLA, deletes too</text>
+<g class="c-teal"><rect x="680" y="564" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="770" y="582" text-anchor="middle" dominant-baseline="central">MCP servers</text><text class="ts" x="770" y="602" text-anchor="middle" dominant-baseline="central">On Cloud Run</text></g>
+<text class="tn" x="870" y="576" dominant-baseline="central">› Pin versions; re-approve</text>
+<text class="tn" x="870" y="590" dominant-baseline="central">on change (rug pull)</text>
+<line x1="290" y1="564" x2="290" y2="502" class="arr" marker-end="url(#arrow)"/>
+<line x1="770" y1="500" x2="770" y2="562" class="arr" marker-end="url(#arrow)"/>
+<g><rect class="box" x="680" y="684" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="770" y="702" text-anchor="middle" dominant-baseline="central">Internal systems</text><text class="ts" x="770" y="722" text-anchor="middle" dominant-baseline="central">Databases, APIs in VPC</text></g>
+<line x1="770" y1="620" x2="770" y2="682" class="arr" marker-end="url(#arrow)"/>
+<text class="ts" x="1190" y="426" text-anchor="middle" dominant-baseline="central">Outside the perimeter</text>
+<g><rect class="box" x="1100" y="444" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="1190" y="462" text-anchor="middle" dominant-baseline="central">External MCP servers</text><text class="ts" x="1190" y="482" text-anchor="middle" dominant-baseline="central">SaaS, customer-hosted</text></g>
+<g><rect class="box" x="1100" y="564" width="180" height="56" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="1190" y="582" text-anchor="middle" dominant-baseline="central">External systems</text><text class="ts" x="1190" y="602" text-anchor="middle" dominant-baseline="central">SaaS, on-prem ERP, CRM</text></g>
+<line x1="860" y1="490" x2="1098" y2="490" class="arr" marker-end="url(#arrow)"/>
+<line x1="860" y1="610" x2="1098" y2="610" class="arr" marker-end="url(#arrow)"/>
+<g><rect class="box" x="200" y="764" width="660" height="115" rx="8" stroke-width="0.5" stroke-dasharray="4 3"/><text class="th" x="530" y="782" text-anchor="middle" dominant-baseline="central">Ops layer</text>
+<text class="ts" x="530" y="808" text-anchor="middle" dominant-baseline="central"><tspan class="tg">Observe:</tspan> Cloud Logging (debug &amp; audit), Cloud Trace, Monitoring</text>
+<text class="ts" x="530" y="826" text-anchor="middle" dominant-baseline="central"><tspan class="tg">Evals:</tspan> Evaluation service, online + offline, CI gate, golden set</text>
+<text class="ts" x="530" y="844" text-anchor="middle" dominant-baseline="central"><tspan class="tg">Release:</tspan> Cloud Build, config, flag-based canary, rollback</text>
+<text class="ts" x="530" y="862" text-anchor="middle" dominant-baseline="central"><tspan class="tg">Cost:</tspan> token meter, Billing budgets, alerts</text></g>
+<text class="tn" x="870" y="814" dominant-baseline="central">› Golden set gates changes</text>
+<text class="tn" x="870" y="828" dominant-baseline="central">Cost per resolved task</text>
+</svg>
