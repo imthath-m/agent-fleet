@@ -1,0 +1,1217 @@
+item_id,source,ticket_subject,ticket_text,reference,model_answer,human_score,human_pass,human_notes
+resolution:lost-password,resolution,Forgot my password,I have forgotten my Ubuntu login password and cannot get root access to the machine. How do I reset it from recovery mode?,Boot into recovery mode to get a full root shell and reset the forgotten password. Be careful: this step gives full root access to your system and you can damage it.,"If this is your computer, you can reset your account password from Ubuntu’s recovery mode:
+
+1. Restart the computer. Show the GRUB menu by holding **Shift** on many BIOS systems, or tapping **Esc** on many UEFI systems as it starts.
+2. Select **Advanced options for Ubuntu**, then an entry marked **(recovery mode)**.
+3. In the recovery menu, select **root – Drop to root shell prompt**.
+4. Remount the system as writable:
+   ```bash
+   mount -o remount,rw /
+   ```
+5. Reset your account password, replacing `username` with your Ubuntu login name:
+   ```bash
+   passwd username
+   ```
+   If you’re unsure of the login name, you can check the home directories with `ls /home`.
+6. Enter and confirm the new password, then restart:
+   ```bash
+   reboot
+   ```
+
+Recovery mode gives you administrator access, so use it only on a machine you’re authorized to manage. If the disk is encrypted, you’ll need its encryption passphrase to access it.",,,
+pool:GEN-0003,pool,This article should be cleaned-up to follow the content stan,This is blocking my work — I've been trying to sort out this article should be cleaned-up to follow the content standards on my Ubuntu machine and keep getting stuck. How do I this article should be cleaned-up to follow the content standards? Thanks for any help you can offer.,"Content Cleanup Required
+
+This article should be cleaned-up to follow the content standards in the Wiki Guide. More info...
+
+Style Cleanup Required
+
+This article does not follow the style standards in the Wiki Guide. More info...
+
+You can use the Ubuntu Live Cd to install packages (i.e. to an older offline Ubuntu computer).
+
+Source.list
+
+If you have a new Live CD and the Live CD in the Source.list file, comment all the repositories excepting the CD and
+
+```
+sudo apt-get update
+sudo apt-get dist-upgrade
+```
+
+After upgrade, uncomment all the other repositories in the source.list file.
+
+Some computers can ask to use apt-cdrom. If so, follow the instructions that appears bellow.
+
+Apt-cdrom
+
+apt-cdrom can add a new CDROM to APTs sources.list file (list of available repositories). It is necessary to use apt-cdrom to add CDs to the APT system, it cannot be done by hand.
+
+Put the Live CD in the unit and use one of these commands, in this order :
+
+test:  sudo apt-cdrom --no-act add
+
+if everything is OK:  sudo apt-cdrom add
+
+sudo apt-cdrom ident
+
+sudo apt-cdrom -d ""your-cdrom-mount-point"" -r
+
+Description and options","That notice is about an **Ubuntu Wiki page**, not a problem with your Ubuntu installation. It means the page needs editing to meet the wiki’s content or style guidelines.
+
+To help clean it up:
+
+1. Open the specific wiki page and read the linked **Wiki Guide** and any discussion or talk page.
+2. Check the instructions for accuracy and whether they apply to currently supported Ubuntu releases. Several pages in your context contain old or obsolete guidance.
+3. Edit the page, preview your changes, and save them with a brief summary. If you’re unsure what to change, ask on the page’s discussion area before editing.
+4. Remove the cleanup notice only after the issues it identifies have actually been addressed.
+
+Don’t run commands from an outdated article just to clear the notice. If you share the exact page you’re trying to fix and what’s getting in your way, I can suggest specific edits.",,,
+resolution:printer-not-detected,resolution,Printer is not detected,My printer is not detected at all. How do I get it working on Ubuntu?,"Install and maintain the printer using the tools for its manufacturer - there are pages for HP, Canon, Lexmark, Samsung and Xerox printers. Virtually all of the better models support PostScript and work very well, so take care buying low end printers of any brand.","Try these steps in order. The wireless and printing pages in the supplied documentation refer to old, unsupported Ubuntu releases, so the menu names may differ from yours.
+
+1. **Check the connection.** Make sure the printer is on and has no error lights. For USB, reconnect the cable directly to the computer (not through a hub), and try another cable or port if possible. For a network printer, confirm it’s on the same Wi‑Fi or wired network as the computer.
+
+2. **Add it in Ubuntu.** Open **Settings → Printers** (or search for **Printers**) and choose **Add Printer**. Wait a little for Ubuntu to find it. For a network printer, check the printer’s screen or network settings for its IP address.
+
+3. **Check whether Ubuntu can see a USB printer.** Open Terminal, run:
+   ```bash
+   lsusb
+   ```
+   Then unplug and reconnect the printer and run it again. If no new device appears, the issue is likely the cable, port, printer, or USB connection. If `lsusb` isn’t installed, run `sudo apt install usbutils`.
+
+4. **Check the printing service.** Run:
+   ```bash
+   systemctl status cups
+   ```
+   If CUPS is missing or stopped, install and start it:
+   ```bash
+   sudo apt update
+   sudo apt install cups
+   sudo systemctl enable --now cups
+   ```
+   Then try **Settings → Printers → Add Printer** again.
+
+5. **Check driver support.** Many newer printers work with driverless IPP printing and should appear automatically. If Ubuntu detects the printer but can’t set it up, look for your exact model on the manufacturer’s support site or OpenPrinting. For HP printers, Ubuntu’s **Additional Drivers** tool or the HPLIP package may help. Avoid drivers meant for a different model or Ubuntu release.
+
+If it still isn’t detected, tell me your **Ubuntu version**, printer **make and model**, whether it’s **USB or network**, and what `lsusb` shows (for USB) or whether you know its IP address (for network).",,,
+pool:GEN-0022,pool,Replacing the values for username password proxy and port nu,This is blocking my work — How do I replacing the values for username password proxy and port number? Thanks for any help you can offer.,">/
+```
+
+but REPLACING the values for username, password, proxy and port number, of course.
+
+You can edit the /etc/environment file using this command:
+
+```
+gksudo gedit /etc/environment 
+```
+
+3) put the following configuration lines in a new /etc/apt/apt.conf.d/80proxy file:
+
+```
+Acquire::http::proxy ""http://<username>:<password>@<proxy>:<port>/"";
+```
+
+```
+Acquire::ftp::proxy ""ftp://<username>:<password>@<proxy>:<port>/"";
+```
+
+```
+Acquire::https::proxy ""https://<username>:<password>@<proxy>:<port>/"";
+```
+
+but REPLACING the values for username, password, proxy and port number, of course.
+
+You can edit the /etc/apt/apt.conf.d/80proxy file using this command:
+
+```
+gksudo gedit /etc/apt/apt.conf.d/80proxy
+```
+
+More documentation about the apt-get package manager
+
+http://www.binarytides.com/apt-get-tutorial-package-management-ubuntu-commandline/
+
+http://www.tecmint.com/useful-basic-commands-of-apt-get-and-apt-cache-for-package-management/
+
+http://www.tuxarena.com/intro/ubuntu001.php","Replace each placeholder with details supplied by your network administrator. For example, if they give you proxy host `proxy.example.com`, port `8080`, username `alice`, and password `secret`, the address would look like:
+
+```text
+http://alice:secret@proxy.example.com:8080/
+```
+
+Remove the angle brackets—don’t type `<username>` literally. If the proxy doesn’t require a username and password, use:
+
+```text
+http://proxy.example.com:8080/
+```
+
+For APT, an example `/etc/apt/apt.conf.d/80proxy` file would be:
+
+```text
+Acquire::http::Proxy ""http://proxy.example.com:8080/"";
+Acquire::https::Proxy ""http://proxy.example.com:8080/"";
+```
+
+Many proxies use the same `http://` address for HTTPS traffic; use the exact format your administrator provides. You generally don’t need an FTP entry.
+
+**Don’t guess the proxy host or port.** If you don’t know them, ask your workplace/school IT team. Also, proxy passwords stored in these files are plain text. If your password contains characters such as `@`, `:`, or `/`, it may need URL-encoding; ask IT for the correct format rather than putting your normal password in directly.",,,
+pool:GEN-0009,pool,Problem with installing packages,"No rush, but Something is wrong with installing packages and I don't know how to fix it. It's been happening for a while now and I've tried a few things already but nothing has worked. I've tried this three times already and I'm getting nowhere.","most all the software, drivers, codecs, libraries and other packages that are available for the release of Ubuntu (or whichever distro) you are using.
+
+It is up to the package project's team to get their package into the repositories for the various releases of the various distros. Also it is up to the team developing a release to make sure that the repositories have plenty of the right sort of packages to meet people's needs. Think of a shop. Companies need to get their product onto shelves and shops need to show they have plenty to sell. This saves individual users from having to identify the 'correct' website for a product and assess whether or not the site has been compromised and whether they are getting a genuine product or something stuffed full of malware.
+
+The standard repositories are all free as are the Medibuntu repositories and most others that are easily found and added. Theoretically there is nothing stopping a games manufacturer (for example) setting up a one-off or monthly charge for accessing a specialist repository. The ethics and licensing agreements would have to be looked into if people or companies chose this route.","Sorry—you’ve already spent a lot of time on this. The fix depends on the exact error, so please don’t keep retrying or remove packages yet.
+
+Could you share:
+
+- Whether Ubuntu is running from a **LiveCD/live USB** or is installed on the computer.
+- The package name and how you’re trying to install it (for example, Ubuntu Software or a Terminal command).
+- The **complete error message** or a screenshot. If using Terminal, copy the output from:
+  ```bash
+  sudo apt update
+  sudo apt install package-name
+  ```
+  Replace `package-name` with the package you want.
+
+Also let me know your Ubuntu version (`lsb_release -a`) and whether the computer can access the internet. If this is a LiveCD session, packages you install normally disappear when you shut down; the live session also has limited space, so that could be relevant.",,,
+resolution:unmet-dependencies,resolution,apt reports unmet dependencies,The package manager refuses to install anything and complains about packages with unmet dependencies. How do I fix it?,"Run apt-get check, a diagnostic tool that updates the package lists and checks for broken dependencies, then run apt-get -f install, which does the same thing as Fix Broken Packages in Synaptic when you get complaints about packages with unmet dependencies.","Try repairing the package state from a Terminal:
+
+```bash
+sudo dpkg --configure -a
+sudo apt-get update
+sudo apt-get -f install
+```
+
+Enter your password if prompted, and review the changes Apt proposes before confirming—especially if it plans to remove packages you need. Then try the installation again.
+
+If you use Synaptic instead, choose **Edit → Fix Broken Packages**, then **Apply Marked Changes** and confirm.
+
+If the repair fails, note the exact error message; it can identify which package or dependency needs attention.",,,
+resolution:grub-menu-change,resolution,Change the boot menu,"How do I change the GRUB boot menu options, and what applies the change?","Configuration changes are normally made to the /etc/default/grub file and to the custom scripts located in /etc/grub.d. No changes are made to the GRUB 2 menu until the update-grub command is run as root, which runs the configuration scripts and updates the /boot/grub/grub.cfg file.","Edit GRUB’s settings in `/etc/default/grub` (for example, `GRUB_DEFAULT` selects the default entry and `GRUB_TIMEOUT` sets how long the menu waits). For custom menu entries, use `/etc/grub.d/40_custom`.
+
+After saving your changes, apply them by running:
+
+```bash
+sudo update-grub
+```
+
+This regenerates `/boot/grub/grub.cfg`, which GRUB uses at boot. Don’t edit `grub.cfg` directly; it is generated and your edits may be overwritten.",,,
+pool:GEN-0007,pool,Add the option acl to the partition s on which,"No rush, but How do I add the option acl to the partition s on which? Thanks for any help you can offer.","by default.
+
+```
+$ sudo apt-get install acl
+```
+
+1) Add the option acl to the partition(s) on which you want to enable ACL in /etc/fstab. For example:
+
+```
+...
+UUID=07aebd28-24e3-cf19-e37d-1af9a23a45d4 /home ext4 defaults,acl 0 2
+...
+```
+
+As of Ubuntu 14.04 and for ext4, the above is not required as acl are already default:
+
+```
+sudo tune2fs -l /dev/sdaX |grep acl
+Default mount options: user_xattr acl
+```
+
+2) If necessary, remount partition(s) on which ACLs were enabled for them to take effect. For example:
+
+```
+$ sudo mount -o remount /home
+```
+
+3) Verify that ACLs are enabled on the partition(s):
+
+```
+$ mount | grep acl
+```
+
+ACL Entries
+
+ACL entries consist of a user (u), group (g), other (o) and an effective rights mask (m). An effective rights mask defines the most restrictive level of permissions. setfacl sets the permissions for a given file or directory. getfacl shows the permissions for a given file or directory.
+
+Defaults for a given object can be defined.
+
+ACLs can be applied to users or groups but it is easier to manage groups. Groups scale better than continuously adding or subtracting users.
+
+Listing ACLs","You add `acl` to the **mount options** for the filesystem you want to use ACLs on. First find which filesystem contains the directory in question. For example, for `/home`:
+
+```bash
+findmnt -no SOURCE,FSTYPE,TARGET /home
+```
+
+Then inspect its entry in `/etc/fstab`:
+
+```bash
+sudoedit /etc/fstab
+```
+
+An entry might look like:
+
+```text
+UUID=...  /home  ext4  defaults  0  2
+```
+
+If ACLs are not already enabled and that filesystem needs the option, add `acl` to the fourth field—the mount options—separated by a comma:
+
+```text
+UUID=...  /home  ext4  defaults,acl  0  2
+```
+
+Keep the existing options; don’t replace the UUID, filesystem type, or other fields. Save the file, then remount that filesystem (replace `/home` with its actual mount point):
+
+```bash
+sudo mount -o remount /home
+```
+
+On modern Ubuntu installations using **ext4**, ACL support is normally enabled by default, so you may not need to change `/etc/fstab` at all. You can check whether the ACL tools are available with:
+
+```bash
+getfacl /home
+```
+
+If that command is missing, install them with `sudo apt install acl`. If you share the output of `findmnt -no SOURCE,FSTYPE,TARGET /home` and the relevant `/etc/fstab` line, I can help identify exactly what—if anything—you need to change.",,,
+resolution:dns-explained,resolution,What does DNS actually do?,Can someone explain in plain terms what DNS does on a home network?,"DNS is essentially like an internet phone book. Computers on the internet are identified by IPs, which are a string of numbers, and people do not memorize IPs - we memorize domain names. The perfect example of a domain name is google.com.","DNS is the internet’s **name lookup service**. It turns a human-friendly name like `example.com` into the numerical IP address computers use to find that website—much like looking up a person’s name in your contacts to get their phone number.
+
+On a typical home network:
+
+1. Your device asks a DNS server, “What address goes with `example.com`?”
+2. The DNS server replies with an IP address.
+3. Your device uses that address to connect to the website.
+
+Your router often acts as the DNS server your devices ask first. It usually passes the question on to a DNS service run by your internet provider or another provider. **DHCP** commonly gives your devices the router’s address and tells them which DNS server to use.
+
+DNS finds the address; it doesn’t carry the website’s data or provide the internet connection itself.",,,
+resolution:why-sudo-not-root,resolution,Why is there no root password?,Coming from another distribution I expected a root account. Why does Ubuntu use sudo instead of letting me log in as root?,"In Linux there is a SuperUser named root that can do anything and everything, so doing daily work as the SuperUser is dangerous - you could type a command incorrectly and destroy the system. Ideally you run as a regular user that has only the privileges needed for the task at hand and use sudo when root is necessary.","Ubuntu does have a **root** account—the administrator account that can do anything on the system. By default, its password is locked, so you can’t log in directly as root or use `su` with a root password.
+
+Instead, an administrator can run a particular command with elevated privileges by putting `sudo` before it. For example:
+
+```bash
+sudo apt update
+```
+
+When prompted, enter **your own user password**, not a root password. This approach helps reduce accidental damage by keeping ordinary work unprivileged, avoids sharing a separate root password, and makes it clearer which user performed an administrative action.
+
+For a temporary root shell, an authorized user can run `sudo -i`, but for routine administration it’s generally safer to use `sudo` only for the commands that need it.",,,
+resolution:wifi-drops,resolution,Wifi keeps dropping,My wireless connection drops every few minutes and I have to reconnect by hand. Where do I start troubleshooting?,"Recent versions of Ubuntu support most wireless cards. Start from the Wireless Networking Central pages: check the list of supported wireless cards and adapters, then work through getting started, connections and troubleshooting.","Start by checking whether the problem is the Wi‑Fi link or the internet connection:
+
+1. **Check another device on the same Wi‑Fi.** If it also drops, the router or internet service is more likely the cause. If only Ubuntu drops, focus on the laptop.
+2. **Note what happens when it drops:** does the Wi‑Fi network disappear, does Ubuntu disconnect from it, or does it stay connected but lose internet? Also note whether it happens on other Wi‑Fi networks.
+3. **Check Ubuntu’s connection status** in **Settings → Wi‑Fi**. You can also run:
+   ```bash
+   nmcli device status
+   nmcli connection show --active
+   ```
+
+To collect useful clues after a drop, open Terminal and run:
+
+```bash
+sudo journalctl -b -u NetworkManager --since ""30 minutes ago"" --no-pager
+sudo journalctl -k -b --since ""30 minutes ago"" --no-pager | grep -iE 'wifi|wlan|firmware|disconnect|deauth'
+```
+
+Look for messages around the time of the drop. Before sharing output, remove any personal details; **don’t post Wi‑Fi passwords or connection secrets**.
+
+Also check **Settings → System → About** for your Ubuntu version, and identify the Wi‑Fi adapter with:
+
+```bash
+lspci -nnk | grep -A3 -i network
+lsusb
+```
+
+Install any available Ubuntu updates, then test again. If it still happens, share your Ubuntu version, adapter information, and the relevant log lines. The older wireless pages in the supplied context cover unsupported Ubuntu releases, so their instructions may not apply to a current installation.",,,
+pool:GEN-0021,pool,Problem with user accounts and permissions,URGENT: Something is wrong with user accounts and permissions and I don't know how to fix it. It's been happening for a while now and I've tried a few things already but nothing has worked. I've tried this three times already and I'm getting nowhere.,"cking, and special characters make password significantly harder to memorize but not significantly harder to crack.
+
+So how should I choose passwords?
+
+Randomly. If your method to choose a password doesn't include a source of randomness (with a computer, or rolling a dice if you like it old-school), it's no good. See this link. Make sure there is enough entropy, usually counted in bits!
+
+Diceware is a popular choice (using physical dice + wordlist), but any method that follows the XKCD pattern — pick multiple “words” at random from some dictionary — is good. We are focusing on 'xkcdpass' here.
+
+Generating Passwords in Ubuntu
+
+Now that we've establish what constitutes a strong password. How do we have our computers help generate strong passwords automatically? This section will cover the Automatic Password Generator application (APG) which is available in Ubuntu via the repository Universe. APG does precisely what its name implies: it automatically generates passwords. Not only does APG generate passwords, it will generate strong passwords for you as well.","I’m sorry—you’ve already spent too much time repeating fixes. Let’s identify the specific problem before changing anything else. **Don’t run broad commands such as `chmod -R` or `chown -R` on `/` or your home folder**; they can make the system harder to recover.
+
+Please tell me:
+
+- What exactly fails: logging in, using `sudo`, opening/saving files, or something else? Include the exact error.
+- Which Ubuntu version you’re using, and whether this affects one account or several.
+- What you’ve already tried (commands or steps, if you remember).
+- Whether you can still log in.
+
+If you can log in, these read-only checks may help. Share the output, but redact your username or any private paths if you prefer:
+
+```bash
+whoami
+id
+printf 'HOME=%s\n' ""$HOME""
+ls -ld ""$HOME""
+```
+
+If the issue is with a particular file or folder, also tell me its path and the error you get when accessing it. Don’t post passwords or other secrets. If you can’t log in at all, tell me what happens after you enter your password.",,,
+pool:GEN-0013,pool,The firewall simply check the enabled button and the default,I've been trying to sort out the firewall simply check the enabled button and the default on my Ubuntu machine and keep getting stuck. How do I the firewall simply check the enabled button and the default?,"e the firewall, simply check the Enabled button and the default will be set to Deny for incoming traffic and Allow for outgoing traffic.
+
+Adding Rules
+
+To configure the firewall, we add rules. Simply click the Add button and a new window will pop up. For details about this implementation, see the UFW page. Rules can be configured for TCP and UDP ports, and UFW has some preconfigured programs/services to make setting up rules for them easy.
+
+The available options for rules are Allow, Deny, Reject, and Limit:
+
+Allow: The system will allow entry traffic for a port.
+
+Deny: The system will deny entry traffic to a port.
+
+Reject: The system will deny entry traffic to a port and will inform the requesting for connection system that it has been rejected.
+
+Limit: The system will deny connections if an IP address has attempted to initiate 6 or more connections in the last 30 seconds.
+
+Preconfigured
+
+The Preconfigured tab gives us some options for controlling firewall options for common programs and services.
+
+You have several categories and subcategories. You can filter by name/description/ports too.
+
+Simple","To enable the firewall with **Gufw**:
+
+1. Open **Firewall Configuration** from the applications menu. If it isn’t installed, open Terminal and run:
+   ```bash
+   sudo apt update
+   sudo apt install gufw
+   ```
+2. Unlock it if prompted for your password.
+3. Switch **Status** or **Enabled** to **On**. The default policy is to **deny incoming** connections and **allow outgoing** connections.
+
+You can also enable it in Terminal with:
+```bash
+sudo ufw enable
+sudo ufw status
+```
+
+If you’re connected to this machine remotely, make sure you’ve allowed the remote connection (such as SSH) before enabling the firewall, or you could lose access.",,,
+pool:GEN-0011,pool,There is the tool sha sum' in windows you can,URGENT: I've been trying to sort out there is the tool sha sum' in windows you can on my Ubuntu machine and keep getting stuck. How do I there is the tool sha sum' in windows you can? This is completely unacceptable.,"nux there is the tool 'sha256sum'. In Windows you can do it with Rufus: click on the circle with a tick mark (more about Rufus here.)
+
+Dummy headlines
+
+After a major remake of this help page the following headlines are kept here because they may be linked to from other web sites. Several other headlines further down in the page are also kept for this reason.
+
+Notes about speed
+
+Notes about size
+
+Notes about bootability
+
+The flash hardware
+
+There is a detailed description at the sub-page /pre
+
+Creating a bootable Ubuntu USB flash drive from Windows
+
+There are various methods available for Windows to create a bootable Ubuntu USB flash drive.
+
+NEVER try to use one of your hard disk drives or partitions in this process unless you really know what you are doing, as data will get erased.
+
+Rufus
+
+Rufus is the tool in Windows that is recommended officially by Ubuntu. A tutorial is available from here.
+
+Download Rufus.
+
+balenaEtcher
+
+Download balenaEtcher
+
+Pendrivelinux's Universal USB Installer
+
+Download Universal USB Installer
+
+UNetbootin
+
+Download UNetbootin
+
+Win32 Disk Imager
+
+Download Win32 Disk Imager","Sorry you’ve been getting stuck. On Ubuntu, the command is **`sha256sum`** (one word); you don’t need the Windows tool.
+
+1. Open **Terminal** with **Ctrl+Alt+T**.
+2. Find the ISO’s exact filename:
+   ```bash
+   ls ~/Downloads/*.iso
+   ```
+3. Calculate its checksum, replacing the example filename with the one shown:
+   ```bash
+   sha256sum ~/Downloads/ubuntu-24.04.3-desktop-amd64.iso
+   ```
+4. Compare the long string of letters and numbers with the **SHA256** value published for that exact ISO on Ubuntu’s official download page. They must match exactly.
+
+For an automatic check, download the official `SHA256SUMS` file into `Downloads` too, then run:
+```bash
+cd ~/Downloads
+sha256sum -c --ignore-missing SHA256SUMS
+```
+A result ending in **`OK`** means the ISO matches. If it says **`FAILED`**, don’t use that ISO; download it again and check it again.",,,
+pool:GEN-0016,pool,Problem with installing packages,URGENT: Something is wrong with installing packages and I don't know how to fix it. It's been happening for a while now and I've tried a few things already but nothing has worked. Thanks for any help you can offer.,"r/share/doc/aptitude/README
+
+file:///usr/share/doc/aptitude/html/en/index.html
+
+Troubleshooting apt-get or aptitude or Synaptic package manager errors
+
+PackageManagerTroubleshootingProcedure
+
+Tips
+
+If more than one version is available for a particular package (look at the bottom of the package's information view), apt-cache policy <package> seems to be the best way to see which comes from which repository.
+
+CategoryPackageManagement","Sorry you’re dealing with this. The exact error message is the most useful clue. Please share:
+
+- What you’re trying to install and how (Ubuntu Software, Synaptic, or a Terminal command)
+- Your Ubuntu version
+- The complete error text, including any lines from the Terminal
+- What you’ve already tried
+
+If you’re using a **LiveCD/live USB session**, packages installed during that session normally disappear when you shut down; that’s expected. If installation is failing before shutdown, try this in Terminal:
+
+```bash
+sudo apt update
+```
+
+If that finishes without errors, try installing again. If it reports broken or unfinished packages, run:
+
+```bash
+sudo dpkg --configure -a
+sudo apt --fix-broken install
+```
+
+If any command fails, stop and share its full output rather than deleting package lock files or following commands from an unrelated fix.",,,
+pool:GEN-0017,pool,Step ubuntu software center fails to open,URGENT: How do I step ubuntu software center fails to open? Thanks for any help you can offer.,"xecuting the following commands:
+
+```
+sudo dpkg --add-architecture i386
+```
+
+```
+sudo apt-get update
+```
+
+Step 10 Ubuntu Software Center fails to open
+
+If the Ubuntu Software Center fails to open, then please execute these Terminal commands:
+
+```
+killall -v gnome-software
+```
+
+```
+sudo rm /usr/lib/python*/dist-packages/__pycache__/*pyc
+```
+
+```
+sudo apt-get install --reinstall python3-gi
+```
+
+```
+sudo apt-get purge software-center gnome-software
+```
+
+```
+rm -rf ~/.cache/software-center
+```
+
+```
+rm -rf ~/.config/software-center
+```
+
+```
+rm -rf ~/.cache/update-manager-core
+```
+
+```
+rm ~/.local/share/gnome-software/*
+```
+
+```
+sudo rm /var/lib/apt-xapian-index/cataloged_times.p
+```
+
+```
+sudo rm /var/lib/apt-xapian-index/values
+```
+
+```
+sudo update-apt-xapian-index --verbose --force
+```
+
+```
+sudo update-apt-xapian-index --force
+```
+
+```
+sudo apt-get update
+```
+
+```
+sudo apt-get dist-upgrade
+```
+
+```
+sudo apt-get install software-center gnome-software
+```
+
+```
+sudo dpkg-reconfigure software-center --force
+```
+
+```
+sudo update-software-center
+```
+
+```
+sudo apt-get install --reinstall software-center gnome-software
+```
+
+Then reboot and retest.
+
+Sources:","The old “Software Center” repair instructions are outdated for current Ubuntu. **Don’t run the long list of `rm` or `purge` commands**—some target obsolete components.
+
+Try this first:
+
+1. Open **Terminal** (`Ctrl`+`Alt`+`T`) and run:
+   ```bash
+   snap-store
+   ```
+   If it prints an error, copy the complete output.
+
+2. If the Software app is installed as a Snap, refresh it:
+   ```bash
+   sudo snap refresh snap-store
+   ```
+   Then try opening it again:
+   ```bash
+   snap-store
+   ```
+
+If `snap-store` isn’t found, check which version is installed:
+```bash
+snap list snap-store
+dpkg -l gnome-software
+```
+
+Please share the output of those commands, along with your Ubuntu version (`lsb_release -ds`). The right repair depends on whether your release uses the Snap Store or the older GNOME Software package.",,,
+pool:GEN-0005,pool,Problem with installing Ubuntu,This is blocking my work — Something is wrong with installing Ubuntu and I don't know how to fix it. It's been happening for a while now and I've tried a few things already but nothing has worked. Thanks for any help you can offer.,"untu images on XenServer
+
+Installation/UnattendedCD - Making a customized installation CD for unattended installations, with a web-served preseed file
+
+MigratingFromWindows - Instructions on how to transfer data from common Windows applications to their Ubuntu equivalents.
+
+SwitchingFromWindows - Guidance on switching from Windows to Ubuntu and getting used to the differences.
+
+See also
+
+InstallingSoftware
+
+Using Grub2 to Boot the Dell Diagnostic Partition
+
+CategoryInstallation","Sorry this is getting in the way of your work. I can help, but I need to know **where the installation fails**—the steps differ depending on whether the USB won’t boot, the installer errors, or the problem happens during partitioning or after reboot.
+
+Please share:
+
+- Your computer model and current operating system
+- The Ubuntu version you’re trying to install
+- What you see when it fails (copy the exact error or describe a photo)
+- Whether you’re installing alongside your current OS or replacing it
+- What you’ve already tried
+
+If you’re following the older “install Ubuntu from another distro” instructions in the context, pause before changing partitions or boot settings. That’s an advanced, outdated approach; for most computers, booting the official Ubuntu installer from a USB is safer. **Back up important files before attempting an install**, especially if you plan to replace an operating system.
+
+Tell me the failure point and error message, and I’ll suggest the next steps without risking your existing data.",,,
+resolution:directory-permissions,resolution,Permissions on a shared directory,"What do the read, write and execute permissions actually mean on a directory?","On a directory, read restricts or allows viewing the directory contents with the ls command, write restricts or allows creating new files or deleting files in the directory, and execute restricts or allows changing into the directory with the cd command. Directories must have execute permissions set or they will not function as folders.","On a directory, permissions control access to the **directory’s entries**, not directly the contents of each file:
+
+- **Read (`r`)**: List the names in the directory, for example with `ls`. Without execute permission, you may see names but generally can’t access those entries.
+- **Write (`w`)**: Add, remove, or rename entries in the directory. This normally requires **execute (`x`) as well**. So a user with `w+x` on a directory can often delete or rename a file there even if they can’t write to that file.
+- **Execute (`x`)**: Search or traverse the directory—enter it with `cd`, or access an item inside it by name. It does not mean “run” the directory.
+
+For a shared directory, `rwx` lets a user list, traverse, and change entries. A **sticky bit** (often shown as `t`, as in `/tmp`) can restrict who may delete or rename entries: typically only the file’s owner, the directory’s owner, or root.",,,
+pool:GEN-0012,pool,The system each file has access restrictions with permission,"No rush, but How do I the system each file has access restrictions with permissions user? I've tried this three times already and I'm getting nowhere.","n the system. Each file has access restrictions with permissions, user restrictions with owner/group association. Permissions are referred to as bits.
+
+To change or edit files that are owned by root, sudo must be used - please see RootSudo for details.
+
+If the owner read & execute bit are on, then the permissions are:
+
+```
+-r-x------
+```
+
+There are three types of access restrictions:
+
+Permission
+
+Action
+
+chmod option
+
+read
+
+(view)
+
+r or 4
+
+write
+
+(edit)
+
+w or 2
+
+execute
+
+(execute)
+
+x or 1
+
+There are also three types of user restrictions:
+
+User
+
+ls output
+
+owner
+
+-rwx------
+
+group
+
+----rwx---
+
+other
+
+-------rwx
+
+Note: The restriction type scope is not inheritable: the file owner will be unaffected by restrictions set for his group or everybody else.
+
+Folder/Directory Permissions
+
+Directories have directory permissions. The directory permissions restrict different actions than with files or device nodes.
+
+Permission
+
+Action
+
+chmod option
+
+read
+
+(view contents, i.e. ls command)
+
+r or 4
+
+write
+
+(create or remove files from dir)
+
+w or 2
+
+execute
+
+(cd into directory)
+
+x or 1
+
+read restricts or allows viewing the directories contents, i.e. ls command","Sorry you’ve had to try this several times. There are two different things you might mean:
+
+- **See a file’s permissions and owner:**  
+  ```bash
+  ls -l filename
+  ```
+  For example, `-rw-r--r-- alice alice ...` means Alice owns the file; Alice can read and write it, while the group and others can read it.
+
+- **Change permissions:**  
+  ```bash
+  chmod 640 filename
+  ```
+  This gives the owner read/write access, the group read access, and others no access. Or use letters, such as:
+  ```bash
+  chmod u+rw filename
+  ```
+
+- **Change the owner:**  
+  ```bash
+  sudo chown username:group filename
+  ```
+  Use this only if you actually need to change who owns the file. `chmod` changes permissions; it does **not** change the owner.
+
+For a directory, `x` permission is needed to enter it. Be cautious with recursive commands like `chmod -R` or `chown -R`, especially on system folders—they can cause problems.
+
+If you tell me what you want to allow (for example, “only my user can read and edit it”), and paste the command you tried plus any error message, I can give you the exact command.",,,
+pool:GEN-0015,pool,Efi is the only way your computer can boot e,This is blocking my work — How do I efi is the only way your computer can boot e? This is completely unacceptable.,"EFI is the only way your computer can boot, e.g. if you have a modern Intel Atom based laptop. In this case, you will need a complicated work-around.)
+
+In your firmware, disable QuickBoot/FastBoot and Intel Smart Response Technology (SRT). If you have Windows 8, also disable Fast Startup.
+
+You might want to use an EFI-only image to avoid troubles with mistakenly booting the image and installing Ubuntu in BIOS mode.
+
+Use a supported version of Ubuntu. Support for UEFI appeared in 11.10, but has become more reliable in next versions. Support for UEFI SecureBoot appeared in 12.10 and 12.04.2.
+
+Set up your firmware (BIOS) to boot the disk in UEFI mode (see the ""Identifying if the computer boots the HDD in UEFI mode"" paragraph below)
+
+Then:
+
+nothing special is required if you use the automatic installer of Ubuntu (""Install Ubuntu alongside others"" or ""Erase the disk and install Ubuntu""). Important: if you have a pre-installed Windows and you want to keep it, do not choose ""Erase the disk and install Ubuntu"".","I understand the wording is frustrating. **“e.g.” means “for example”**—it isn’t an instruction to “boot e.” The sentence means some computers, such as certain Atom-based laptops, can boot only in UEFI mode.
+
+If your computer is UEFI-only:
+
+1. Create an installer USB from a **64-bit Ubuntu image**.
+2. In the firmware boot menu, choose the USB entry marked **UEFI**. Don’t enable Legacy/CSM mode.
+3. Start the installer. If you’re keeping Windows, choose **Install Ubuntu alongside Windows**—not “Erase disk.”
+
+If the USB won’t boot, your computer may have **32-bit UEFI firmware**. That needs a different workaround; a 64-bit processor alone doesn’t rule this out. Share your computer’s make/model, the Ubuntu version, and what happens when you select the USB, and I can give you the right steps.",,,
+pool:GEN-0008,pool,Problem with installing Ubuntu,Something is wrong with installing Ubuntu and I don't know how to fix it. It's been happening for a while now and I've tried a few things already but nothing has worked. I've tried this three times already and I'm getting nowhere.,"e Ubuntu installer, you need to make sure you have an EFI System Partition (ESP) set up. This partition holds EFI-mode boot loaders and related files.
+
+If your disk already contains an ESP (eg if your computer had Windows 8 preinstalled), it can be used for Ubuntu too. Do not format it. It is strongly recommended to have only 1 ESP per disk.
+
+An ESP can be created via a recent version of GParted (the Gparted version included in the 12.04 disk is OK), and must have the following attributes:
+
+Mount point: /boot/efi (remark: no need to set this mount point when using the manual partitioning, the Ubuntu installer will detect it automatically)
+
+Size: minimum 100Mib. 200MiB recommended.
+
+Type: FAT32
+
+Other: needs a ""boot"" flag.
+
+Performing the Installation","Sorry—you’ve already spent a lot of time trying this. I can help narrow it down, but “something is wrong” could mean a few different things.
+
+What happens on your latest attempt? Please tell me:
+
+- Which Ubuntu version you’re installing, and whether you’re installing from a USB or DVD.
+- The step where it fails, and the exact error message (a photo is fine).
+- Whether you’re keeping Windows and installing Ubuntu alongside it, or replacing Windows.
+- What you’ve already tried.
+
+If you’re installing alongside Windows, don’t try another installation yet if you haven’t backed up important files. Also, tell me whether Ubuntu starts from the USB/DVD at all, or whether the problem happens later in the installer.",,,
+pool:GEN-0002,pool,Problem with installing Ubuntu,URGENT: Something is wrong with installing Ubuntu and I don't know how to fix it.,", including new, pc's are i386).
+
+For 2: Choose the directory to install to. Choose something unique, like /mnt/ubuntu. Don't choose a used directory.
+
+For 3: Choose an appropriate, up-to-date mirror, or use the above address.
+
+Wait for the install to finish. If your network is unreliable, then you may need to run debootstrap multiple times to complete the installation. It should resume where it left off. If it has successfully installed, you should see the message ""Base system installed successfully"" near the end of its output. If you run into a problem unrelated to networking, you may need to delete all of the installed files and directories and restart.
+
+Set up Fstab
+
+Create your fstab. You can copy your current one, but you may need to make a couple changes.
+
+```
+# cp /etc/fstab /mnt/ubuntu/etc/fstab
+# nano /mnt/ubuntu/etc/fstab
+```
+
+You can use your favorite text editor in place of nano above.
+
+Change the mount points on the partition(s) you set up in step 1
+
+Change their options to ""defaults""
+
+Change the Type to whatever Filesystem is on that particular partition.
+
+Change /mnt/auto/floppy to /mnt/floppy. Do the same for /mnt/cdrom.
+
+Add ""sync"" to the options for /mnt/floppy.","I’m sorry—let’s avoid making anything worse. **If the installer is asking to erase a disk, format a partition, or change partitions and you’re unsure, stop there for now.** Don’t confirm the change.
+
+Please tell me:
+- What happens, and the **exact error message** (a photo is fine)?
+- Which step are you on: booting the USB/DVD, starting the installer, choosing an installation type, or after installation?
+- What Ubuntu version are you installing, and are you keeping Windows or other files on the computer?
+
+If you can reach the USB/DVD menu, choose **“Try Ubuntu”** rather than **“Install Ubuntu”** for now. That lets us check whether the computer works from the installation media without installing or changing the hard drive.",,,
+pool:GEN-0004,pool,The dots with the desired resolution for further details and,This is blocking my work — How do I the dots with the desired resolution for further details and? Thanks for any help you can offer.,"ce the dots with the desired resolution. For further details and potential workarounds see X config resolutions.
+
+Low Resolution Icons and OS Features
+
+If you have problems with low resolution icons, shortcuts and menus placed strangely, and especially desktop size not matching your monitor, this may be due to a bug with multiple monitor setup. If you've previously setup a second monitor and have it plugged in but not turned on, Ubuntu/Xubuntu may be counfounded by this. The simplest method to resolve this is to remove the redundant cable from your machine and reboot. Additionally, install arandr (GUI for xrandr editing) and setup two profiles, one with the secondary monitor and one without. Removal of redundant cable when not in use is nonetheless still recommended. This problem was experienced in Ubuntu and Xubuntu.
+
+Screen Blanks/Monitor Turns Off
+
+Using a laptop with a GeForce Go card, or connecting the sole display via DVI on a dual-head system sometimes results in the screen not receiving a picture. This is caused by the driver outputting video to the VGA port on the graphics card, instead of DVI.","Replace `...` with a resolution name such as `1280x720`—but `S-video` must also match the name of your actual display output.
+
+Run:
+
+```bash
+xrandr
+```
+
+Find your connected output (for example, `HDMI-1`) and check whether the desired resolution appears beneath it. If it does, use:
+
+```bash
+xrandr --addmode HDMI-1 1280x720
+xrandr --output HDMI-1 --mode 1280x720
+```
+
+Replace `HDMI-1` and `1280x720` with the names shown on your system. If that resolution is already listed, skip the `--addmode` command and just set it with `--output`. `S-video` in the guide is only an example; it may not be your output name.",,,
+pool:GEN-0014,pool,Problem with installing Ubuntu,This is blocking my work — Something is wrong with installing Ubuntu and I don't know how to fix it.,"oad locations. The Alternate CD allows more advanced installation options which are not available with the standard LiveCD.
+
+Installation without a CD
+
+The new generations of laptops and netbooks are increasingly shipping without CD drives. To cater to this need, or if you do not wish to burn a CD to install Ubuntu, you are not left to trudge in the dark - Ubuntu can be installed without using a CD or CD-ROM drive!
+
+Quick Install from USB - A quick guide to installing from a USB memory stick. Intended for less technically-inclined readers.
+
+Install from USB - Installing from a USB memory stick (full version).
+
+Installation/iso2usb - Overview: cloning and extraction, tools and a simple 'Do it yourself' extracting method.
+
+Smart Boot Manager - Installing from a PC which will not boot from a CD.
+
+Install within Windows - Yes, it is possible to install Ubuntu from within Windows without using floppies, a CD, or any other removable media! This uses Wubi, and installs Ubuntu as a large file that may be uninstalled like any other program in Windows.
+
+Install with Floppies - Installing without a CD drive over a network.","Sorry—that’s especially frustrating when it’s stopping your work. Let’s avoid risking any files while we narrow it down.
+
+**First, is there important data on this computer that isn’t backed up?** If so, don’t choose **Erase disk**, format partitions, or resize anything yet.
+
+Please tell me:
+
+- What happens when you try to install—does the USB fail to boot, does the installer stop, or do you see an error? Please copy the exact message or share a photo.
+- Which Ubuntu version are you installing, and how did you create the USB?
+- Is this a new install, or are you keeping Windows or another operating system?
+- What computer model is it, if you know?
+
+If you need to get work done right away, you may be able to boot from the USB and choose **Try Ubuntu** to use a temporary desktop without installing. Don’t save important work there unless you have an external drive or another safe place to store it.",,,
+resolution:add-repository,resolution,Add a software repository,How do I add or temporarily disable a software repository from the command line?,"Software repositories are listed in /etc/apt/sources.list, and by editing that file from the command line you can add, remove, or temporarily disable software repositories. Backup the configuration file first: sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup.","APT reads repositories from `/etc/apt/sources.list` and files in `/etc/apt/sources.list.d/`. Back up the files before changing them:
+
+```bash
+sudo cp -a /etc/apt/sources.list /etc/apt/sources.list.backup
+sudo cp -a /etc/apt/sources.list.d /etc/apt/sources.list.d.backup
+```
+
+**To add a repository:** use the repository’s instructions and make sure it supports your Ubuntu release. A repository line typically looks like:
+
+```text
+deb https://example.com/ubuntu <release> <component>
+```
+
+You can put the line in a new file, for example:
+
+```bash
+sudo nano /etc/apt/sources.list.d/example.list
+```
+
+Replace the placeholders with the repository’s actual URL, your Ubuntu release codename, and its component. Save and exit, then refresh package lists:
+
+```bash
+sudo apt update
+```
+
+For a Launchpad PPA, use its published PPA name:
+
+```bash
+sudo add-apt-repository ppa:owner/archive
+sudo apt update
+```
+
+**To temporarily disable a repository:** find its line in `sources.list` or a file under `sources.list.d`, and put `#` at the beginning of the line. For example, change `deb ...` to `# deb ...`. Run `sudo apt update` afterward. To re-enable it, remove the `#` and update again.
+
+You can use `sudoedit <file>` instead of `nano` if you prefer another configured editor. Don’t add a repository intended for a different Ubuntu release; it can cause package conflicts.",,,
+resolution:add-user-to-group,resolution,How do I add a user to a group?,A colleague needs access on our Ubuntu workstation. How do I add a new user account and put that username into a group?,Add the user account and then add that username to the group. The Users and Groups administration window does the same from the desktop; you need the sudo password to make changes there.,"You can create the account and add it to an existing group from a terminal. Replace `sam` and `project` with the username and group you need:
+
+```bash
+sudo adduser sam
+sudo adduser sam project
+```
+
+The first command creates the account and prompts you to set its password. The second adds it to `project`. The group must already exist; if it doesn’t, create it first with `sudo addgroup project`.
+
+Alternatively, you can create the account in Ubuntu’s **Settings → System → Users** (unlock the settings if prompted), then run the group command above.
+
+The user may need to sign out and back in for the new group membership to take effect. Check it with:
+
+```bash
+id sam
+```
+
+Only add someone to the `sudo` group if they should have administrator privileges.",,,
+pool:GEN-0018,pool,See this link installation iso usb do it yourself,How do I see this link installation iso usb do it yourself? Thanks for any help you can offer.,"UEFI mode and BIOS mode
+
+See this link: Installation/iso2usb#Do_it_yourself
+
+Portable installed system booting from UEFI and BIOS
+
+Multiboot pendrives
+
+Booting ISO files on internal drive
+
+Booting USB drives with grub2 and iso files 'grub-n-iso'
+
+There are more details at the sub-page /alt
+
+Booting the Computer from USB
+
+Remove all unneeded USB items, but keep the network cable attached.
+
+Boot menu
+
+Instead of editing BIOS settings, you can choose a boot device from the boot menu. Press the function key to enter the boot menu when your computer is booting. Typically, the boot screen displays which key you need to press. It maybe one of F12, F10, F9.
+
+Edit the BIOS settings
+
+Insert the bootable USB flash drive that you just created in your target computer and restart it. Most newer computers can boot from a USB flash drive. If your computer does not automatically do so, you might need to edit the BIOS settings.
+
+Restart your computer, and watch for a message telling you which key, hotkey to press to enter the BIOS setup.
+
+It will usually be one of F1, F2, F9, F10, DEL, Enter or ESC.","Here’s the link to the **“Do it yourself”** section:
+
+[Installation/iso2usb — Do it yourself](https://help.ubuntu.com/community/Installation/iso2usb#Do_it_yourself)
+
+Click the link above. If it doesn’t open, copy and paste the address into your browser.",,,
+pool:GEN-0006,pool,Problem with installing Ubuntu,This is blocking my work — Something is wrong with installing Ubuntu and I don't know how to fix it. It's been happening for a while now and I've tried a few things already but nothing has worked.,"r attempt to boot from the USB device before booting from the hard disk.
+
+Chainloading
+
+PLoP Boot Manager
+
+For old computers that cannot boot from USB
+
+Flow chart for trouble-shooting
+
+See this link: Why Doesn't a Bootable USB Boot
+
+There are more details at the sub-page /bootUSB
+
+Known Issues
+
+There are problems with the versions of the Startup Disk Creator alias usb-creator in versions of Ubuntu older than 16.04 LTS. There are similar problems with old versions of Unetbootin. Until these problems are solved other tools work, for example mkusb and Win32DiskImager described in the following links, https://help.ubuntu.com/community/mkusb and https://wiki.ubuntu.com/Win32DiskImager/iso2usb
+
+The version 0.3.2 (and newer versions) of the Startup Disk Creator alias usb-creator in Ubuntu 16.04 LTS (and newer versions) clones the iso file and creates a read-only file system. This method is very robust, but if you want to re-use the USB stick as a storage drive, you must restore it. Two methods are described in the next paragraph.
+
+Postrequisites - restore the USB stick","Sorry this is holding up your work. First, which kind of installation is failing?
+
+- Installing Ubuntu from a USB drive
+- Installing Ubuntu from within another Linux distribution (for example, using `debootstrap`)
+- Installing a package or app on an existing Ubuntu system
+
+Please share the **exact error message** (or a photo), what step it appears at, your current operating system, and the Ubuntu version you’re trying to install. Also say what you’ve already tried and whether you need to keep data or another operating system on the computer.
+
+For now, don’t change partitions or add repository entries. The repository examples in the material you quoted use very old Ubuntu releases and shouldn’t be copied into a current system. If this is a USB install, tell me how you created the USB and whether the computer can boot from it.",,,
+resolution:enable-firewall-over-ssh,resolution,Enable the firewall,How do I turn on the firewall on an Ubuntu server that I only reach over ssh?,Append the ssh rule before you enable the firewall: if you enable the firewall under ssh without the ssh rule you will close the ssh connection. Use the command sudo ufw enable ssh from a terminal on the remote computer.,"Before enabling UFW, allow the SSH port you use. For the standard SSH port, run:
+
+```bash
+sudo ufw allow OpenSSH
+sudo ufw enable
+sudo ufw status verbose
+```
+
+If the `OpenSSH` profile isn’t available, use `sudo ufw allow 22/tcp` instead. If SSH uses a different port, allow that port first—for example, `sudo ufw allow 2222/tcp`—or you could block new SSH connections.
+
+Keep your current SSH session open while checking the status, and make sure you can access your server’s provider console in case you need to recover access.",,,
+pool:GEN-0010,pool,Problem with user accounts and permissions,This is blocking my work — Something is wrong with user accounts and permissions and I don't know how to fix it. It's been happening for a while now and I've tried a few things already but nothing has worked. I've tried this three times already and I'm getting nowhere.,"how to manually generate a strong password. Keep in mind that because the examples here are viewable by anyone, these exact results should be avoided.
+
+The first step is to choose a phrase which you can easily remember, but is at least 8 words long. This can be a favourite quote, a line from your favourite song, something you heard randomly while walking around, or even an obscure reference to a movie you like. For this example, we'll choose ""To be or not to be, that is the question"".
+
+Now, convert your phrase to a single word. Exactly how you do so is not important, as long as you remember how you did it! We'll take the first letter of each word, which gives us ""tbontbtitq"". Now, we have one character class, the lower case letter. To get upper case letters, simply randomly capitalize letters. We'll capitalize each third letter, and end up with ""tbOntBtiTq"".","Sorry—you’ve already spent a lot of time on this. “User accounts and permissions” can mean several different problems, and the fix depends on the exact error. Please don’t keep repeating changes until we know what’s failing.
+
+Could you share:
+
+- What you’re trying to do, and the exact error message.
+- Whether you can log in and whether `sudo` works.
+- Your Ubuntu version (`lsb_release -ds`).
+- What you tried, including the commands, if you have them.
+
+Don’t share your password. Also avoid commands such as `chmod -R 777` or broad `chown -R` changes; they can make the system less secure or break it further.
+
+If you can open a terminal, these read-only checks may help:
+
+```bash
+whoami
+id
+ls -ld ""$HOME""
+```
+
+Paste the output along with the error. If the issue is specifically a forgotten login password, say so—that has a different recovery procedure.",,,
+resolution:webcam-blank,resolution,Webcam shows nothing,Cheese does not display anything at all from my webcam. What should I check next?,"Try one of the other programs, such as Empathy, to make sure that Cheese is not causing the problem. Your media player may also need to know the video and audio device files for your webcam: before you plug in your webcam run ls /dev/video* and ls /dev/audio* at a console and note the difference.","First check whether Ubuntu detects the webcam, rather than troubleshooting Cheese:
+
+1. In a terminal, run:
+   ```bash
+   ls /dev/video*
+   ls /dev/audio*
+   ```
+2. Note the results, connect or switch on the webcam, wait a few seconds, and run the commands again. A new device such as `/dev/video0` may be the webcam. (The audio command may show no devices; that alone doesn’t mean the camera failed.)
+3. If no video device appears, check that the webcam is switched on—built-in cameras may have a function key or privacy switch.
+4. If a video device does appear, test the webcam with another application, such as VLC or a video-chat app. This helps determine whether the problem is specific to Cheese.",,,
+resolution:password-policy,resolution,Password policy guidance,What counts as a strong password for the accounts on our Ubuntu machines?,"A strong password is at least fifteen characters in length, does not contain your user name, real name, organization name or birth date, does not contain a complete dictionary word, is significantly different from your previous password, and should contain three of the following character types: lowercase alphabetical, uppercase alphabetical, numerics and special characters.","For Ubuntu user accounts, a strong password should be **long, unique, and hard to guess**:
+
+- Prefer **at least 15 characters** when the password is the only sign-in factor. A randomly generated password or a passphrase made from several randomly chosen, unrelated words can work well.
+- Never reuse it on another account or service. A password manager can generate and store unique passwords; use MFA where available.
+- Avoid names, dates, quotations, keyboard patterns, and predictable substitutions such as `@` for `a`. Don’t use a sample passphrase from a guide as your real password.
+
+Ubuntu can check password quality through its PAM configuration, but enforcement depends on how the machine is set up—and it doesn’t cover every application’s passwords. Don’t assume a password is being checked just because it’s an Ubuntu account.
+
+You can use **APG** for generated passwords or **xkcdpass** for randomly chosen-word passphrases. Both are available from Ubuntu’s repositories; if Universe is not enabled, use `sudo add-apt-repository universe` followed by `sudo apt update`, then install the package you want with `sudo apt install apg` or `sudo apt install xkcdpass`. Prefer Ubuntu’s repositories to an unfamiliar PPA for security-sensitive software.",,,
+resolution:network-config-files,resolution,Where are my network settings stored?,"After upgrading the release, where does NetworkManager keep the connection configuration files on disk?","From Ubuntu 23.10 onwards NetworkManager includes netplan, and all the connection configuration files are stored as yaml files in /etc/netplan. If it is not managing your network connections you can remove the .nmconnection files.","On Ubuntu 23.10 and later, network configuration managed through Netplan is stored as YAML files in **`/etc/netplan/`**.
+
+On Ubuntu 23.04 and earlier, NetworkManager connection profiles are typically stored in **`/etc/NetworkManager/system-connections/`**. Files under **`/run/NetworkManager/system-connections/`** are runtime-generated and may not persist across reboots.",,,
+pool:GEN-0020,pool,Warning even if your pc boots the dvd in uefi,"No rush, but How do I warning even if your pc boots the dvd in uefi? This is completely unacceptable.","
+
+Warning: even if your PC boots the DVD in UEFI mode, it might boot the HDD in Legacy mode (and the contrary).
+
+When booting on a 64-bit Ubuntu disk:
+
+- If the BIOS is set up to boot the CD in UEFI mode, then you will see the screen below:
+
+- If the BIOS is NOT set up to boot the CD in UEFI mode, or if the disk is not 64-bit, then you will see the screen below:
+
+Set up the firmware in UEFI or BIOS/CSM/Legacy mode
+
+Some recent computers (>2011) allow you to set up the computer to boot either in UEFI mode or in BIOS/CSM/Legacy (not-EFI) mode. The way to adjust this setting depends on the computers, but generally this setting is located in the ""Boot order"" tab of the BIOS (to access the BIOS screens, it is generally necessary to press a key during the PC startup). It can also often be set on a per-boot basis by hitting a function key (F8 and F10 are common choices) soon after you power on the computer.
+
+Note: Some UEFIs (e.g. American Megatrends' ""Aptio"", found on the Asus vivobook series) call Legacy mode ""Compatibility Support Module"" or simply ""CSM"".
+
+Remark: Some UEFIs enable one to set up the boot mode for the optical drive separately from the boot mode for the HDD.","I think you’re asking how to check whether the installer actually booted in UEFI mode. The warning is just saying that booting the DVD/USB in UEFI mode does **not** prove the installed system—or Windows—uses UEFI too. The computer can boot each one differently.
+
+From the Ubuntu live session, open Terminal and run:
+
+```bash
+test -d /sys/firmware/efi && echo ""UEFI mode"" || echo ""Legacy/BIOS mode""
+```
+
+- **UEFI mode** means the live installer was started in UEFI mode.
+- **Legacy/BIOS mode** means it was started in Legacy/CSM mode.
+
+You can also check the computer’s one-time boot menu and choose the entry prefixed with **UEFI:** for your DVD or USB. If you’re keeping Windows, check its mode too: press **Win+R**, enter `msinfo32`, and look for **BIOS Mode**. Ideally, install Ubuntu in the same mode Windows uses. This check doesn’t change anything on your disks.",,,
+pool:GEN-0019,pool,The scope of this discussion so i will leave you,"No rush, but How do I the scope of this discussion so i will leave you?","tside the scope of this discussion. So I will leave you to research that on your own.
+
+Well, I'm behind a NAT router so none of this is for me, right?
+
+Wrong again. A NAT router is a great addition to your security, but as I've been enforcing throughout this post, that there is no catch all solution. A NAT router will prevent a service from being bound and accessible from the Internet. That being said, it works a lot like strong inbound only rules as we discussed earlier in this post. It does not provide protection against methods like a reverse connection designed to bypass a firewall. Another important thing to note is that the NAT router's protection is not host based. So if another machine on the network with yours is compromised the NAT router will offer your machine no protection. When used in conjunction with the other topics we've discussed in this post a NAT router is an excellent hardening measure, however as a stand alone solution it is lacking in many ways. Hopefully this has been educational, and given you an idea of ways that you can utilize your firewall and other security applications to increase your level of protection.
+
+Additional Resources :","If you mean **how to protect private data with encryption**, the right option depends on what you want to protect:
+
+- **A new Ubuntu installation:** During installation, choose the option to encrypt the disk (often listed under advanced storage features). This protects data on the computer when it’s shut down. Keep your password safe; losing it can mean losing access to your data.
+- **A USB drive or separate disk:** The **Disks** app can format a drive with LUKS encryption. Formatting erases the drive, so back it up first.
+- **One or a few files:** You can encrypt a file with GPG in Terminal:
+  ```bash
+  gpg -c --cipher-algo AES256 filename
+  ```
+  Enter a strong passphrase. This creates `filename.gpg`. To decrypt it later:
+  ```bash
+  gpg filename.gpg
+  ```
+  The original `filename` remains unencrypted until you remove it, so take care not to leave an unprotected copy.
+
+Encryption mainly protects data when a device or drive is inaccessible or powered off. It does not protect files from malware or someone using your already-unlocked account. Keep a separate, secure backup of anything important.",,,
+resolution:bootable-usb,resolution,Create a bootable USB,I want to install Ubuntu on a new laptop. How do I make a bootable USB flash drive?,"To create a USB installation device you need an 8 GB USB flash drive, or a 4 GB device with some of the methods if the iso file is smaller than 4 GB. Files on this USB device will be erased, so backup the files you want to keep before making the device bootable.","You’ll need an Ubuntu ISO file and an **8 GB or larger USB flash drive**. Creating the installer will erase everything on the USB drive, so back up any files you want to keep.
+
+### On Windows (recommended: Rufus)
+1. Download the Ubuntu ISO from [ubuntu.com/download](https://ubuntu.com/download) and save it on your computer—not on the USB drive.
+2. Download and open [Rufus](https://rufus.ie/).
+3. Insert the USB drive. In Rufus, select that drive under **Device** and the Ubuntu ISO under **Boot selection**.
+4. For a new laptop, the default **GPT / UEFI** settings are usually appropriate. Click **Start** and confirm that the USB drive can be erased. If prompted, choose **ISO Image mode**.
+5. When Rufus finishes, safely eject the USB drive.
+
+### On Ubuntu
+1. Download the Ubuntu ISO from [ubuntu.com/download](https://ubuntu.com/download).
+2. Insert and mount the USB drive, then open **Startup Disk Creator**.
+3. Select the downloaded ISO in the top pane and the correct USB drive in the lower pane. Click **Make Startup Disk** and confirm erasure.
+
+To use it, insert the USB into the new laptop and start the laptop’s boot menu (often opened with **F12**, **Esc**, or another key shown at startup). Select the USB drive, then choose the option to try or install Ubuntu. Take care to select the USB—not an internal or external disk—as the target when creating the installer.",,,
+resolution:what-is-a-ppa,resolution,Is a PPA safe to use?,A guide told me to add a PPA to get a newer version of a program. What is a PPA and is it safe?,"A PPA is a Personal Package Archive, a method of distributing software to users without requiring developers to undergo the full process of distribution in the main ubuntu repositories. PPAs have not undergone the same process of validation as regular ubuntu packages, so end users install PPAs at their own risk.","A **PPA** (“Personal Package Archive”) is a software repository hosted on Launchpad. It lets a developer offer Ubuntu packages—often newer versions than the ones in Ubuntu’s official repositories. Once added, packages from it can be installed and may receive updates through Ubuntu’s normal package tools.
+
+A PPA can be safe, but it is **not vetted to the same standard as Ubuntu’s official repositories**. The package signature helps confirm that a package came from that archive and hasn’t been altered in transit; it does **not** prove the software is harmless or that the uploader is trustworthy. Installing a package can also run code with system-level privileges, and you are trusting the PPA maintainer to provide future updates responsibly.
+
+Before adding one:
+
+- Check that it is the **specific PPA recommended by the program’s official developer**, not just a similar-looking name.
+- Consider whether you really need the newer version; the Ubuntu repository is usually the safer default.
+- Be especially cautious with PPAs that replace system libraries or packages, or that ask you to run unexplained commands.
+- Remember that removing a PPA does not necessarily remove software already installed from it.
+
+In short: use a PPA only when you trust its maintainer and need what it provides.",,,
+resolution:uefi-or-legacy,resolution,Dual boot with Windows,Should I install Ubuntu in UEFI mode or in legacy mode alongside an existing Windows install?,Match whatever the other systems use. If the other systems on your computer are installed in UEFI mode then you must install Ubuntu in UEFI mode too; if they are installed in Legacy mode then you must install Ubuntu in Legacy mode too.,"Install Ubuntu in the **same boot mode Windows uses**. Mixing modes (Windows in UEFI and Ubuntu in Legacy, or vice versa) can make choosing between them awkward.
+
+To check Windows, press **Win+R**, enter `msinfo32`, and look for **BIOS Mode**:
+- **UEFI** → boot the Ubuntu installer USB in UEFI mode and install Ubuntu in UEFI mode.
+- **Legacy** → boot the USB in Legacy/CSM mode and install Ubuntu in Legacy mode.
+
+On most newer PCs—especially those that came with Windows 8 or later—Windows uses UEFI. Don’t change the firmware boot mode just to install Ubuntu. Secure Boot can usually remain enabled.",,,
+pool:GEN-0001,pool,Files so i can simply re-install it later,URGENT: I've been trying to sort out files so i can simply re-install it later on my Ubuntu machine and keep getting stuck. How do I files so i can simply re-install it later? I've tried this three times already and I'm getting nowhere.,"uration files so I can simply re-install it later.
+
+```
+apt-get remove torcs
+```
+
+If I want to also remove config files :
+
+```
+apt-get purge torcs
+```
+
+Setting up apt-get to use a http-proxy
+
+These are three methods of using apt-get with a http-proxy.
+
+Temporary proxy session
+
+This is a temporary method that you can manually use each time you want to use apt-get through a http-proxy. This method is useful if you only want to temporarily use a http-proxy.
+
+Enter this line in the terminal prior to using apt-get (substitute your details for yourproxyaddress and proxyport).
+
+```
+export http_proxy=http://yourproxyaddress:proxyport
+```
+
+If you normally use sudo to run apt-get you will need to login as root first for this to work unless you also add some explicit environment settings to /etc/sudoers, e.g.
+
+```
+Defaults env_keep = ""http_proxy https_proxy ftp_proxy""
+```
+
+APT configuration file method
+
+This method uses the apt.conf file which is found in your /etc/apt/ directory. This method is useful if you only want apt-get (and not other applications) to use a http-proxy permanently.","To uninstall a program but keep its system configuration files for a later reinstall, use **remove**, not **purge**:
+
+```bash
+sudo apt remove torcs
+```
+
+Later, reinstall it with:
+
+```bash
+sudo apt install torcs
+```
+
+Replace `torcs` with the package name you want. Avoid `sudo apt purge` if you want to keep configuration files. Note that `remove` does not necessarily preserve personal data or every file the program created.",,,
+resolution:nvidia-driver,resolution,Nvidia driver is not loading,After an update my nvidia graphics card fell back to a basic driver. How do I install the proprietary driver?,"The open source Nouveau driver lacks support for 3D acceleration, while the closed source NVIDIA drivers developed by NVIDIA provide excellent 3D acceleration and video card support. Install the nvidia-graphics-drivers package provided by the Ubuntu repositories that matches your version of Ubuntu and your graphics card.","The update may have left the NVIDIA kernel module unavailable or blocked. Install Ubuntu’s recommended proprietary driver rather than downloading NVIDIA’s `.run` installer.
+
+### Install the recommended driver
+
+In the desktop, open **Software & Updates → Additional Drivers**, select the recommended NVIDIA proprietary driver, choose **Apply Changes**, then reboot.
+
+Or use the terminal:
+
+```bash
+sudo apt update
+ubuntu-drivers devices
+sudo ubuntu-drivers install
+sudo reboot
+```
+
+After reboot, check whether the driver is active:
+
+```bash
+nvidia-smi
+```
+
+### If it still falls back to the basic driver
+
+**Check Secure Boot.** It can block the NVIDIA module after an update. Run:
+
+```bash
+mokutil --sb-state
+```
+
+If Secure Boot is enabled, reboot and look for the **MOK enrollment** screen. Follow its prompts to enroll the key created during driver installation, then reboot again. If you never get that prompt, tell me what the install and reboot showed.
+
+You can also collect these details to diagnose the failure:
+
+```bash
+lspci -k | grep -A3 -E 'VGA|3D|Display'
+dkms status
+uname -r
+```
+
+On a hybrid Intel/NVIDIA laptop, the system may use Intel for the desktop while keeping NVIDIA available for demanding apps; that alone doesn’t mean the driver failed. `nvidia-smi` is a useful check that the NVIDIA driver loaded.",,,
