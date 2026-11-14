@@ -437,6 +437,20 @@ ANTHROPIC_API_KEY=... uv run python -m triage.eval --live
   default model included), so live output is at the model's default temperature.
 - A per-example failure (unparseable reply, API error) is recorded in the row's
   `error` field and scored 0; it does not stop the run.
+- OpenAI: `OPENAI_API_KEY=... SPINE_LIVE_PROVIDER=openai uv run python -m triage.eval --live`
+  (`spine/models_openai.py`, plain httpx, Chat Completions). `SPINE_LIVE_PROVIDER`
+  is `anthropic` or `openai`; unset, it picks Anthropic if `ANTHROPIC_API_KEY` is
+  set, else OpenAI if `OPENAI_API_KEY` is set, else exit 2. Default OpenAI model
+  `gpt-6-luna`; `SPINE_LIVE_MODEL` overrides it. `summary.json` records `provider`.
+- OpenAI prices come from the table in `models_openai.py` (source URL and fetch
+  date in its comment); an unpriced model gives `cost_usd: null`. To price any
+  model yourself set both `SPINE_LIVE_INPUT_COST_PER_1M` and
+  `SPINE_LIVE_OUTPUT_COST_PER_1M` (user-supplied USD per 1M tokens; applied to
+  every call, so the figure is only as good as what you enter).
+- OpenAI sends `temperature`; if the model rejects it the client retries once
+  without it and stops sending it. Optional `SPINE_LIVE_REASONING_EFFORT` is
+  passed as `reasoning_effort`. An empty reply with `finish_reason=length` (cap
+  eaten by hidden reasoning) is an error row, not an empty answer.
 - Without `--live` it runs the fake model and writes nothing.
 - In live mode the resolution suite uses the real `LlmJudge` prompt
   (`DEFAULT_JUDGE_TEMPLATE`) with the live model, instead of the keyword fake.

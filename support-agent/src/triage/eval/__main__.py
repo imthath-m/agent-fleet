@@ -1,7 +1,8 @@
 """``python -m triage.eval [--live] [--out DIR] [--suite NAME ...] [--limit N]``
 
 Without ``--live``: the five suites on the fake model, table only, nothing
-written. With ``--live``: the real model (needs ``ANTHROPIC_API_KEY``); results
+written. With ``--live``: the real model (needs ``ANTHROPIC_API_KEY`` or
+``OPENAI_API_KEY``; ``SPINE_LIVE_PROVIDER`` picks one); results
 go to ``<out>/<UTC date>/``. Exit code 2 if ``--live`` has no key.
 """
 
@@ -27,7 +28,7 @@ def _print_table(summary: dict) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="triage.eval")
-    parser.add_argument("--live", action="store_true", help="use the real Claude API")
+    parser.add_argument("--live", action="store_true", help="use the real model API")
     parser.add_argument("--out", type=Path, default=RESULTS_DIR, help="results root (live only)")
     parser.add_argument("--suite", nargs="+", choices=list(SUITES), help="suites to run")
     parser.add_argument("--limit", type=int, help="only the first N examples per suite")

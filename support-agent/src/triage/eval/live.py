@@ -18,14 +18,16 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from spine import models_anthropic, models_openai
 from spine.eval.metrics import MetricResult
 from spine.models import ModelClient, ModelConfig, ModelResponse, WrappedModelClient
 from spine.models_anthropic import (
     ANTHROPIC_DEFAULT_CONFIG,
     AnthropicModelClient,
+    MissingApiKeyError,
     config_for_model,
-    cost_usd,
 )
+from spine.models_openai import OPENAI_DEFAULT_CONFIG, OpenAIModelClient
 
 from triage import config
 from triage.eval import suites
@@ -41,12 +43,31 @@ SUITES: dict[str, Callable[..., Any]] = {
 }
 
 
+def live_provider() -> str:
+    """``SPINE_LIVE_PROVIDER`` (anthropic|openai), else whichever key is set
+    (Anthropic first). Raises ``MissingApiKeyError`` if neither is."""
+    provider = os.environ.get("SPINE_LIVE_PROVIDER", "").strip().lower()
+    if provider in ("anthropic", "openai"):
+        return provider
+    if provider:
+        raise ValueError(f"SPINE_LIVE_PROVIDER must be 'anthropic' or 'openai', got {provider!r}")
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        return "anthropic"
+    if os.environ.get("OPENAI_API_KEY"):
+        return "openai"
+    raise MissingApiKeyError("neither ANTHROPIC_API_KEY nor OPENAI_API_KEY is set")
+
+
 def build_live_client() -> ModelClient:
-    """Real Claude client; model from ``SPINE_LIVE_MODEL`` or the default.
+    """Real client for ``live_provider()``; model from ``SPINE_LIVE_MODEL`` or the default.
 
     Raises ``spine.models_anthropic.MissingApiKeyError`` without a key.
     """
-    model = os.environ.get("SPINE_LIVE_MODEL") or ANTHROPIC_DEFAULT_CONFIG.model
+    override = os.environ.get("SPINE_LIVE_MODEL")
+    if live_provider() == "openai":
+        model = override or OPENAI_DEFAULT_CONFIG.model
+        return OpenAIModelClient(config=models_openai.config_for_model(model))
+    model = override or ANTHROPIC_DEFAULT_CONFIG.model
     return AnthropicModelClient(config=config_for_model(model))
 
 
@@ -61,12 +82,13 @@ class _Usage:
     input_tokens: int = 0
     output_tokens: int = 0
     cost: float | None = 0.0  # None once any call used a model with no known price
+    price: Callable[[str, int, int], float | None] = models_anthropic.cost_usd
 
     def add(self, r: ModelResponse) -> None:
         self.calls += 1
         self.input_tokens += r.input_tokens
         self.output_tokens += r.output_tokens
-        c = cost_usd(r.model, r.input_tokens, r.output_tokens)
+        c = self.price(r.model, r.input_tokens, r.output_tokens)
         self.cost = None if c is None or self.cost is None else self.cost + c
 
     def to_dict(self) -> dict[str, Any]:
@@ -222,7 +244,11 @@ def run_all(
 
     base = build_live_client()  # raises before anything is written if no key
     cfg: ModelConfig = getattr(base, "config", config.MODEL_CONFIG)
-    main_usage, judge_usage = _Usage(), _Usage()
+    provider = {OpenAIModelClient: "openai", AnthropicModelClient: "anthropic"}.get(
+        type(base), "other"
+    )
+    price = models_openai.cost_usd if provider == "openai" else models_anthropic.cost_usd
+    main_usage, judge_usage = _Usage(price=price), _Usage(price=price)
     main = _Tally(base, main_usage)
     judge = _Tally(base, judge_usage)
     # Wrap here (once) so classify()/resolve()/TriageAgent do not re-wrap.
@@ -248,6 +274,7 @@ def run_all(
     model_id = cfg.model if hasattr(base, "config") else (main.model or "unknown")
     summary = {
         "mode": "live",
+        "provider": provider,
         "model": model_id,
         "judge_model": model_id,
         "run_at": run_at.isoformat(timespec="seconds"),

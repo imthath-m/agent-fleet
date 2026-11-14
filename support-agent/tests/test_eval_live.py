@@ -1,8 +1,10 @@
 import json
 
+import httpx
 import pytest
 from spine.eval.runner import load_suite
 from spine.models import FakeModelClient
+from spine.models_openai import OpenAIModelClient
 
 from triage.eval import live
 from triage.eval.__main__ import main
@@ -104,8 +106,69 @@ def test_fake_mode_writes_nothing(tmp_path):
     assert list(tmp_path.iterdir()) == []
 
 
+def _clear_env(monkeypatch):
+    for var in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "SPINE_LIVE_PROVIDER", "SPINE_LIVE_MODEL"):
+        monkeypatch.delenv(var, raising=False)
+
+
 def test_live_without_key_exits_2_and_writes_nothing(monkeypatch, tmp_path, capsys):
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    _clear_env(monkeypatch)
     assert main(["--live", "--out", str(tmp_path)]) == 2
-    assert "ANTHROPIC_API_KEY" in capsys.readouterr().err
+    err = capsys.readouterr().err
+    assert "ANTHROPIC_API_KEY" in err and "OPENAI_API_KEY" in err
     assert list(tmp_path.iterdir()) == []
+
+
+def test_provider_auto_selection(monkeypatch):
+    _clear_env(monkeypatch)
+    monkeypatch.setenv("OPENAI_API_KEY", "o")
+    assert live.live_provider() == "openai"
+    assert type(live.build_live_client()).__name__ == "OpenAIModelClient"
+    assert live.build_live_client().config.model == "gpt-6-luna"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "a")
+    assert live.live_provider() == "anthropic"  # anthropic wins when both set
+    assert type(live.build_live_client()).__name__ == "AnthropicModelClient"
+
+
+def test_provider_explicit_and_model_override(monkeypatch):
+    _clear_env(monkeypatch)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "a")
+    monkeypatch.setenv("OPENAI_API_KEY", "o")
+    monkeypatch.setenv("SPINE_LIVE_PROVIDER", "openai")
+    monkeypatch.setenv("SPINE_LIVE_MODEL", "gpt-x")
+    client = live.build_live_client()
+    assert (type(client).__name__, client.config.model) == ("OpenAIModelClient", "gpt-x")
+    monkeypatch.setenv("SPINE_LIVE_PROVIDER", "bogus")
+    with pytest.raises(ValueError, match="SPINE_LIVE_PROVIDER"):
+        live.build_live_client()
+
+
+def test_explicit_provider_missing_its_key_exits_2(monkeypatch, tmp_path, capsys):
+    _clear_env(monkeypatch)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "a")
+    monkeypatch.setenv("SPINE_LIVE_PROVIDER", "openai")
+    assert main(["--live", "--out", str(tmp_path)]) == 2
+    assert "OPENAI_API_KEY" in capsys.readouterr().err
+
+
+def test_summary_records_provider_and_uses_its_prices(monkeypatch, tmp_path):
+    def handler(request):
+        text = '{"score": 0.8, "reason": "ok"}' if JUDGE_MARKER in json.loads(
+            request.content
+        )["messages"][0]["content"] else "x"
+        return httpx.Response(
+            200,
+            json={
+                "model": "gpt-6-luna",
+                "choices": [{"message": {"content": text}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1_000_000, "completion_tokens": 0},
+            },
+        )
+
+    http = httpx.Client(transport=httpx.MockTransport(handler))
+    client = OpenAIModelClient(api_key="k", client=http)
+    monkeypatch.setattr(live, "build_live_client", lambda: client)
+    summary = live.run_all(True, tmp_path, "d", names=["classification"], limit=1)
+    assert summary["provider"] == "openai"
+    assert summary["usage"]["cost_usd"] == pytest.approx(0.10 * summary["usage"]["calls"])
+    assert json.loads((tmp_path / "d" / "summary.json").read_text())["provider"] == "openai"
