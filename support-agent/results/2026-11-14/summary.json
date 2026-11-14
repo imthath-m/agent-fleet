@@ -1,0 +1,85 @@
+{
+  "mode": "live",
+  "provider": "openai",
+  "model": "gpt-6-luna",
+  "judge_model": "gpt-6-luna",
+  "run_at": "2026-11-14T12:46:38+00:00",
+  "git_sha": "60dc927",
+  "suites": {
+    "classification": {
+      "n_examples": 18,
+      "mean_scores": {
+        "schema_pass_rate": 1.0,
+        "field_accuracy": 0.7638888888888888
+      },
+      "pass_rates": {
+        "schema_pass_rate": 1.0,
+        "field_accuracy": 0.3333333333333333
+      },
+      "n_errors": 0
+    },
+    "resolution": {
+      "n_examples": 18,
+      "mean_scores": {
+        "grounding_rate": 1.0,
+        "llm_judge": 0.9066666666666667,
+        "schema_pass_rate": 1.0
+      },
+      "pass_rates": {
+        "grounding_rate": 1.0,
+        "llm_judge": 0.8333333333333334,
+        "schema_pass_rate": 1.0
+      },
+      "n_errors": 0
+    },
+    "actions": {
+      "n_examples": 15,
+      "mean_scores": {
+        "tool_call_correctness": 0.9333333333333333,
+        "field_accuracy": 1.0
+      },
+      "pass_rates": {
+        "tool_call_correctness": 0.9333333333333333,
+        "field_accuracy": 1.0
+      },
+      "n_errors": 0
+    },
+    "escalation": {
+      "n_examples": 15,
+      "mean_scores": {
+        "escalation_accuracy": 0.9333333333333333,
+        "escalation_precision": 0.875,
+        "escalation_recall": 1.0
+      },
+      "pass_rates": {
+        "escalation_accuracy": 0.9333333333333333
+      },
+      "n_errors": 0
+    },
+    "triage": {
+      "n_examples": 18,
+      "mean_scores": {
+        "grounding_rate": 0.5555555555555556,
+        "schema_pass_rate": 1.0
+      },
+      "pass_rates": {
+        "grounding_rate": 0.5555555555555556,
+        "schema_pass_rate": 1.0
+      },
+      "n_errors": 0
+    }
+  },
+  "usage": {
+    "calls": 168,
+    "input_tokens": 84207,
+    "output_tokens": 35697,
+    "cost_usd": 0.026269
+  },
+  "judge_usage": {
+    "calls": 18,
+    "input_tokens": 7700,
+    "output_tokens": 3084,
+    "cost_usd": 0.002312
+  },
+  "out_dir": "/home/user/agent-fleet/support-agent/results/2026-11-14"
+}

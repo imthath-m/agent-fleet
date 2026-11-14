@@ -285,8 +285,8 @@ The 10/18 reading is arithmetic on the row count, not stated in a file.
 
 Code: `src/triage/eval/live.py`, `src/triage/eval/__main__.py`,
 `shared-infra/src/spine/models_anthropic.py`. The live path is covered by offline
-tests with a mocked transport and a stand-in client. No real API call has been
-made yet (no key was available when this was written).
+tests with a mocked transport and a stand-in client. The first real run was made on 2026-11-14 with the OpenAI client (results below).
+The Anthropic client has not been exercised against the real API.
 
 Run (from `support-agent/`):
   `uv run python scripts/generate_tickets.py --seed 7 --n 80 [--out PATH]`
@@ -494,25 +494,28 @@ uv run python scripts/judge_agreement.py results/<date>
 
 ### Live results
 
-Separate from the fake table above. `NOT RUN` means no live run has been
-recorded in this file.
+Separate from the fake table above.
 
 <!-- LIVE_RESULTS_TABLE -->
 
+Source: `support-agent/results/2026-11-14/summary.json`. Single run, 2026-11-14T12:46:38+00:00, provider `openai`, model and judge `gpt-6-luna`, git `60dc927`.
+Usage: 168 calls, 84207 input tokens, 35697 output tokens, cost $0.0263 (computed from the price table in `models_openai.py`; token counts are from the API).
+Examples per suite: classification 18, resolution 18, actions 15, escalation 15, triage 18. Pipeline errors: 0.
+
 | Suite | Metric | Live value |
 | --- | --- | --- |
-| classification | `schema_pass_rate` | NOT RUN |
-| classification | `field_accuracy` | NOT RUN |
-| resolution | `grounding_rate` | NOT RUN |
-| resolution | `llm_judge` | NOT RUN |
-| resolution | `schema_pass_rate` | NOT RUN |
-| actions | `tool_call_correctness` | NOT RUN |
-| actions | `field_accuracy` | NOT RUN |
-| escalation | `escalation_accuracy` | NOT RUN |
-| escalation | `escalation_precision` | NOT RUN |
-| escalation | `escalation_recall` | NOT RUN |
-| triage | `grounding_rate` | NOT RUN |
-| triage | `schema_pass_rate` | NOT RUN |
+| classification | `schema_pass_rate` | 1.0000 |
+| classification | `field_accuracy` | 0.7639 |
+| resolution | `grounding_rate` | 1.0000 |
+| resolution | `llm_judge` | 0.9067 |
+| resolution | `schema_pass_rate` | 1.0000 |
+| actions | `tool_call_correctness` | 0.9333 |
+| actions | `field_accuracy` | 1.0000 |
+| escalation | `escalation_accuracy` | 0.9333 |
+| escalation | `escalation_precision` | 0.8750 |
+| escalation | `escalation_recall` | 1.0000 |
+| triage | `grounding_rate` | 0.5556 |
+| triage | `schema_pass_rate` | 1.0000 |
 
 Why the two tables are not directly comparable
 - Different judge: keyword overlap (fake) vs a real model prompt (live).
