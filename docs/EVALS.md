@@ -283,6 +283,138 @@ The 10/18 reading is arithmetic on the row count, not stated in a file.
 
 ### Live run
 
+Code: `src/triage/eval/live.py`, `src/triage/eval/__main__.py`,
+`shared-infra/src/spine/models_anthropic.py`. The live path is covered by offline
+tests with a mocked transport and a stand-in client. No real API call has been
+made yet (no key was available when this was written).
+
+Run (from `support-agent/`):
+  `uv run python scripts/generate_tickets.py --seed 7 --n 80 [--out PATH]`
+  Defaults: seed 7, n 80, out `data/generated/tickets.jsonl`.
+- Committed output: `data/generated/tickets.jsonl`, 80 rows, from commit
+  `e806e80` (6.1). The commit's `--seed`/`--n` are not recorded beyond the
+  defaults and the task's verify line (`--seed 7 --n 80`).
+- Consumption today: no eval suite, test or workflow reads
+  `data/generated/tickets.jsonl` (the script docstring says the same). The only
+  reader found is `scripts/judge_sheet.py` (section 5), for the judge-check pool.
+
+## 4. CI gate
+
+Workflow: `.github/workflows/support-agent-ci.yml` (and `spine-ci.yml` for the
+shared library). It triggers on push and pull_request touching `support-agent/**`,
+`shared-infra/**` or the workflow file. Python 3.11, `uv`, working dir
+`support-agent`. Steps: `uv sync`, `uv run ruff check`, `uv run pytest`, then
+five gates. No secrets or env vars are referenced.
+
+```
+uv run python -m spine.eval gate --suite triage.eval.suites:<factory> --baseline baselines/<name>.json
+```
+
+| Gate | Factory | Baseline |
+| --- | --- | --- |
+| classification | `build_classification_suite` | `baselines/classification.json` |
+| resolution | `build_resolution_suite` | `baselines/resolution.json` |
+| actions | `build_actions_suite` | `baselines/actions.json` |
+| escalation | `build_escalation_suite` | `baselines/escalation.json` |
+| triage | `build_triage_suite` | `baselines/triage.json` |
+
+### Rule (`shared-infra/src/spine/eval/gate.py`)
+
+- For each metric **in the baseline**: `delta = current - baseline`; fail if
+  `delta < -threshold`. Default `DEFAULT_THRESHOLD = 0.01`; override with
+  `--threshold`.
+- A metric missing from the current run counts as `0.0`, so it fails.
+- Metrics that exist only in the current run are not checked.
+- Improvements never fail. Exit code 0 pass, 1 regression.
+- There is no absolute floor in the gate. A baseline of 0.5 gates at 0.49.
+- Absolute floors exist only in tests (`support-agent/tests/`):
+
+| Test file | Floors |
+| --- | --- |
+| `test_eval_classification.py` | `MIN_FIELD_ACCURACY = 0.90`, `MIN_EXAMPLES = 15` |
+| `test_eval_resolution.py` | `MIN_GROUNDING_RATE = 0.90`, `MIN_LLM_JUDGE = 0.70`, `MIN_EXAMPLES = 15` |
+| `test_eval_actions.py` | `MIN_TOOL_CALL_CORRECTNESS = 0.90` (also applied to `field_accuracy`), `MIN_EXAMPLES = 15` |
+| `test_eval_escalation.py` | `MIN_PRECISION = 0.80`, `MIN_RECALL = 0.90`, `MIN_EXAMPLES = 15`, positive share 0.2 to 0.5 |
+
+  There are no floors for the triage suite (its `grounding_rate` baseline is
+  below the 0.90 used for the resolution suite).
+
+### Refresh a baseline
+
+From `support-agent/`:
+
+```
+uv run python -m spine.eval baseline --suite triage.eval.suites:<factory> --out baselines/<name>.json
+```
+
+Then run the matching `gate` command, review the JSON diff, commit it. The
+baseline file is just `dataset_name`, `dataset_version`, `mean_scores`.
+Refreshing after a regression erases the signal, so the diff should be
+explained in the commit message.
+
+### Offline
+
+CI runs entirely on `FakeModelClient` with the committed KB
+(`data/kb/ubuntu_docs.jsonl`). No network, no API key, no GCP project. Live runs
+are not part of CI (section 5).
+
+## 5. Fake vs live
+
+### What the fake model is
+
+`support-agent/src/triage/fakes.py`; no model is called.
+
+- `classifier_responder`: ordered regex alternations over signal words in the
+  ticket text (for example `refund`/`invoice` give `billing`; `wifi`/`dns` give
+  `networking`). First matching label wins; fallbacks are `other`, `normal`,
+  `neutral`. Does not read ticket ids.
+- `resolver_responder`: concatenates every retrieved passage into
+  "Based on our documentation: ...". It does not reason; it copies the context.
+- `resolution_judge_client` (the fake "LLM judge"): **keyword overlap**, not an
+  LLM. Score = share of the reference answer's content words found in the
+  answer, rounded to 3 places. Because the fake answer copies the retrieved
+  context, `llm_judge` here measures whether retrieval surfaced the reference's
+  words.
+- Retrieval is an in-memory substring-scoring retriever over 382 chunks.
+
+### What the fake baselines prove and do not prove
+
+- They are a regression harness: they fail when pipeline plumbing, retrieval,
+  rules, schemas or a fake responder change in a way that moves a score.
+- They are **not** a quality measure of any language model. The fake and the
+  labels were developed together in the same repo, so agreement is partly by
+  construction.
+- `llm_judge` 0.8486 is a keyword-overlap number. It says nothing about how a
+  real judge would grade real answers.
+- Rule-based parts (`plan_actions`, escalation rules, retriever, grounding) are
+  real code under test, but only on 15 to 18 tickets.
+
+### Fake baseline (committed, CI-gated)
+
+Exact values from `support-agent/baselines/*.json`.
+
+| Suite | Metric | Value | Source file |
+| --- | --- | --- | --- |
+| classification | `schema_pass_rate` | 1.0 | `baselines/classification.json` |
+| classification | `field_accuracy` | 0.9722222222222222 | `baselines/classification.json` |
+| resolution | `grounding_rate` | 1.0 | `baselines/resolution.json` |
+| resolution | `llm_judge` | 0.8485555555555555 | `baselines/resolution.json` |
+| resolution | `schema_pass_rate` | 1.0 | `baselines/resolution.json` |
+| actions | `tool_call_correctness` | 1.0 | `baselines/actions.json` |
+| actions | `field_accuracy` | 1.0 | `baselines/actions.json` |
+| escalation | `escalation_accuracy` | 0.9333333333333333 | `baselines/escalation.json` |
+| escalation | `escalation_precision` | 0.875 | `baselines/escalation.json` |
+| escalation | `escalation_recall` | 1.0 | `baselines/escalation.json` |
+| triage | `grounding_rate` | 0.5555555555555556 | `baselines/triage.json` |
+| triage | `schema_pass_rate` | 1.0 | `baselines/triage.json` |
+
+Reading the triage row: the 0.5556 follows from the suite design, in which
+escalated tickets are withheld and scored as uncited. It is the pipeline's
+"current behaviour", not a grounding failure (`build_triage_suite` docstring).
+The 10/18 reading is arithmetic on the row count, not stated in a file.
+
+### Live run
+
 Described per the spec for this PR. At the time of writing,
 `scripts/error_analysis.py`, `scripts/judge_sheet.py` and
 `scripts/judge_agreement.py` existed in the working tree. `src/triage/eval/live.py`,
@@ -298,7 +430,13 @@ ANTHROPIC_API_KEY=... uv run python -m triage.eval --live
 
 - Runs all five suites on a real Claude model through an API-key client
   (`spine/models_anthropic.py`, plain httpx, no GCP project).
-- `SPINE_LIVE_MODEL` overrides the model.
+- Default model `claude-haiku-5-5`; `SPINE_LIVE_MODEL` overrides it. Cost comes
+  from the price table in `models_anthropic.py`; an unpriced model gives
+  `cost_usd: null`, never a guess.
+- `temperature` is not sent to models that reject non-default sampling (the
+  default model included), so live output is at the model's default temperature.
+- A per-example failure (unparseable reply, API error) is recorded in the row's
+  `error` field and scored 0; it does not stop the run.
 - Without `--live` it runs the fake model and writes nothing.
 - In live mode the resolution suite uses the real `LlmJudge` prompt
   (`DEFAULT_JUDGE_TEMPLATE`) with the live model, instead of the keyword fake.
