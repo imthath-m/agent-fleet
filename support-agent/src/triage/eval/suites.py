@@ -32,7 +32,7 @@ from spine.eval.metrics import (
 )
 from spine.eval.runner import EvalResult, EvalSuite
 from spine.logging import get_logger
-from spine.models import FakeModelClient
+from spine.models import FakeModelClient, ModelClient
 
 from triage.actions import plan_actions
 from triage.classifier import CLASSIFIED_FIELDS, classify
@@ -67,10 +67,13 @@ def classification_metrics() -> list[Metric]:
     ]
 
 
-def build_classification_suite() -> EvalSuite:
-    """Run every golden ticket through `classify()` and score the labels."""
+def build_classification_suite(model: ModelClient | None = None) -> EvalSuite:
+    """Run every golden ticket through `classify()` and score the labels.
+
+    `model` defaults to the fake; `triage.eval.live` passes a real client.
+    """
     dataset = load_dataset(CLASSIFICATION_DATASET)
-    model = FakeModelClient(responder=classifier_responder)
+    model = model or FakeModelClient(responder=classifier_responder)
     # Discard the per-example structured logs: the eval CLI's stdout is the
     # summary, not a log stream.
     logger = get_logger("triage.eval.classification", stream=io.StringIO())
@@ -88,11 +91,11 @@ def build_classification_suite() -> EvalSuite:
 # --------------------------------------------------------------------------- #
 
 
-def resolution_metrics(retriever) -> list[Metric]:
+def resolution_metrics(retriever, judge: ModelClient | None = None) -> list[Metric]:
     return [
         GroundingRate(retriever=retriever),
         LlmJudge(
-            client=resolution_judge_client(),
+            client=judge or resolution_judge_client(),
             criterion="resolution correctness",
             reference_key="answer",
         ),
@@ -100,7 +103,9 @@ def resolution_metrics(retriever) -> list[Metric]:
     ]
 
 
-def build_resolution_suite() -> EvalSuite:
+def build_resolution_suite(
+    model: ModelClient | None = None, judge: ModelClient | None = None
+) -> EvalSuite:
     """Classify then resolve every golden ticket against the committed KB.
 
     The stages run composed rather than with hand-fed labels because
@@ -110,8 +115,8 @@ def build_resolution_suite() -> EvalSuite:
     """
     dataset = load_dataset(RESOLUTION_DATASET)
     retriever = load_kb()
-    classifier_model = FakeModelClient(responder=classifier_responder)
-    resolver_model = FakeModelClient(responder=resolver_responder)
+    classifier_model = model or FakeModelClient(responder=classifier_responder)
+    resolver_model = model or FakeModelClient(responder=resolver_responder)
     logger = get_logger("triage.eval.resolution", stream=io.StringIO())
 
     def predict(agent_input: Any) -> Prediction:
@@ -128,7 +133,7 @@ def build_resolution_suite() -> EvalSuite:
         # `text` is what the judge reads: the answer, not the serialized record.
         return Prediction(output=output, text=resolution.answer)
 
-    return EvalSuite(dataset, predict, resolution_metrics(retriever))
+    return EvalSuite(dataset, predict, resolution_metrics(retriever, judge))
 
 
 # --------------------------------------------------------------------------- #
@@ -145,7 +150,7 @@ def actions_metrics() -> list[Metric]:
     ]
 
 
-def build_actions_suite() -> EvalSuite:
+def build_actions_suite(model: ModelClient | None = None) -> EvalSuite:
     """Classify, resolve, then plan actions for every golden ticket.
 
     Composed rather than hand-fed for the same reason as the resolution suite:
@@ -161,8 +166,8 @@ def build_actions_suite() -> EvalSuite:
     """
     dataset = load_dataset(ACTIONS_DATASET)
     retriever = load_kb()
-    classifier_model = FakeModelClient(responder=classifier_responder)
-    resolver_model = FakeModelClient(responder=resolver_responder)
+    classifier_model = model or FakeModelClient(responder=classifier_responder)
+    resolver_model = model or FakeModelClient(responder=resolver_responder)
     logger = get_logger("triage.eval.actions", stream=io.StringIO())
 
     def predict(agent_input: Any) -> Prediction:
@@ -214,7 +219,7 @@ class _EscalationSuite(EvalSuite):
         return result
 
 
-def build_escalation_suite() -> _EscalationSuite:
+def build_escalation_suite(model: ModelClient | None = None) -> _EscalationSuite:
     """Run the whole `TriageAgent` and score whether it escalated.
 
     The system under test is the composed pipeline, because escalation is a
@@ -234,7 +239,9 @@ def build_escalation_suite() -> _EscalationSuite:
       not pretend otherwise — the gap is real and belongs to a later phase.
     """
     dataset = load_dataset(ESCALATION_DATASET)
-    agent = TriageAgent(logger=get_logger("triage.eval.escalation", stream=io.StringIO()))
+    agent = TriageAgent(
+        model=model, logger=get_logger("triage.eval.escalation", stream=io.StringIO())
+    )
 
     def predict(agent_input: Any) -> Prediction:
         result = agent.run(Ticket.from_dict(agent_input))
@@ -261,7 +268,7 @@ def triage_metrics(retriever) -> list[Metric]:
     ]
 
 
-def build_triage_suite() -> EvalSuite:
+def build_triage_suite(model: ModelClient | None = None) -> EvalSuite:
     """Run the whole `TriageAgent` — classify, resolve, plan actions, escalate —
     as the predictor over the resolution set: the analogue of
     `spine.reference_agent.build_reference_suite`, covering the composed
@@ -282,7 +289,7 @@ def build_triage_suite() -> EvalSuite:
     retriever = load_kb()
     agent = TriageAgent(
         retriever=retriever,
-        model=FakeModelClient(responder=triage_responder),
+        model=model or FakeModelClient(responder=triage_responder),
         logger=get_logger("triage.eval.triage", stream=io.StringIO()),
     )
 
